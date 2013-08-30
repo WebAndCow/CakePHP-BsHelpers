@@ -616,4 +616,8 @@ class Bs3FormHelper extends FormHelper {
 	public function end($options = null){
 		return parent::end($options);
 	}
+	
+	public function truc(){
+	 echo 'truc';
+	}
 }
