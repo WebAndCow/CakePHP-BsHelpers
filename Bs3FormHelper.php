@@ -125,10 +125,12 @@ class Bs3FormHelper extends FormHelper {
 			$options['role'] = 'form';
 		}
 
-		if (is_integer(strpos($options['class'], 'form-horizontal'))){
-			$this->_setFormType('horizontal');
-		}elseif (is_integer(strpos($options['class'], 'form-inline'))) {
-			$this->_setFormType('inline');
+		if (isset($options['class'])) {
+			if (is_integer(strpos($options['class'], 'form-horizontal'))){
+				$this->_setFormType('horizontal');
+			}elseif (is_integer(strpos($options['class'], 'form-inline'))) {
+				$this->_setFormType('inline');
+			}
 		}
 
 		$this->_setModelForm($model);
