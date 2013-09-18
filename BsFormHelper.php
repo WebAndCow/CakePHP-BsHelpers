@@ -8,14 +8,14 @@
  */
 
 
-class Bs3FormHelper extends FormHelper {
+class BsFormHelper extends FormHelper {
 
 /**
  * The name of the helper
  *
  * @var string
  */
-	public $name = 'Bs3Form';
+	public $name = 'BsForm';
 
 /**
  * Right and left settings to have 2 columns (label and inputs) with an horizontal form
