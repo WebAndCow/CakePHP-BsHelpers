@@ -27,14 +27,14 @@ class BsFormHelper extends FormHelper {
 	private $right = 9;
 
 /**
- * Defines the type of form being created, horizontal form or inline form. Set by Bs3FormHelper::create()
+ * Defines the type of form being created, horizontal form or inline form. Set by BsFormHelper::create()
  *
  * @var string
  */
 	protected $_typeForm = 'horizontal';
 
 /**
- * Defines the model of form being created. Set by Bs3FormHelper::create()
+ * Defines the model of form being created. Set by BsFormHelper::create()
  *
  * @var string
  */
@@ -246,7 +246,7 @@ class BsFormHelper extends FormHelper {
  *
  * Extends of FormHelper::checkbox() so get same options and params
  *
- * Prefer use this function and not Bs3FormHelper::input() to create checkbox - better results and automatically adapted to Twitter Bootstrap v3
+ * Prefer use this function and not BsFormHelper::input() to create checkbox - better results and automatically adapted to Twitter Bootstrap v3
  *
  * ### New Options:
  *
@@ -270,7 +270,7 @@ class BsFormHelper extends FormHelper {
  * - 'class'
  * - 'label' - string and array
  *
- * ### In case of multiple checkboxes -> use the Bs3FormHelper::select()
+ * ### In case of multiple checkboxes -> use the BsFormHelper::select()
  *
  * Some options are added
  * - 'help' - can be for each, always with an array in parameter
@@ -325,7 +325,7 @@ class BsFormHelper extends FormHelper {
 		$out .= '</label>';
 
 		//----- [help] option for multiple checkboxes ([label] is an array)
-		if (isset($options['label']['help']) && !empty($options['label']['help'])) {
+		if (is_array($options['label']) && isset($options['label']['help']) && !empty($options['label']['help'])) {
 			$out .= '<span class="help-block">'.$options['label']['help'].'</span>';
 		}
 
@@ -610,7 +610,7 @@ class BsFormHelper extends FormHelper {
 
 
 /**
- * Closes an HTML form, cleans up values set by Bs3FormHelper::create(), and writes hidden
+ * Closes an HTML form, cleans up values set by BsFormHelper::create(), and writes hidden
  * input fields where appropriate.
  *
  * @param string|array $options as a string will use $options as the value of button,
