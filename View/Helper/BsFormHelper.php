@@ -27,14 +27,14 @@ class BsFormHelper extends FormHelper {
 	private $right = 9;
 
 /**
- * Defines the type of form being created, horizontal form or inline form. Set by BsFormHelper::create()
+ * Defines the type of form being created, horizontal form or inline form. Set by Bs3FormHelper::create()
  *
  * @var string
  */
 	protected $_typeForm = 'horizontal';
 
 /**
- * Defines the model of form being created. Set by BsFormHelper::create()
+ * Defines the model of form being created. Set by Bs3FormHelper::create()
  *
  * @var string
  */
@@ -270,7 +270,7 @@ class BsFormHelper extends FormHelper {
  * - 'class'
  * - 'label' - string and array
  *
- * ### In case of multiple checkboxes -> use the BsFormHelper::select()
+ * ### In case of multiple checkboxes -> use the Bs3FormHelper::select()
  *
  * Some options are added
  * - 'help' - can be for each, always with an array in parameter
@@ -324,6 +324,8 @@ class BsFormHelper extends FormHelper {
 
 		$out .= '</label>';
 
+
+
 		//----- [help] option for multiple checkboxes ([label] is an array)
 		if (is_array($options['label']) && isset($options['label']['help']) && !empty($options['label']['help'])) {
 			$out .= '<span class="help-block">'.$options['label']['help'].'</span>';
@@ -370,83 +372,54 @@ class BsFormHelper extends FormHelper {
 
 		$out = '';
 
-		// CHECKBOX elements
-		//----- [multiple] attribute for multiple checkbox
-		if (isset($attributes['multiple']) && $attributes['multiple'] == 'checkbox') {
-
-			$horizontal = false;
-
-			if ($this->_getFormType() == 'horizontal') {
-				$horizontal = true;
-				$out .= '<div class="form-group">';
-				$out .= '<div class="col-md-offset-'.$this->left.' col-md-'.$this->right.'">';
-			}
-
-			$this->_setFormType('inline');
-
-			//----- [inline] attribute for multiple checkbox
-			if (isset($attributes['inline']) && $attributes['inline'] == 'inline') {
-				$checkbox['inline'] = 'inline';
-			}
-
-			$out .= '<input name="data['.$this->_getModelForm().']['.$fieldName.']" value="" id="'.$this->_getModelForm().Inflector::camelize($fieldName).'" type="hidden">';
-
-			foreach ($options as $key => $value) {
-
-				$checkbox['label'] = $value;
-				$checkbox['hiddenField'] = false;
-				$out .= $this->checkbox($fieldName, $checkbox);
-
-			}
-
-			if ($horizontal) {
-				//----- [help] option for multiple checkbox
-				if (isset($attributes['help']) && !empty($attributes['help'])) {
-					$out .= '<span class="help-block">'.$attributes['help'].'</span>';
-				}
-
-				$out .= '</div></div>';
-				$this->_setFormType('horizontal');
-
-			}
-
-			return $out;
-
-		}else{
-
-			// SELECT element			
-			//----- [class] attribute
+		// MULTIPLE CHECKBOX			
+		if ((isset($attributes['multiple']) && $attributes['multiple'] != 'checkbox') || !isset($attributes['multiple'])) {
 			if (!isset($attributes['class'])) {
 				$attributes['class'] = 'form-control';
 			}else{
 				$attributes['class'] .= ' form-control';
 			}
-			//----- [empty] attribute
-			if (!isset($attributes['empty'])) {
-				$attributes['empty'] = false;
-			}
-
-			if ($this->_getFormType() == 'horizontal') {
-
-				$out .= '<div class="form-group">';
-				//----- [label] attribute
-				if (isset($attributes['label']) && !empty($attributes['label'])) {
-					$out .= '<label class="control-label col-md-'.$this->left.'">'.$attributes['label'].'</label>';
-					$out .= '<div class="col-md-'.$this->right.'">';
+		}else{
+			//----- [inline] attribute for checkbox
+			if(isset($attributes['inline']) && ($attributes['inline'] == 'inline' || $attributes['inline'] == true)){
+				if (!isset($attributes['class'])) {
+					$attributes['class'] = 'checkbox checkbox-inline';
 				}else{
-					$out .= '<div class="col-md-offset-'.$this->left.' col-md-'.$this->right.'">';
+					$attributes['class'] = 'checkbox checkbox-inline '.$attributes['class'];
+				}
+			}else{
+				if (!isset($attributes['class'])) {
+					$attributes['class'] = 'checkbox';
+				}else{
+					$attributes['class'] = 'checkbox '.$attributes['class'];
 				}
 			}
+		}
+		//----- [empty] attribute
+		if (!isset($attributes['empty'])) {
+			$attributes['empty'] = false;
+		}
 
-			$out .= parent::select($fieldName, $options, $attributes);
+		if ($this->_getFormType() == 'horizontal') {
 
-			if ($this->_getFormType() == 'horizontal') {
-				//----- [help] attribute
-				if (isset($attributes['help']) && !empty($attributes['help'])) {
-					$out .= '<span class="help-block">'.$attributes['help'].'</span>';
-				}
-				$out .= '</div></div>';
+			$out .= '<div class="form-group">';
+			//----- [label] attribute
+			if (isset($attributes['label']) && !empty($attributes['label'])) {
+				$out .= '<label class="control-label col-md-'.$this->left.'">'.$attributes['label'].'</label>';
+				$out .= '<div class="col-md-'.$this->right.'">';
+			}else{
+				$out .= '<div class="col-md-offset-'.$this->left.' col-md-'.$this->right.'">';
 			}
+		}
+
+		$out .= parent::select($fieldName, $options, $attributes);
+
+		if ($this->_getFormType() == 'horizontal') {
+			//----- [help] attribute
+			if (isset($attributes['help']) && !empty($attributes['help'])) {
+				$out .= '<span class="help-block">'.$attributes['help'].'</span>';
+			}
+			$out .= '</div></div>';
 		}
 
 		return $out;
@@ -529,7 +502,7 @@ class BsFormHelper extends FormHelper {
 			$out .= '</label>';
 
 			//----- [help] option
-			if (isset($value['help']) && !empty($value['help'])) {
+			if (isset($value['help']) && !empty($value['help']) && is_array($options[$key])) {
 				$out .= '<span class="help-block">'.$options[$key]['help'].'</span>';
 			}
 
@@ -610,7 +583,7 @@ class BsFormHelper extends FormHelper {
 
 
 /**
- * Closes an HTML form, cleans up values set by BsFormHelper::create(), and writes hidden
+ * Closes an HTML form, cleans up values set by Bs3FormHelper::create(), and writes hidden
  * input fields where appropriate.
  *
  * @param string|array $options as a string will use $options as the value of button,

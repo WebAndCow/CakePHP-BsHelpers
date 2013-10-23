@@ -33,5 +33,12 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 
-	public $helpers = array('Form', 'BsForm');
+	public $helpers = array('Form', 'Bs', 'BsForm');
+
+	public $titre = 'Title';
+	public $description = '';
+
+	public function beforeFilter() {
+		$this->layout = 'bootstrap';
+	}
 }
