@@ -569,7 +569,11 @@ class BsFormHelper extends FormHelper {
 		if (!isset($options['class'])) {
 			$options['class'] = 'btn btn-success';
 		}else{
-			$options['class'] = 'btn btn-success '.$options['class'];
+			if(is_integer(strpos($options['class'], 'btn-danger')) || is_integer(strpos($options['class'], 'btn-warning'))){	
+				$options['class'] = 'btn '.$options['class'];
+			}else{
+				$options['class'] = 'btn '.$options['class'].' btn-success';
+			}
 		}
 
 		$out .= parent::submit($caption, $options);
