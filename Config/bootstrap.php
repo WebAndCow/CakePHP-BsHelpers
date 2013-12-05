@@ -57,7 +57,10 @@ define('FORM_HORIZONTAL' , 'form-horizontal');
 define('HR' , '<hr />');
 define('BR' , '<br />');
 
-
+define('TR' , '<tr>');
+define('_TR' , '</tr>');
+define('TD' , '<td>');
+define('_TD' , '</td>');
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
  *
