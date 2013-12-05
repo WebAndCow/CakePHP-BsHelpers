@@ -33,12 +33,12 @@ class BsHelper extends HtmlHelper {
  * @var string
  */
 	public $pathCSS = 'bootstrap';
-	public $pathICONS = '//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css';
-	public $pathBsAddOn = 'bs_addon';
+	public $fa_path = '//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css';
+	public $bs_addon_path = 'bs_addon';
 
 	// Load Font Awesome
-	public $pathICONSLoad = true;
-	public $pathBsAddOnLoad = true;
+	public $fa_load = true;
+	public $bs_addon_load = true;
 
 	// Prefix Font Awesome
 	public $fa_prefix = 'fa-';
@@ -122,7 +122,7 @@ class BsHelper extends HtmlHelper {
 	public function body() {
 		
 		$out =  '</head>' . BL;
-		$out .= '<body class="cbp-spmenu-push">' . BL;
+		$out .= '<body>' . BL;
 		
 		return $out;
 	}
@@ -153,11 +153,11 @@ class BsHelper extends HtmlHelper {
 	public function css($array_css = array(), $options = array()) {
 		
 		$out = parent::css($this->pathCSS). BL ;
-		if ($pathICONSLoad) {
-			$out .= parent::css($this->pathICONS) . BL;
+		if ($fa_load) {
+			$out .= parent::css($this->fa_path) . BL;
 		}
-		if ($pathBsAddOnLoad) {
-			$out .= parent::css($this->pathBsAddOn) . BL;
+		if ($bs_addon_load) {
+			$out .= parent::css($this->bs_addon_path) . BL;
 		}
 		
 		// Others CSS
