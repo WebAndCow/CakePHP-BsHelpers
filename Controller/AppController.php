@@ -33,7 +33,7 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 
-	public $helpers = array('Form', 'Bs', 'BsForm');
+	public $helpers = array('Html', 'Form', 'Bs', 'BsForm');
 
 	public $titre = 'Title';
 	public $description = '';
