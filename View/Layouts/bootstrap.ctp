@@ -1,17 +1,17 @@
 <?php
 
-echo $this->Bp->html($title_for_layout , $description_for_layout).
+echo $this->Bs->html($title_for_layout , $description_for_layout).
 		
 	// HEAD
-		$this->Bp->css().
-		$this->Bp->js().
+		$this->Bs->css().
+		$this->Bs->js().
 	// \HEAD
 
 	// BODY
-		$this->Bp->body().
+		$this->Bs->body().
 
 			// CONTENT
 			$content_for_layout;
 
 	// \BODY
-echo $this->Bp->endBodyHtml();
+echo $this->Bs->end();
