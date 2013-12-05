@@ -1,0 +1,26 @@
+/* Width for tables */
+
+.l_5 {width: 5%}
+.l_10 {width: 10%}
+.l_15 {width: 15%}
+.l_20 {width: 20%}
+.l_25 {width: 25%}
+.l_30 {width: 30%}
+.l_35 {width: 35%}
+.l_40 {width: 40%}
+.l_45 {width: 45%}
+.l_50 {width: 50%}
+.l_55 {width: 55%}
+.l_60 {width: 60%}
+.l_65 {width: 65%}
+.l_70 {width: 70%}
+.l_75 {width: 75%}
+.l_80 {width: 80%}
+.l_85 {width: 85%}
+.l_90 {width: 90%}
+.l_95 {width: 95%}
+
+
+/* Add the class .info for tables lines */
+
+.table > tbody > tr.info > td{background-color: #d9edf7;border-top-color: #bce8f1;}
