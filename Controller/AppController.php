@@ -46,4 +46,8 @@ class AppController extends Controller {
 		$this->set('title_for_layout' , $this->titre);
 		$this->set('description_for_layout' , $this->description);
 	}
+
+	public function layout($layout) {
+		$this->layout = $layout;
+	}
 }
