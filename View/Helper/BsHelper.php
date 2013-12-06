@@ -150,18 +150,18 @@ class BsHelper extends HtmlHelper {
  * @return string A link tag for the head element
  */
 
-	public function css($array_css = array(), $options = array()) {
+	public function css($path = array(), $options = array()) {
 		
 		$out = parent::css($this->pathCSS). BL ;
-		if ($fa_load) {
+		if ($this->fa_load) {
 			$out .= parent::css($this->fa_path) . BL;
 		}
-		if ($bs_addon_load) {
+		if ($this->bs_addon_load) {
 			$out .= parent::css($this->bs_addon_path) . BL;
 		}
 		
 		// Others CSS
-		foreach($array_css as $css)
+		foreach($path as $css)
 			$out .= parent::css($css, $options) . BL;
 			
 		return $out;
@@ -175,7 +175,7 @@ class BsHelper extends HtmlHelper {
  * @return string A script tag for the head element
  */
 
-	public function js($array_js = array()) {		
+	public function js($array_js = array()) {
 		
 		$out =  parent::script($this->pathJquery) . BL;
 		$out .= parent::script($this->pathJS) . BL;

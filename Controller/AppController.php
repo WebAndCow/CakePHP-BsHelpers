@@ -36,9 +36,14 @@ class AppController extends Controller {
 	public $helpers = array('Html', 'Form', 'Bs', 'BsForm');
 
 	public $titre = 'Title';
-	public $description = '';
+	public $description = 'Description';
 
 	public function beforeFilter() {
 		$this->layout = 'bootstrap';
+	}
+
+	public function beforeRender() {
+		$this->set('title_for_layout' , $this->titre);
+		$this->set('description_for_layout' , $this->description);
 	}
 }
