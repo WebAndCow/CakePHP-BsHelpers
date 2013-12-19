@@ -120,14 +120,8 @@ class BsHelper extends HtmlHelper {
  */
 	
 	public function body($classBody = '') {
- 
 		$out =  '</head>' . BL;
-		 
-		if($classBody == '')
-		$out .= '<body>' . BL;
-		else 
-		$out .= '<body class="'.$classBody.'">' . BL;
-		 
+		$out .= '<body ' . (empty($classBody)) ? '' : ' class="' . $classBody . '">' . BL;
 		return $out;
 	}
 	
