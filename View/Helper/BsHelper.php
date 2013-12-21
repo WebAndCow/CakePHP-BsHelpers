@@ -429,7 +429,7 @@ class BsHelper extends HtmlHelper {
 	* @param array $class classes of the table (hover, striped, etc)
 	* @return string
 	*/
-	function table($titles, $class = array()) {
+	public function table($titles, $class = array()) {
 			
 		$classes = '';
 		$out = '<div class="table-responsive">';
