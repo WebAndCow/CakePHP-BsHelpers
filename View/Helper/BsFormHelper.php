@@ -172,7 +172,7 @@ class BsFormHelper extends FormHelper {
 	public function input($fieldName, $options = array()){
 
 		//----- [before], [state] and [after] options
-		if (!isset($options['before']) && !isset($options['after'])) {
+		if (!isset($options['before'])) {
 			if (isset($options['state'])) {
 				switch ($options['state']) {
 					case 'error':
@@ -192,8 +192,10 @@ class BsFormHelper extends FormHelper {
 				$options['before'] = '<div class="form-group'.$state.'">';
 			}else{
 				$options['before'] = '<div class="form-group">'; 
+			}	
+			if (!isset($options['after'])) {
+				$options['after'] = '</div>';
 			}
-			$options['after'] = '</div>';
 		}
 
 		//----- [div] option
@@ -230,16 +232,17 @@ class BsFormHelper extends FormHelper {
 		//----- [between], [after] and [help] options
 		if ($this->_getFormType() == 'horizontal') {
 			$options['between'] = '<div class="col-md-'.$this->right.'">';
-			if (isset($options['help']) && !empty($options['help'])) {
-				$options['after'] = '<span class="help-block">'.$options['help'].'</span></div></div>';
-			}else{
-				$options['after'] = '</div></div>';
+			if ($options['after'] == '</div>'){	
+				if (isset($options['help']) && !empty($options['help'])) {
+					$options['after'] = '<span class="help-block">'.$options['help'].'</span></div></div>';
+				}else{
+					$options['after'] = '</div></div>';
+				}
 			}
 		}
 
 		return parent::input($fieldName, $options).SP;
 	}
-
 
 /**
  * Creates a checkbox input widget.
