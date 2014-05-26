@@ -184,15 +184,15 @@ class BsFormHelper extends FormHelper {
 					case 'success':
 						$state = ' has-success';
 						break;
-					
+
 					default:
 						$state = '';
 						break;
 				}
 				$options['before'] = '<div class="form-group'.$state.'">';
 			}else{
-				$options['before'] = '<div class="form-group">'; 
-			}	
+				$options['before'] = '<div class="form-group">';
+			}
 			if (!isset($options['after'])) {
 				$options['after'] = '</div>';
 			}
@@ -217,7 +217,7 @@ class BsFormHelper extends FormHelper {
 			}else{
 				$options['label'] = array('class' => 'control-label sr-only');
 			}
-		}else{
+		} else {
 			if (!is_array($options['label'])) {
 				$options['label'] = array('class' => 'control-label col-md-'.$this->left, 'text' => $options['label']);
 			}else{
@@ -231,8 +231,10 @@ class BsFormHelper extends FormHelper {
 
 		//----- [between], [after] and [help] options
 		if ($this->_getFormType() == 'horizontal') {
-			$options['between'] = '<div class="col-md-'.$this->right.'">';
-			if ($options['after'] == '</div>'){	
+			if (!isset($options['between'])) {
+				$options['between'] = '<div class="col-md-'.$this->right.'">';
+			}
+			if ($options['after'] == '</div>'){
 				if (isset($options['help']) && !empty($options['help'])) {
 					$options['after'] = '<span class="help-block">'.$options['help'].'</span></div></div>';
 				}else{
@@ -243,6 +245,119 @@ class BsFormHelper extends FormHelper {
 
 		return parent::input($fieldName, $options).SP;
 	}
+
+
+/**
+ * Generate a form input element with an addon or button on his side.
+ *
+ *  * ### Addon Options
+ *
+ * - 'content' - The addon content.
+ * - 'side'    - Which side the addon will be. Be default 'left'.
+ * - 'state'   - Change bootstrap button state. Values : 'default', 'primary', 'secondary', 'warning', 'danger'.
+ * - 'class'   - Add HTML class attribute.
+ * - 'button'  - Define if the addon is a submit button. By default 'false'.
+ *
+ * @param array $options      Extends of BsFormHelper::input() so get same options
+ * @param array $addonOptions Array of options
+ *
+ * @return string Input-group de Bootstrap
+ */
+	public function inputGroup($fieldName, $options, $addonOptions)
+	{
+
+		$between = '<div class="col-md-'.$this->right.'">'. BL;
+		$between .= '<div class="input-group">'. BL;
+
+		// Check if the addon is on the right
+		if (isset($addonOptions	['side']) && $addonOptions['side'] == 'right') {
+			$after = $this->_createAddon($addonOptions).'</div>'. BL;
+			unset($addonOptions['side']);
+		} else {
+			$between .= $this->_createAddon($addonOptions). BL;
+			$after = '</div>';
+		}
+
+		$after .= '</div>'. BL;
+		$options['between'] = $between;
+		$options['after'] = $after;
+		$options['before'] = null;
+		$options['div'] = false;
+
+		$out = $this->input($fieldName, $options);
+
+		return $out;
+	}
+
+
+	/**
+	 * Generate a span element for BsFormHelper::inputGroup() with his content.
+	 *
+	 * @param string/array $options Array of options
+	 *
+	 * @return string HTML <span> element
+	 */
+	private function _createAddon($options)
+	{
+		if (is_array($options)) {
+
+			// Check if the span content is a button
+			if (isset($options['button'])) {
+
+				$buttonOptions = $options['button'];
+				$state = 'btn btn-default';
+
+				if (isset($options['class'])) {
+					$options['class'] .= ' input-group-btn';
+				} else {
+					$options['class'] = 'input-group-btn';
+				}
+
+				$out = '<span class="'.$options['class'].'">'. BL;
+
+				if (isset($buttonOptions['state'])) {
+					$state = 'btn btn-'.$buttonOptions['state'];
+					unset($buttonOptions['state']);
+				}
+
+				if (isset($buttonOptions['class'])) {
+					$buttonOptions['class'] .= ' '.$state;
+				} else {
+					$buttonOptions['class'] = $state;
+				}
+
+				if (!isset($buttonOptions['type'])) {
+					$buttonOptions['type'] = 'button';
+				}
+
+				if ($buttonOptions['type'] == 'submit') {
+					$buttonOptions['div'] = false;
+					$out .= parent::submit($options['content'], $buttonOptions). BL;
+				} else {
+					$out .= parent::button($options['content'], $buttonOptions). BL;
+				}
+
+				$out .= '</span>'. BL;
+
+			} else {
+
+				if (isset($options['left']['class'])) {
+					$options['class'] .= ' input-group-addon';
+				} else {
+					$options['class'] = 'input-group-addon';
+				}
+
+				$out = '<span class="'.$options['class'].'">'.$options['content'].'</span>'. BL;
+			}
+		} else {
+			$out = '<span class="input-group-addon">'.$options.'</span>'. BL;
+		}
+
+		return $out;
+	}
+
+
+
 
 /**
  * Creates a checkbox input widget.
@@ -257,7 +372,7 @@ class BsFormHelper extends FormHelper {
  * - `help` - Add a message under the checkbox to give more informations
  *			  Use this option in an array with the label
  *			  Example : input('foo', array(
- *											'label' => 'name', 
+ *											'label' => 'name',
  *											'help' => 'informations'
  *										)
  *							);
@@ -273,6 +388,12 @@ class BsFormHelper extends FormHelper {
  * - 'class'
  * - 'label' - string and array
  *
+ * ### labelOptions use two key
+ *
+ * - 'label' - Define the label content
+ * - 'class' - Define the label class
+ *
+ *
  * ### In case of multiple checkboxes -> use the Bs3FormHelper::select()
  *
  * Some options are added
@@ -281,10 +402,11 @@ class BsFormHelper extends FormHelper {
  *
  * @param string $fieldName Name of a field, like this "Modelname.fieldname"
  * @param array $options Array of HTML attributes.
+ * @param array $labelOptions Array of options
  * @return string An HTML text input element.
  */
 
-	public function checkbox($fieldName, $options = array()){
+	public function checkbox($fieldName, $options = array(), $labelOptions = array()){
 
 		//----- [div] option
 		if (!isset($options['div'])) {
@@ -298,51 +420,40 @@ class BsFormHelper extends FormHelper {
 
 		$out = '';
 
-		if ($this->_getFormType() == 'horizontal') {
+		if ($this->_getFormType() == 'horizontal' && !isset($options['inline'])) {
 			$out .= '<div class="form-group">';
 			$out .= '<div class="col-md-offset-'.$this->left.' col-md-'.$this->right.'">';
+		}
+
+		if(isset($labelOptions['label'])) {
+			$label = $labelOptions['label'];
+			unset($labelOptions['label']);
+		} else {
+			$label = Inflector::camelize($fieldName);
 		}
 
 		//----- [inline] option
 		if (!(isset($options['inline']) && ($options['inline'] == 'inline' || $options['inline'] == true))) {
 			$out .= '<div class="checkbox">';
-			$out .= '<label>';
+			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options).' '.$label, $labelOptions);
 		}else{
-			$out .= '<label class="checkbox-inline">';
-		}
-
-		$out .= parent::checkbox($fieldName, $options);
-
-		//----- [label] option
-		if ($options['label'] != false) {
-			// If options are array('label' => 'text')
-			if (is_array($options['label'])) {
-				$out .= ' '.$options['label']['label'];
-			}else{
-				$out .= ' '.$options['label'];
+			if (isset($labelOptions['class']) and !is_array($labelOptions['class'])) {
+				$labelOptions['class'] .= ' checkbox-inline';
+			} else {
+				$labelOptions['class'] = 'checkbox-inline';
 			}
-		}else{
-			$out .= ' '.Inflector::camelize($fieldName);
+			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options).' '.$label, $labelOptions);
 		}
-
-		$out .= '</label>';
-
-
 
 		//----- [help] option for multiple checkboxes ([label] is an array)
 		if (is_array($options['label']) && isset($options['label']['help']) && !empty($options['label']['help'])) {
 			$out .= '<span class="help-block">'.$options['label']['help'].'</span>';
 		}
 
-		//----- [inline] option
-		if (!(isset($options['inline']) && ($options['inline'] == 'inline' || $options['inline'] == true))) {
-			$out .= '</div>';
-		}
-
 		$out .= SP;
 
 		//----- [help] option for single checkbox
-		if ($this->_getFormType() == 'horizontal') {
+		if ($this->_getFormType() == 'horizontal' && !isset($options['inline'])) {
 			if (isset($options['help']) && !empty($options['help'])) {
 				$out .= '<span class="help-block">'.$options['help'].'</span>';
 			}
@@ -375,7 +486,7 @@ class BsFormHelper extends FormHelper {
 
 		$out = '';
 
-		// MULTIPLE CHECKBOX			
+		// MULTIPLE CHECKBOX
 		if ((isset($attributes['multiple']) && $attributes['multiple'] != 'checkbox') || !isset($attributes['multiple'])) {
 			if (!isset($attributes['class'])) {
 				$attributes['class'] = 'form-control';
@@ -557,7 +668,7 @@ class BsFormHelper extends FormHelper {
 			$out .= '<div class="form-group">';
 			$out .= '<div class="col-md-offset-'.$this->left.' col-md-'.$this->right.'">';
 		}
-		
+
 		//----- [div] option
 		if (!isset($options['div'])) {
 			$options['div'] = false;
@@ -572,7 +683,7 @@ class BsFormHelper extends FormHelper {
 		if (!isset($options['class'])) {
 			$options['class'] = 'btn btn-success';
 		}else{
-			if(is_integer(strpos($options['class'], 'btn-danger')) || is_integer(strpos($options['class'], 'btn-warning')) || is_integer(strpos($options['class'], 'btn-info'))){	
+			if(is_integer(strpos($options['class'], 'btn-danger')) || is_integer(strpos($options['class'], 'btn-warning')) || is_integer(strpos($options['class'], 'btn-info'))){
 				$options['class'] = 'btn '.$options['class'];
 			}else{
 				$options['class'] = 'btn '.$options['class'].' btn-success';
@@ -597,7 +708,7 @@ class BsFormHelper extends FormHelper {
  * @return string a closing FORM tag optional submit button.
  */
 
-	public function end($options = null){
-		return parent::end($options);
+	public function end($options = null, $secureAttributes = array()){
+		return parent::end($options, $secureAttributes);
 	}
 }
