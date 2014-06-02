@@ -84,7 +84,7 @@ class BsFormHelper extends FormHelper {
  *
  * @var string
  */
-	protected function _setFormType($val){
+	public function _setFormType($val){
 		$this->_typeForm = $val;
 	}
 
@@ -170,6 +170,18 @@ class BsFormHelper extends FormHelper {
  * @return string Completed form widget.
  */
 	public function input($fieldName, $options = array()){
+
+		if (isset($options['type']) and $options['type'] == 'date') {
+			$options['between'] = '<div class="col-md-'.$this->right.'">';
+			$options['after'] = '</div></div>';
+			if (isset($options['class'])) {
+				$options['class'] .= ' input_date';
+			} else {
+				$options['class'] = 'input_date';
+			}
+
+		}
+
 
 		//----- [before], [state] and [after] options
 		if (!isset($options['before'])) {
@@ -271,11 +283,11 @@ class BsFormHelper extends FormHelper {
 
 		// Check if the addon is on the right
 		if (isset($addonOptions	['side']) && $addonOptions['side'] == 'right') {
-			$after = $this->_createAddon($addonOptions).'</div>'. BL;
+			$after = $this->_createAddon($addonOptions).'</div>'.'</div>'. BL;
 			unset($addonOptions['side']);
 		} else {
 			$between .= $this->_createAddon($addonOptions). BL;
-			$after = '</div>';
+			$after = '</div>'.'</div>'. BL;
 		}
 
 		$after .= '</div>'. BL;
@@ -285,7 +297,6 @@ class BsFormHelper extends FormHelper {
 		$options['div'] = false;
 
 		$out = $this->input($fieldName, $options);
-
 		return $out;
 	}
 
@@ -457,9 +468,8 @@ class BsFormHelper extends FormHelper {
 			if (isset($options['help']) && !empty($options['help'])) {
 				$out .= '<span class="help-block">'.$options['help'].'</span>';
 			}
-			$out .= '</div></div>';
+			$out .= '</div></div></div>';
 		}
-
 		return $out;
 	}
 
