@@ -416,16 +416,20 @@ class BsFormHelper extends FormHelper {
  * @return string An HTML text input element.
  */
 
-	public function checkbox($fieldName, $options = array(), $labelOptions = array()){
+	public function checkbox($fieldName, $options = array()){
 
-		//----- [div] option
-		if (!isset($options['div'])) {
-			$options['div'] = false;
+		//----- [label]
+		if(isset($options['label'])) {
+			$label = $options['label'];
+		} else {
+			$label = Inflector::camelize($fieldName);
 		}
 
-		//----- [label] option
-		if (!isset($options['label'])) {
-			$options['label'] = false;
+		//----- [label] class
+		if (isset($options['label-class'])) {
+			$label_class = array('class' => $options['label-class']);
+		} else {
+			$label_class = array();
 		}
 
 		$out = '';
@@ -435,17 +439,10 @@ class BsFormHelper extends FormHelper {
 			$out .= '<div class="col-md-offset-'.$this->left.' col-md-'.$this->right.'">';
 		}
 
-		if(isset($labelOptions['label'])) {
-			$label = $labelOptions['label'];
-			unset($labelOptions['label']);
-		} else {
-			$label = Inflector::camelize($fieldName);
-		}
-
 		//----- [inline] option
 		if (!(isset($options['inline']) && ($options['inline'] == 'inline' || $options['inline'] == true))) {
 			$out .= '<div class="checkbox">';
-			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options).' '.$label, $labelOptions);
+			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options).' '.$label, $label_class);
 		}else{
 			if (isset($labelOptions['class']) and !is_array($labelOptions['class'])) {
 				$labelOptions['class'] .= ' checkbox-inline';
@@ -740,7 +737,7 @@ class BsFormHelper extends FormHelper {
 		if (is_array($fieldName)) {
 
 			$script = "$('#sandbox-container .input-daterange').datepicker({". BL;
-			$script .= $this->scriptDP($optionsDP).'})'. BL;
+			$script .= $this->_scriptDP($optionsDP).'})'. BL;
 			$script .= '.on(\'changeDate\', function(){'. BL;
 
 			$_left = $this->left;
