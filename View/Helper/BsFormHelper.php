@@ -171,15 +171,18 @@ class BsFormHelper extends FormHelper {
  */
 	public function input($fieldName, $options = array()){
 
+		$form_type = $this->_getFormType();
+
 		if (isset($options['type']) and $options['type'] == 'date') {
 			$options['between'] = '<div class="col-md-'.$this->right.'">';
 			$options['after'] = '</div></div>';
+
+			$this->_setFormType('inline');
 			if (isset($options['class'])) {
 				$options['class'] .= ' input_date';
 			} else {
 				$options['class'] = 'input_date';
 			}
-
 		}
 
 		//----- [before], [state] and [after] options
@@ -254,7 +257,9 @@ class BsFormHelper extends FormHelper {
 			}
 		}
 
-		return parent::input($fieldName, $options).SP;
+		return parent::input($fieldName, $options).$this->_setFormType($form_type).SP;
+
+
 	}
 
 
@@ -269,12 +274,12 @@ class BsFormHelper extends FormHelper {
  * - 'class'   - Add HTML class attribute.
  * - 'button'  - Define if the addon is a submit button. By default 'false'.
  *
- * @param array $options      Extends of BsFormHelper::input() so get same options
  * @param array $addonOptions Array of options
+ * @param array $options      Extends of BsFormHelper::input() so get same options
  *
  * @return string Input-group de Bootstrap
  */
-	public function inputGroup($fieldName, $options, $addonOptions)
+	public function inputGroup($fieldName, $addonOptions, $options = array())
 	{
 
 		$between = '<div class="col-md-'.$this->right.'">'. BL;
@@ -296,6 +301,7 @@ class BsFormHelper extends FormHelper {
 		$options['div'] = false;
 
 		$out = $this->input($fieldName, $options);
+		debug($out);
 		return $out;
 	}
 
@@ -313,38 +319,43 @@ class BsFormHelper extends FormHelper {
 
 			// Check if the span content is a button
 			if (isset($options['button'])) {
-
-				$buttonOptions = $options['button'];
-				$state = 'btn btn-default';
-
-				if (isset($options['class'])) {
-					$options['class'] .= ' input-group-btn';
+				if ($options['button'] === true) {
+					$out = '<span class="input-group-btn">'. BL;
+					$out .= parent::button($options['content'], array('type' => 'button', 'class' => 'btn btn-default')). BL;
 				} else {
-					$options['class'] = 'input-group-btn';
-				}
+					$buttonOptions = $options['button'];
+					$state = 'btn btn-default';
 
-				$out = '<span class="'.$options['class'].'">'. BL;
+					if (isset($options['class'])) {
+						$options['class'] .= ' input-group-btn';
+					} else {
+						$options['class'] = 'input-group-btn';
+					}
 
-				if (isset($buttonOptions['state'])) {
-					$state = 'btn btn-'.$buttonOptions['state'];
-					unset($buttonOptions['state']);
-				}
+					$out = '<span class="'.$options['class'].'">'. BL;
 
-				if (isset($buttonOptions['class'])) {
-					$buttonOptions['class'] .= ' '.$state;
-				} else {
-					$buttonOptions['class'] = $state;
-				}
+					if (isset($buttonOptions['state'])) {
+						$state = 'btn btn-'.$buttonOptions['state'];
+						unset($buttonOptions['state']);
+					}
 
-				if (!isset($buttonOptions['type'])) {
-					$buttonOptions['type'] = 'button';
-				}
+					if (isset($buttonOptions['class'])) {
+						$buttonOptions['class'] .= ' '.$state;
+					} else {
+						$buttonOptions['class'] = $state;
+					}
 
-				if ($buttonOptions['type'] == 'submit') {
-					$buttonOptions['div'] = false;
-					$out .= parent::submit($options['content'], $buttonOptions). BL;
-				} else {
-					$out .= parent::button($options['content'], $buttonOptions). BL;
+					if (!isset($buttonOptions['type'])) {
+						$buttonOptions['type'] = 'button';
+					}
+
+					if ($buttonOptions['type'] == 'submit') {
+						$buttonOptions['div'] = false;
+						$buttonOptions['escape'] = false;
+						$out .= parent::button($options['content'], $buttonOptions). BL;
+					} else {
+						$out .= parent::button($options['content'], $buttonOptions). BL;
+					}
 				}
 
 				$out .= '</span>'. BL;
@@ -362,7 +373,6 @@ class BsFormHelper extends FormHelper {
 		} else {
 			$out = '<span class="input-group-addon">'.$options.'</span>'. BL;
 		}
-
 		return $out;
 	}
 
@@ -718,12 +728,12 @@ class BsFormHelper extends FormHelper {
 	 * - ... and more at http://eternicode.github.io/bootstrap-datepicker/
 	 *
 	 * @param string $fieldName This should be "Modelname.fieldname"
-	 * @param array  $options   Each type of input takes different options.
 	 * @param array  $optionsDP Datepicker options.
+	 * @param array  $options   Each type of input takes different options
 	 *
 	 * @return string Input datepicker element
 	 */
-	public function datepicker($fieldName, $options = array(), $optionsDP = array())
+	public function datepicker($fieldName, $optionsDP = array(), $options = array())
 	{
 		// Set some default parameters
 		if (!isset($optionsDP['format'])) {
