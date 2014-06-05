@@ -182,7 +182,6 @@ class BsFormHelper extends FormHelper {
 
 		}
 
-
 		//----- [before], [state] and [after] options
 		if (!isset($options['before'])) {
 			if (isset($options['state'])) {
@@ -707,6 +706,152 @@ class BsFormHelper extends FormHelper {
 		}
 
 		return $out;
+	}
+
+
+	/**
+	 * Create an input-datepicker element
+	 *
+	 * ### options datepicker
+	 * - format 		Input Date format.
+	 * - startview      Datepicker startview (days, months, years).
+	 * - orientation    Orientation of the datepicker window (top left, bottom right, ...).
+	 * - language       Datepicker langage (en, fr, ...).
+	 * - autoclose      True to close automaticly the window when you clic.
+	 * - ... and more at http://eternicode.github.io/bootstrap-datepicker/
+	 *
+	 * @param string $fieldName This should be "Modelname.fieldname"
+	 * @param array  $options   Each type of input takes different options.
+	 * @param array  $optionsDP Datepicker options.
+	 *
+	 * @return string Input datepicker element
+	 */
+	public function datepicker($fieldName, $options = array(), $optionsDP = array())
+	{
+		// Set some default parameters
+		if (!isset($optionsDP['format'])) {
+			$optionsDP['format'] = 'dd/mm/yyyy';
+		}
+		if (!isset($optionsDP['language'])) {
+			$optionsDP['language'] = 'fr';
+		}
+
+		// If it's a datepicker range
+		if (is_array($fieldName)) {
+
+			$script = "$('#sandbox-container .input-daterange').datepicker({". BL;
+			$script .= $this->scriptDP($optionsDP).'})'. BL;
+			$script .= '.on(\'changeDate\', function(){'. BL;
+
+			$_left = $this->left;
+
+			if (!isset($optionsDP['addon'])) {
+				$optionsDP['addon'] = 'à';
+			}
+			if (!isset($optionsDP['label'])) {
+				$optionsDP['label'] = '';
+			}
+
+			$out = '<div class="form-group">';
+			$out .= '<label class="control-label col-md-3">'.$optionsDP['label'].'</label>';
+			unset($optionsDP['label']);
+			$out .= '<div id="sandbox-container">';
+			$out .= '<div class=" col-md-9">';
+			$out .= '<div class="input-daterange input-group" id="datepicker">';
+
+			$this->left= 0;
+
+			foreach ($fieldName as $key => $field) {
+				if($key == 1){
+					$out .= '<span class="input-group-addon">'.$optionsDP['addon'].'</span>'. BL;
+					unset($optionsDP['addon']);
+				}
+
+				$options[$field]['label'] = false;
+				$options[$field]['before'] = '';
+    			$options[$field]['between'] = '';
+				$options[$field]['after'] = '';
+
+				if (isset($options[$field])) {
+					$out .= $this->input($field, $options[$field]). BL;
+				}else{
+					$out .= $this->input($field, $options). BL;
+				}
+				$options[$field]['type'] = 'hidden';
+    			$options[$field]['id'] = 'alt_dp_'.$key;
+
+    			if (isset($options[$field])) {
+					$out .= $this->input($field, $options[$field]). BL;
+				}else{
+					$out .= $this->input($field, $options). BL;
+				}
+
+				$script .= 'var date_'.$key.' = $(\'#'.parent::domId($field).'\').datepicker(\'getDate\');
+				date_'.$key.'.setHours(0, -date_'.$key.'.getTimezoneOffset(), 0, 0);
+				date_'.$key.' = date_'.$key.'.toISOString().slice(0,19).replace(\'T\', " ");
+			    $(\'#alt_dp_'.$key.'\').attr(\'value\', date_'.$key.');';
+
+			}
+
+    		$this->left = $_left;
+    		$out.= '</div></div>';
+    		$out .= '</div></div>';
+
+			$script .= '});';
+
+			$out.= '<script>'.$script.'</script>';
+
+		} else {
+			$out = '<div id="sandbox-container">'. BL;
+			$out .= $this->input($fieldName, $options). BL;
+			$options['id'] = 'alt_dp';
+			$options['type'] = 'hidden';
+			$out .= $this->input($fieldName, $options). BL;
+			$out .= '</div>'. BL;
+
+			$script = "$('#sandbox-container input').datepicker({". BL;
+			$script .= $this->_scriptDP($optionsDP).'})'. BL;
+
+			$script .= '.on(\'changeDate\', function(){
+				var date = $(\'#'.parent::domId($fieldName).'\').datepicker(\'getDate\');
+				date.setHours(0, -date.getTimezoneOffset(), 0, 0);
+				date = date.toISOString().slice(0,19).replace(\'T\', " ");
+			    $(\'#alt_dp\').attr(\'value\', date);';
+			$script .= '});';
+
+			$out.= '<script>'.$script.'</script>';
+
+		}
+		return $out;
+	}
+
+
+/**
+ * Create a datepicker script body.
+ *
+ * @param array $options $optionsDP from $this->datepicker()
+ *
+ * @return string Formated script body
+ */
+	private function _scriptDP($options)
+	{
+		$script = '';
+		foreach ($options as $key => $value) {
+			if (is_bool($value)) {
+				if ($value === true) {
+					$script .= $key.' : true,'. BL;
+				} else {
+					$script .= $key.' : false,'. BL;
+				}
+			} else {
+				if (is_int($value) or is_bool($value)) {
+					$script .= $key.' : '.$value.','. BL;
+				} else {
+					$script .= $key.' : "'.$value.'",'. BL;
+				}
+			}
+		}
+		return $script;
 	}
 
 
