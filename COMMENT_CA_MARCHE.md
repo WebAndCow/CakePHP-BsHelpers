@@ -123,7 +123,7 @@ Les options possibles pour l'addon/bouton sont :
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-__BsFormHelper::datepicker($mixed $fieldName, array $optionsDP, array $options = array())_
+__BsFormHelper::datepicker($mixed $fieldName, array $optionsDP, array $options = array())__
 
 $fieldName : Voir $fieldName du BsFormHelper::input().
 $optionsDP : Tableau d'options caractérisant le datepicker.
