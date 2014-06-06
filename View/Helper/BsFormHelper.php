@@ -301,7 +301,6 @@ class BsFormHelper extends FormHelper {
 		$options['div'] = false;
 
 		$out = $this->input($fieldName, $options);
-		debug($out);
 		return $out;
 	}
 
@@ -321,7 +320,7 @@ class BsFormHelper extends FormHelper {
 			if (isset($options['button'])) {
 				if ($options['button'] === true) {
 					$out = '<span class="input-group-btn">'. BL;
-					$out .= parent::button($options['content'], array('type' => 'button', 'class' => 'btn btn-default')). BL;
+					$out .= parent::button($options['content'], array('type' => 'submit', 'class' => 'btn btn-default')). BL;
 				} else {
 					$buttonOptions = $options['button'];
 					$state = 'btn btn-default';
@@ -746,7 +745,7 @@ class BsFormHelper extends FormHelper {
 		// If it's a datepicker range
 		if (is_array($fieldName)) {
 
-			$script = "$('#sandbox-container .input-daterange').datepicker({". BL;
+			$script = "$('.dp-container .input-daterange').datepicker({". BL;
 			$script .= $this->_scriptDP($optionsDP).'})'. BL;
 			$script .= '.on(\'changeDate\', function(){'. BL;
 
@@ -762,7 +761,7 @@ class BsFormHelper extends FormHelper {
 			$out = '<div class="form-group">';
 			$out .= '<label class="control-label col-md-3">'.$optionsDP['label'].'</label>';
 			unset($optionsDP['label']);
-			$out .= '<div id="sandbox-container">';
+			$out .= '<div class="dp-container">';
 			$out .= '<div class=" col-md-9">';
 			$out .= '<div class="input-daterange input-group" id="datepicker">';
 
@@ -805,18 +804,18 @@ class BsFormHelper extends FormHelper {
     		$out .= '</div></div>';
 
 			$script .= '});';
-
+			debug($out);
 			$out.= '<script>'.$script.'</script>';
 
 		} else {
-			$out = '<div id="sandbox-container">'. BL;
+			$out = '<div class="dp-container">'. BL;
 			$out .= $this->input($fieldName, $options). BL;
 			$options['id'] = 'alt_dp';
 			$options['type'] = 'hidden';
 			$out .= $this->input($fieldName, $options). BL;
 			$out .= '</div>'. BL;
 
-			$script = "$('#sandbox-container input').datepicker({". BL;
+			$script = "$('.dp-container input').datepicker({". BL;
 			$script .= $this->_scriptDP($optionsDP).'})'. BL;
 
 			$script .= '.on(\'changeDate\', function(){
@@ -826,6 +825,7 @@ class BsFormHelper extends FormHelper {
 			    $(\'#alt_dp\').attr(\'value\', date);';
 			$script .= '});';
 
+			debug($out);
 			$out.= '<script>'.$script.'</script>';
 
 		}
