@@ -1,6 +1,6 @@
 # BsHelper
 
-BsHelper::modal(string $header, string $body, array $options = array(), array $buttons = array())
+__BsHelper::modal(string $header, string $body, array $options = array(), array $buttons = array())__
 
 _param string $header_ :
 Contenu de l'en-tête
@@ -54,8 +54,9 @@ Pour insérer un formulaire dans le body :
 
 La variable $form désigne ici le code HTML de votre formulaire.
 
+---------------------------------------------------------------------------------------------------------------------------
 
-BeHelper::alert(string $text, string $state, array $options = array())
+__BeHelper::alert(string $text, string $state, array $options = array())__
 
 $text : Définit le contenu de l'alerte.
 $state : L'état bootrstrap de l'alerte.
@@ -74,7 +75,7 @@ Le tableau $options prend des attributs HTML classiques, mais aussi l'index 'dis
 
 # BsFormHelper
 
-BsFormHelper::inputGroup(string $fieldName, array $addonOptions, array $options = array())
+__BsFormHelper::inputGroup(string $fieldName, array $addonOptions, array $options = array())__
 
 $fieldName : Voir $fieldName du BsFormHelper::input().
 $addonOptions : Tableau d'options caractérisant l'addon.
@@ -120,8 +121,9 @@ Les options possibles pour l'addon/bouton sont :
 	* 'type'  : Définit le type du bouton. Par défaut 'submit'.
 	* 'class' : Permet d'ajouter des classes au bouton.
 
+---------------------------------------------------------------------------------------------------------------------------
 
-BsFormHelper::datepicker($mixed $fieldName, array $optionsDP, array $options = array())
+__BsFormHelper::datepicker($mixed $fieldName, array $optionsDP, array $options = array())_
 
 $fieldName : Voir $fieldName du BsFormHelper::input().
 $optionsDP : Tableau d'options caractérisant le datepicker.
