@@ -446,7 +446,7 @@ class BsHelper extends HtmlHelper {
 	* @param array $class classes of the table (hover, striped, etc)
 	* @return string
 	*/
-	function table($titles, $class = array()) {
+	public function table($titles, $class = array()) {
 
 		$classes = '';
 		$out = '<div class="table-responsive">';
@@ -593,17 +593,12 @@ class BsHelper extends HtmlHelper {
  *
  * @return string
  */
-	public function alert($text, $state, $options) {
+	public function alert($text, $state, $options = array()) {
 
 		if (!isset($options['class'])) {
 			$options['class'] = 'alert alert-'.$state;
 		} else {
 			$options['class'] .= ' alert alert-'.$state;
-		}
-		if (!isset($options['style'])) {
-			$options['style'] = 'display:none;';
-		} else {
-			$options['style'] .= 'display:none;';
 		}
 		if (!isset($options['dismiss']) or $options['dismiss'] == 'true') {
 			$dismiss = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
@@ -619,8 +614,6 @@ class BsHelper extends HtmlHelper {
 		}
 		$out .= $text;
 		$out .= '</div>';
-
-		debug($out);
 		return $out;
 	}
 

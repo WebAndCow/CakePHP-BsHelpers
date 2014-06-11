@@ -84,7 +84,7 @@ class BsFormHelper extends FormHelper {
  *
  * @var string
  */
-	public function _setFormType($val){
+	public function setFormType($val){
 		$this->_typeForm = $val;
 	}
 
@@ -127,9 +127,9 @@ class BsFormHelper extends FormHelper {
 
 		if (isset($options['class'])) {
 			if (is_integer(strpos($options['class'], 'form-horizontal'))){
-				$this->_setFormType('horizontal');
+				$this->setFormType('horizontal');
 			}elseif (is_integer(strpos($options['class'], 'form-inline'))) {
-				$this->_setFormType('inline');
+				$this->setFormType('inline');
 			}
 		}else{
 			$options['class'] = 'form-horizontal';
@@ -257,7 +257,7 @@ class BsFormHelper extends FormHelper {
 			}
 		}
 
-		return parent::input($fieldName, $options).$this->_setFormType($form_type).SP;
+		return parent::input($fieldName, $options).$this->setFormType($form_type).SP;
 
 
 	}
@@ -272,10 +272,12 @@ class BsFormHelper extends FormHelper {
  * - 'side'    - Which side the addon will be. Be default 'left'.
  * - 'state'   - Change bootstrap button state. Values : 'default', 'primary', 'secondary', 'warning', 'danger'.
  * - 'class'   - Add HTML class attribute.
- * - 'button'  - Define if the addon is a submit button. By default 'false'.
+ * - 'type'    - Change the type of the addon. Values : 'button', 'submit', 'image'.
+ * - 'src'	   - URL of the image, if 'type' = 'image'.
  *
- * @param array $addonOptions Array of options
- * @param array $options      Extends of BsFormHelper::input() so get same options
+ * @param string $fieldName    Extends of BsFormHelper::input()
+ * @param array  $addonOptions Array of options, see above for more informations
+ * @param mixed  $options      Extends of BsFormHelper::input() so get same options
  *
  * @return string Input-group de Bootstrap
  */
@@ -286,7 +288,7 @@ class BsFormHelper extends FormHelper {
 		$between .= '<div class="input-group">'. BL;
 
 		// Check if the addon is on the right
-		if (isset($addonOptions	['side']) && $addonOptions['side'] == 'right') {
+		if (isset($addonOptions['side']) && $addonOptions['side'] == 'right') {
 			$after = $this->_createAddon($addonOptions).'</div>'.'</div>'. BL;
 			unset($addonOptions['side']);
 		} else {
@@ -299,6 +301,7 @@ class BsFormHelper extends FormHelper {
 		$options['after'] = $after;
 		$options['before'] = null;
 		$options['div'] = false;
+		$options['label'] = false;
 
 		$out = $this->input($fieldName, $options);
 		return $out;
@@ -317,51 +320,43 @@ class BsFormHelper extends FormHelper {
 		if (is_array($options)) {
 
 			// Check if the span content is a button
-			if (isset($options['button'])) {
-				if ($options['button'] === true) {
-					$out = '<span class="input-group-btn">'. BL;
-					$out .= parent::button($options['content'], array('type' => 'submit', 'class' => 'btn btn-default')). BL;
+			if (isset($options['type'])) {
+
+				$buttonOptions = array();
+
+				if (isset($options['state'])) {
+					$state = 'btn btn-'.$options['state'];
 				} else {
-					$buttonOptions = $options['button'];
 					$state = 'btn btn-default';
+				}
 
-					if (isset($options['class'])) {
-						$options['class'] .= ' input-group-btn';
-					} else {
-						$options['class'] = 'input-group-btn';
-					}
+				$out = '<span class="input-group-btn">'. BL;
 
-					$out = '<span class="'.$options['class'].'">'. BL;
+				if (isset($options['class'])) {
+					$options['class'] .= ' '.$state;
+				} else {
+					$options['class'] = $state;
+				}
 
-					if (isset($buttonOptions['state'])) {
-						$state = 'btn btn-'.$buttonOptions['state'];
-						unset($buttonOptions['state']);
-					}
 
-					if (isset($buttonOptions['class'])) {
-						$buttonOptions['class'] .= ' '.$state;
-					} else {
-						$buttonOptions['class'] = $state;
-					}
-
-					if (!isset($buttonOptions['type'])) {
-						$buttonOptions['type'] = 'button';
-					}
-
-					if ($buttonOptions['type'] == 'submit') {
-						$buttonOptions['div'] = false;
-						$buttonOptions['escape'] = false;
-						$out .= parent::button($options['content'], $buttonOptions). BL;
-					} else {
-						$out .= parent::button($options['content'], $buttonOptions). BL;
-					}
+				$buttonOptions['div'] = false;
+				$buttonOptions['escape'] = false;
+				$buttonOptions['type'] = $options['type'];
+				$buttonOptions['class'] =  $options['class'];
+				if ($options['type'] == 'image') {
+					$buttonOptions['src'] = $options['src'];
+					$buttonOptions['type'] = 'image';
+					$buttonOptions['label'] = false;
+					$out .= parent::input($options['content'], $buttonOptions). BL;
+				} else {
+					$out .= parent::button($options['content'], $buttonOptions). BL;
 				}
 
 				$out .= '</span>'. BL;
 
 			} else {
 
-				if (isset($options['left']['class'])) {
+				if (isset($options['class'])) {
 					$options['class'] .= ' input-group-addon';
 				} else {
 					$options['class'] = 'input-group-addon';
@@ -372,6 +367,7 @@ class BsFormHelper extends FormHelper {
 		} else {
 			$out = '<span class="input-group-addon">'.$options.'</span>'. BL;
 		}
+
 		return $out;
 	}
 
@@ -407,12 +403,6 @@ class BsFormHelper extends FormHelper {
  * - 'class'
  * - 'label' - string and array
  *
- * ### labelOptions use two key
- *
- * - 'label' - Define the label content
- * - 'class' - Define the label class
- *
- *
  * ### In case of multiple checkboxes -> use the Bs3FormHelper::select()
  *
  * Some options are added
@@ -421,11 +411,16 @@ class BsFormHelper extends FormHelper {
  *
  * @param string $fieldName Name of a field, like this "Modelname.fieldname"
  * @param array $options Array of HTML attributes.
- * @param array $labelOptions Array of options
+ *
  * @return string An HTML text input element.
  */
 
 	public function checkbox($fieldName, $options = array()){
+
+		//----- [div] option
+		if (!isset($options['div'])) {
+			$options['div'] = false;
+		}
 
 		//----- [label]
 		if(isset($options['label'])) {
@@ -448,22 +443,21 @@ class BsFormHelper extends FormHelper {
 			$out .= '<div class="col-md-offset-'.$this->left.' col-md-'.$this->right.'">';
 		}
 
+		//----- [help] option for multiple checkboxes ([label] is an array)
+		if (isset($options['label']) && is_array($options['label']) && isset($options['label']['help']) && !empty($options['label']['help'])) {
+			$out .= '<span class="help-block">'.$options['label']['help'].'</span>';
+		}
+
 		//----- [inline] option
 		if (!(isset($options['inline']) && ($options['inline'] == 'inline' || $options['inline'] == true))) {
 			$out .= '<div class="checkbox">';
 			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options).' '.$label, $label_class);
-		}else{
-			if (isset($labelOptions['class']) and !is_array($labelOptions['class'])) {
-				$labelOptions['class'] .= ' checkbox-inline';
-			} else {
-				$labelOptions['class'] = 'checkbox-inline';
+		} else {
+			if (isset($label_class['class'])) {
+				$label= $label_class['class'].' checkbox-inline';
 			}
-			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options).' '.$label, $labelOptions);
-		}
 
-		//----- [help] option for multiple checkboxes ([label] is an array)
-		if (is_array($options['label']) && isset($options['label']['help']) && !empty($options['label']['help'])) {
-			$out .= '<span class="help-block">'.$options['label']['help'].'</span>';
+			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options).' '.$label, $label_class);
 		}
 
 		$out .= SP;
@@ -474,6 +468,7 @@ class BsFormHelper extends FormHelper {
 				$out .= '<span class="help-block">'.$options['help'].'</span>';
 			}
 			$out .= '</div></div></div>';
+		} else if ($this->_getFormType() == 'horizontal') {
 		}
 		return $out;
 	}
@@ -759,10 +754,10 @@ class BsFormHelper extends FormHelper {
 			}
 
 			$out = '<div class="form-group">';
-			$out .= '<label class="control-label col-md-3">'.$optionsDP['label'].'</label>';
+			$out .= '<label class="control-label col-md-'.$this->left.'">'.$optionsDP['label'].'</label>';
 			unset($optionsDP['label']);
 			$out .= '<div class="dp-container">';
-			$out .= '<div class=" col-md-9">';
+			$out .= '<div class=" col-md-'.$this->right.'">';
 			$out .= '<div class="input-daterange input-group" id="datepicker">';
 
 			$this->left= 0;
@@ -804,7 +799,6 @@ class BsFormHelper extends FormHelper {
     		$out .= '</div></div>';
 
 			$script .= '});';
-			debug($out);
 			$out.= '<script>'.$script.'</script>';
 
 		} else {
@@ -824,8 +818,6 @@ class BsFormHelper extends FormHelper {
 				date = date.toISOString().slice(0,19).replace(\'T\', " ");
 			    $(\'#alt_dp\').attr(\'value\', date);';
 			$script .= '});';
-
-			debug($out);
 			$out.= '<script>'.$script.'</script>';
 
 		}
