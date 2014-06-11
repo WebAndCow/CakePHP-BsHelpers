@@ -1,6 +1,6 @@
 <?php
 /**
- * 
+ *
  * Helper CakePHP to create Twitter Bootstrap elements
  * @author AWL
  *
@@ -8,7 +8,7 @@
 
 
 class BsHelper extends HtmlHelper {
-	
+
 
 /**
  * The name of the helper
@@ -33,8 +33,12 @@ class BsHelper extends HtmlHelper {
  * @var string
  */
 	public $pathCSS = 'bootstrap';
-	public $fa_path = '//netdna.bootstrapcdn.com/font-awesome/4.0.0/css/font-awesome.css';
+	public $fa_path = '//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css';
+
 	public $bs_addon_path = 'bs_addon';
+
+	// Load Bootstrap Datepicker
+	public $dp_css_path = 'datepicker';
 
 	// Load Font Awesome
 	public $fa_load = true;
@@ -49,14 +53,17 @@ class BsHelper extends HtmlHelper {
  * @var string
  */
 	public $pathJS = 'bootstrap.js';
-	
+
+	// Load Bootstrap Datepicker
+	public $dp_js_path = 'bootstrap-datepicker';
+
 /**
  * Path for JQuery
  *
  * @var string
  */
 	public $pathJquery = 'http://codeorigin.jquery.com/jquery-1.10.2.min.js';
-	
+
 
 
 
@@ -78,7 +85,7 @@ class BsHelper extends HtmlHelper {
  */
 
 	public function html($titre = '' , $description = '' , $lang = 'fr') {
-	
+
 		$out = '<!DOCTYPE html>' . BL;
 		$out .= '<html lang="'.$lang.'">' . BL;
 		$out .= '<head>' . BL;
@@ -86,7 +93,7 @@ class BsHelper extends HtmlHelper {
 		$out .= '<title>'.$titre.'</title>' . BL;
 		$out .= '<meta name="viewport" content="width=device-width, initial-scale=1.0">' . BL;
 		$out .= '<meta name="description" content="'.$description.'">' . BL;
-	
+
 		return $out;
 	}
 
@@ -101,31 +108,37 @@ class BsHelper extends HtmlHelper {
  */
 
 	public function html5($titre = '' , $description = '' , $lang = 'fr') {
-	
+
 		$out = $this->html($titre , $description , $lang);
-		
+
 		// Script JS for IE and HTML 5
 		$out .= '<!--[if lt IE 9]>' . BL;
 		$out .= '<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>' . BL;
 		$out .= '<![endif]-->' . BL;
-	
+
 		return $out;
 	}
-	
+
 
 /**
  * Close the head element and initialize the body element
  *
  * @return string
  */
-	
+
 	public function body($classBody = '') {
+
 		$out =  '</head>' . BL;
-		$out .= '<body ' . (empty($classBody)) ? '' : ' class="' . $classBody . '">' . BL;
+
+		if($classBody == '')
+		$out .= '<body>' . BL;
+		else
+		$out .= '<body class="'.$classBody.'">' . BL;
+
 		return $out;
 	}
-	
-	
+
+
 /**
  * Close the body element and the html element
  *
@@ -133,13 +146,13 @@ class BsHelper extends HtmlHelper {
  */
 
 	public function end() {
-		
+
 		$out =  '</body>' . BL;
 		$out .= '</html>';
-		
+
 		return $out;
 	}
-	
+
 
 /**
  * Load CSS for the current page
@@ -149,7 +162,7 @@ class BsHelper extends HtmlHelper {
  */
 
 	public function css($path = array(), $options = array()) {
-		
+
 		$out = parent::css($this->pathCSS). BL ;
 		if ($this->fa_load) {
 			$out .= parent::css($this->fa_path) . BL;
@@ -157,11 +170,14 @@ class BsHelper extends HtmlHelper {
 		if ($this->bs_addon_load) {
 			$out .= parent::css($this->bs_addon_path) . BL;
 		}
-		
+		if ($this->dp_css_path) {
+			$out .= parent::css($this->dp_css_path) . BL;
+		}
+
 		// Others CSS
 		foreach($path as $css)
 			$out .= parent::css($css, $options) . BL;
-			
+
 		return $out;
 	}
 
@@ -174,17 +190,18 @@ class BsHelper extends HtmlHelper {
  */
 
 	public function js($array_js = array()) {
-		
+
 		$out =  parent::script($this->pathJquery) . BL;
 		$out .= parent::script($this->pathJS) . BL;
-		
+		$out .= parent::script($this->dp_js_path). BL;
+
 		// Others JS
 		foreach($array_js as $js)
 			$out .= parent::script($js). BL;
-		
+
 		return $out;
 	}
-	
+
 /**
  * Close div elements
  *
@@ -240,7 +257,7 @@ class BsHelper extends HtmlHelper {
 		$out = '';
 		$class = CONTAINER;
 		if(isset($options['class']))
-			$class .= SP . $options['class'];		
+			$class .= SP . $options['class'];
 		$out .= parent::div($class , null, $options). BL;
 		return $out;
 	}
@@ -263,7 +280,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * Create a <div class="col"> element.
- * 
+ *
  * Differents layouts with options.
  *
  * ### Construction
@@ -289,7 +306,7 @@ class BsHelper extends HtmlHelper {
  *
  * @param string layout, size and options (offset, push and/or pull)
  * @param array $attributes Options of the div element
- * @return string DIV tag element 
+ * @return string DIV tag element
  */
 	public function col() {
 		$class = '';
@@ -316,7 +333,7 @@ class BsHelper extends HtmlHelper {
 			$device = str_replace($replace, '.', $device);
 			$device = explode('.', $device);
 
-			// Sould define the device in first 
+			// Sould define the device in first
 			foreach ($device as $elem) {
 				if (!$ecran) {
 					$nom = substr($elem, 0, 2);
@@ -371,7 +388,7 @@ class BsHelper extends HtmlHelper {
 				case 'ph':
 					return 'col-'.$screen.'-push-'.$size;
 					break;
-				
+
 				case 'of':
 					return 'col-'.$screen.'-offset-'.$size;
 					break;
@@ -423,20 +440,20 @@ class BsHelper extends HtmlHelper {
 
 	/**
 	* Initialize the table with the head and the body element.
-	* @param array $titles 'title' => title of the cell 
+	* @param array $titles 'title' => title of the cell
 	*					   'width' => width in percent of the cell
 	*					   'hidden' => layout
 	* @param array $class classes of the table (hover, striped, etc)
 	* @return string
 	*/
 	public function table($titles, $class = array()) {
-			
+
 		$classes = '';
 		$out = '<div class="table-responsive">';
 
 		if (!empty($class)) {
 			foreach ($class as $opt) {
-				$classes .= ' table-'.$opt;		
+				$classes .= ' table-'.$opt;
 			}
 		}
 
@@ -451,7 +468,7 @@ class BsHelper extends HtmlHelper {
 			$tablePos = 0;
 			$nbColumn = count($titles);
 			$width = false;
-				
+
 			foreach($titles as $title) {
 				$classVisibility = '';
 				if(isset($title['hidden'])) {
@@ -472,7 +489,7 @@ class BsHelper extends HtmlHelper {
 				$out .= $classVisibility.'">'.$title['title'].'</th>';
 				$tablePos ++;
 			}
-				
+
 			$out .= _TR;
 			$out .= '</thead>';
 			$out .= '<tbody>';
@@ -480,11 +497,11 @@ class BsHelper extends HtmlHelper {
 			$this->_nbColumn = $nbColumn - 1;
 			$this->_tableClassesCells = $tableClassesCells;
 			$this->_cellPos = 0;
-			$this->_openLine = 0; 
+			$this->_openLine = 0;
 		}
 		return $out;
 	}
-		
+
 
 	/**
 	* Create a cell (<td>)
@@ -498,10 +515,10 @@ class BsHelper extends HtmlHelper {
 		$out = '';
 		$classVisibility = '';
 		$cellPos = $this->_cellPos;
-			
+
 		if($cellPos == 0 && $this->_openLine == 0)
 			$out .= TR;
-				
+
 		$this->_openLine = 0;
 
 		if($this->_tableClassesCells[$cellPos])
@@ -511,9 +528,9 @@ class BsHelper extends HtmlHelper {
 			$out .= '<td class="'.$class.$classVisibility.'">';
 		else
 			$out .= TD;
-			
+
 		$out .= $content;
-			 
+
 		if($autoformat) {
 
 			$out .= _TD;
@@ -532,7 +549,7 @@ class BsHelper extends HtmlHelper {
 		}
 		return $out;
 	}
-		
+
 
 	/**
 	* Color a line (<tr>)
@@ -567,12 +584,45 @@ class BsHelper extends HtmlHelper {
 				*--------------------------*/
 
 
+/**
+ * Create a bootstrap alert element.
+ *
+ * @param string $text    Alert content
+ * @param string $state   Bootstrap state
+ * @param array  $options HTML attributes
+ *
+ * @return string
+ */
+	public function alert($text, $state, $options = array()) {
+
+		if (!isset($options['class'])) {
+			$options['class'] = 'alert alert-'.$state;
+		} else {
+			$options['class'] .= ' alert alert-'.$state;
+		}
+		if (!isset($options['dismiss']) or $options['dismiss'] == 'true') {
+			$dismiss = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
+		}
+		unset($options['dismiss']);
+		$out = '<div ';
+		foreach ($options as $key => $value) {
+			$out .= ' '.$key.'="'.$value.'"';
+		}
+		$out .= '>';
+		if (isset($dismiss)) {
+			$out .= $dismiss;
+		}
+		$out .= $text;
+		$out .= '</div>';
+		return $out;
+	}
+
 
 /**
  * Picture responsive
  *
  * Extends from HtmlHelper:image()
- *	
+ *
  * @param string $path Path to the image file, relative to the app/webroot/img/ directory.
  * @param array $options Array of HTML attributes. See above for special options.
  * @return string End tag header
@@ -612,8 +662,8 @@ class BsHelper extends HtmlHelper {
 			}
 		}
 
-		return '<i class="'.$this->fa_prefix.$iconLabel.$class.'"'.$more.'></i>';
-		
+		return '<i class="fa '.$this->fa_prefix.$iconLabel.$class.'"'.$more.'></i>';
+
 	}
 
 
@@ -662,16 +712,16 @@ class BsHelper extends HtmlHelper {
 		}
 	}
 
-	/**
-* Create a Bootstrap Modal
-* @param string $id the modal id
-* @param string $header the text in the header
-* @param string $body the content of the body
-* @param array $buttons informations about open, close and save buttons
-* @param array $options
-* @return string
+/**
+* Create a Bootstrap Modal.
+* @param string $header The text in the header
+* @param string $body The content of the body
+* @param array $buttons Informations about open, close and confirm buttons
+* @param array $options Used to add custom ID, class or a form into the modal
+* @return string Bootstrap modal
 */
-	public function modal($header, $body, $options = array(), $buttons = array()){
+	public function modal($header, $body, $options = array(), $buttons = array())
+	{
 
 		$classes = (isset($options['class'])) ? $options['class'] : '';
 		// Is it a form ?
@@ -686,7 +736,7 @@ class BsHelper extends HtmlHelper {
 			$cle1 = "zarnfjdlvjezprizejrjpzojazjpodffp";
 			$cle2 = "251848416487764197191944948794449";
 			$cle = '';
-			for ($i=0; $i < 15; $i++) { 
+			for ($i=0; $i < 15; $i++) {
 				$tab = array($cle1, $cle2);
 				if ($i == 0) {
 					$cle .= $cle1[rand(0, strlen($cle1)-1)];
@@ -699,98 +749,103 @@ class BsHelper extends HtmlHelper {
 			$id = $cle;
 		}
 
-		// Button
-			if (!empty($buttons)) {
-				if (isset($buttons['open']) && $buttons['open'] != '') {
-					if (is_array(($buttons['open']))){
+	// Create the open button
+		if (!empty($buttons)) {
+			if (isset($buttons['open']) && $buttons['open'] != '') {
+				if (is_array(($buttons['open']))){
+					// Create a simple font-awesome icon instead of a button
+					if (isset($buttons['open']['button']) && $buttons['open']['button'] === false) {
+						$out = $this->icon($buttons['open']['name'], array('open-modal'), array('data-toggle' => 'modal', 'data-target' => '#'.$id));
+					} else {
 						$out = $this->btn(__($buttons['open']['name']), null , array('tag' => 'button', 'class' => $buttons['open']['class'], 'data-toggle' => 'modal', 'data-target' => '#'.$id));
-					}else{
-						$out = $this->btn(__($buttons['open']), null , array('tag' => 'button', 'class' => 'btn-primary btn-lg', 'data-toggle' => 'modal', 'data-target' => '#'.$id));
 					}
 				}else{
-					$out = $this->btn(__('Voir'), null , array('tag' => 'button', 'class' => 'btn-primary btn-lg', 'data-toggle' => 'modal', 'data-target' => '#'.$id));
+					$out = $this->btn(__($buttons['open']), null , array('tag' => 'button', 'class' => 'btn-primary btn-lg', 'data-toggle' => 'modal', 'data-target' => '#'.$id));
 				}
 			}else{
 				$out = $this->btn(__('Voir'), null , array('tag' => 'button', 'class' => 'btn-primary btn-lg', 'data-toggle' => 'modal', 'data-target' => '#'.$id));
 			}
+		}else{
+			$out = $this->btn(__('Voir'), null , array('tag' => 'button', 'class' => 'btn-primary btn-lg', 'data-toggle' => 'modal', 'data-target' => '#'.$id));
+		}
 
-		// Modal
-			$out .= '<div class="modal fade '.$classes.'" id="'.$id.'" tabindex="-1" role="dialog" aria-labelledby="'.$id.'Label" aria-hidden="true">'.BL;
-			$out .= '<div class="modal-dialog">'.BL;
+	// Modal
+		$out .= '<div class="modal fade '.$classes.'" id="'.$id.'" tabindex="-1" role="dialog" aria-labelledby="'.$id.'Label" aria-hidden="true">'.BL;
+		$out .= '<div class="modal-dialog">'.BL;
 
-			// Content
-				$out .= '<div class="modal-content">'.BL;
+		// Content
+			$out .= '<div class="modal-content">'.BL;
 
-				if ($form) {
-					$close = strpos($body, '>');
-					$out .= substr($body, strpos($body, '<form'), $close+1).BL;
-					$body = substr($body, $close+1, strpos($body, '</form>')-($close+1));
-				}
+			if ($form) {
+				$close = strpos($body, '>');
+				$out .= substr($body, strpos($body, '<form'), $close+1).BL;
+				$body = substr($body, $close+1, strpos($body, '</form>')-($close+1));
+			}
 
-				// Header
-					$out .= '<div class="modal-header">'.BL;
-					$out .= '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'.BL;
-					$out .= '<h4 class="modal-title" id="'.$id.'Label">'.$header.'</h4>'.BL;
-					$out .= '</div>'.BL;
-				// End header
-
-				// Body
-					$out .= '<div class="modal-body">'.BL;
-					$out .= $body.BL;
-					$out .= '</div>'.BL;
-				// End body
-
-				// Footer
-					$out_footer = '';
-					if (!empty($buttons)) {
-						if (isset($buttons['close'])) {
-
-							// If the value of 'close' is an array (like 'close' => array('name' => 'Close') )
-							if (is_array(($buttons['close']))){
-								$out_footer .= $this->btn(__($buttons['close']['name']), null , array('tag' => 'button', 'class' => $buttons['close']['class'], 'data-dismiss' => 'modal'));
-							}else{
-								$out_footer .= $this->btn(__($buttons['close']), null , array('tag' => 'button', 'class' => 'btn-link', 'data-dismiss' => 'modal'));
-							}
-
-						// If 'close' index exist => create the button
-						}elseif(in_array('close', $buttons)){
-							$out_footer .= $this->btn(__('Fermer'), null , array('tag' => 'button', 'class' => 'btn-link', 'data-dismiss' => 'modal'));
-						}
-						if (isset($buttons['confirm'])) {
-
-							// Check if it's a form
-							if ($form) {
-								$class = (isset($buttons['confirm']['class'])) ? $buttons['confirm']['class'] : 'btn-success';
-								$out_footer .= $this->btn(__($buttons['confirm']['name']), null , array('tag' => 'button', 'class' => $class, 'type' => $type));
-							}else{
-								$class = (isset($buttons['confirm']['class'])) ? $buttons['confirm']['class'] : 'btn-success';
-								$out_footer .= $this->btn(__($buttons['confirm']['name']), $buttons['confirm']['link'] , array('class' => $class));
-							}
-
-						// If 'confirm' index exist => create the button
-						}elseif(in_array('confirm', $buttons)){
-							$out_footer .= $this->btn(__('Confirmer'), null , array('tag' => 'button', 'class' => 'btn-success', 'type' => $type));
-						}
-
-						if ($out_footer != '') {
-							$out .= '<div class="modal-footer">'.BL;
-							$out .= $out_footer.BL;
-							$out .= '</div>'.BL;	
-						}
-					}
-					$out .=  ($form) ? '</form>'.BL : '';
-				// End footer
-
+			// Header
+				$out .= '<div class="modal-header">'.BL;
+				$out .= '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'.BL;
+				$out .= '<h4 class="modal-title" id="'.$id.'Label">'.$header.'</h4>'.BL;
 				$out .= '</div>'.BL;
-			// End Content
+			// End header
+
+			// Body
+				$out .= '<div class="modal-body">'.BL;
+				$out .= $body.BL;
+				$out .= '</div>'.BL;
+			// End body
+
+			// Footer
+				$out_footer = '';
+				if (!empty($buttons)) {
+					if (isset($buttons['close'])) {
+
+						// If the value of 'close' is an array (like 'close' => array('name' => 'Close') )
+						if (is_array(($buttons['close']))){
+							$out_footer .= $this->btn(__($buttons['close']['name']), null , array('tag' => 'button', 'class' => $buttons['close']['class'], 'data-dismiss' => 'modal'));
+						}else{
+							$out_footer .= $this->btn(__($buttons['close']), null , array('tag' => 'button', 'class' => 'btn-link', 'data-dismiss' => 'modal'));
+						}
+
+					// If 'close' index exist => create the button
+					}elseif(in_array('close', $buttons)){
+						$out_footer .= $this->btn(__('Fermer'), null , array('tag' => 'button', 'class' => 'btn-link', 'data-dismiss' => 'modal'));
+					}
+					if (isset($buttons['confirm'])) {
+
+						// Check if it's a form
+						if ($form) {
+							$class = (isset($buttons['confirm']['class'])) ? $buttons['confirm']['class'] : 'btn-success';
+							$out_footer .= $this->btn(__($buttons['confirm']['name']), null , array('tag' => 'button', 'class' => $class, 'type' => $type));
+						}else{
+							$class = (isset($buttons['confirm']['class'])) ? $buttons['confirm']['class'] : 'btn-success';
+							$out_footer .= $this->btn(__($buttons['confirm']['name']), $buttons['confirm']['link'] , array('class' => $class));
+						}
+
+					// If 'confirm' index exist => create the button
+					}elseif(in_array('confirm', $buttons)){
+						$out_footer .= $this->btn(__('Confirmer'), null , array('tag' => 'button', 'class' => 'btn-success', 'type' => $type));
+					}
+
+					if ($out_footer != '') {
+						$out .= '<div class="modal-footer">'.BL;
+						$out .= $out_footer.BL;
+						$out .= '</div>'.BL;
+					}
+				}
+				$out .=  ($form) ? '</form>'.BL : '';
+			// End footer
 
 			$out .= '</div>'.BL;
-			$out .= '</div>'.BL;
-				       
+		// End Content
+
+		$out .= '</div>'.BL;
+		$out .= '</div>'.BL;
+
 		return $out;
 	}
 
-	
+
 /**
 * Create a button with a confirm like a Bootstrap Modal
 * @param string $button the name of the button, the header and the confirm button in the modal
