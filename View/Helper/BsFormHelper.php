@@ -226,7 +226,6 @@ class BsFormHelper extends FormHelper {
 
 		//----- [label] option
 		if (!isset($options['label'])) {
-			debug('hello there');
 			if ($this->_getFormType() == 'horizontal') {
 				$options['label'] = array('class' => 'control-label col-md-'.$this->left);
 			}else{
