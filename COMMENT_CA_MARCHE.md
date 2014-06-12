@@ -81,7 +81,7 @@ $fieldName : Voir $fieldName du BsFormHelper::input().
 $addonOptions : Tableau d'options caractérisant l'addon.
 $options :	Voir $options du BsFormHelper::input().
 
-		$this->BsForm->inputGroup('Field.name', array('content' => 'MonContenu'));
+		$this->BsForm->inputGroup('Model.field', array('content' => 'MonContenu'));
 
 Donnera :
 
@@ -95,12 +95,14 @@ Donnera :
 			</div>
 		</div>
 
-Pour avoir un bouton à la place de l'addon, il vous suffit d'ajouter, dans $addonOptions, l'index 'button' => 'true' pour un simple bouton, ou 'button' => array() pour un bouton personnalisé. Par défaut le bouton est de type 'submit'.
+Pour avoir un bouton à la place de l'addon, il vous suffit d'ajouter dans $addonOptions l'index 'type' => 'button' pour un simple bouton. De même, pour avoir un bouton submit ou une image utiliser les valeurs 'submit' et 'image'. Pour le type 'image', un attribut 'src' est nécéssaire pour indiquer l'URL de l'image.
 
-Ce qui donnera :
+	$this->BsForm->inputGroup('Model.field', array('content' => 'monContenu', 'type' => 'submit'), array('label' => 'monLabel'))
+
+Donnera :
 
 		<div class="form-group">
-			<label for="FieldName" class="control-label col-md-3">Name</label>
+			<label for="FieldName" class="control-label col-md-3">monLabel</label>
 			<div class="col-md-9">
 				<div class="input-group">
 					<span class="input-group-btn">
@@ -113,13 +115,13 @@ Ce qui donnera :
 
 Les options possibles pour l'addon/bouton sont :
 
-* 'content' : Définit le contenu de l'addon.
-* 'side'    : Définit de quel côté se situera l'addon.
-* 'class'   : Permet d'ajouter des classes à l'input.
-* 'button'  : Permet d'avoir un bouton à la place d'un addon. Plusieurs options lui sont associées :
-	* 'state' : Définit le type bootstrap du bouton. Valeurs possibles : 'default', 'primary', 'secondary', 'warning', 'danger'.
-	* 'type'  : Définit le type du bouton. Par défaut 'submit'.
-	* 'class' : Permet d'ajouter des classes au bouton.
+ * 'content' - The addon content.
+ * 'side'    - Which side the addon will be. Be default 'left'.
+ * 'class'   - Add HTML class attribute.
+ * 'type'    - Change the type of the addon. Values : 'button', 'submit', 'image'.
+ * 'state'   - Change bootstrap button state. Values : 'default', 'primary', 'secondary', 'warning', 'danger'.
+ * 'src'	 - URL of the image, if 'type' = 'image'.
+
 
 ---------------------------------------------------------------------------------------------------------------------------
 

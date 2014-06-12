@@ -226,12 +226,13 @@ class BsFormHelper extends FormHelper {
 
 		//----- [label] option
 		if (!isset($options['label'])) {
+			debug('hello there');
 			if ($this->_getFormType() == 'horizontal') {
 				$options['label'] = array('class' => 'control-label col-md-'.$this->left);
 			}else{
 				$options['label'] = array('class' => 'control-label sr-only');
 			}
-		} else {
+		} else if ($options['label'] != false) {
 			if (!is_array($options['label'])) {
 				$options['label'] = array('class' => 'control-label col-md-'.$this->left, 'text' => $options['label']);
 			}else{
@@ -266,13 +267,13 @@ class BsFormHelper extends FormHelper {
 /**
  * Generate a form input element with an addon or button on his side.
  *
- *  * ### Addon Options
+ *  ### Addon Options
  *
  * - 'content' - The addon content.
  * - 'side'    - Which side the addon will be. Be default 'left'.
- * - 'state'   - Change bootstrap button state. Values : 'default', 'primary', 'secondary', 'warning', 'danger'.
  * - 'class'   - Add HTML class attribute.
  * - 'type'    - Change the type of the addon. Values : 'button', 'submit', 'image'.
+ * - 'state'   - Change bootstrap button state. Values : 'default', 'primary', 'secondary', 'warning', 'danger'.
  * - 'src'	   - URL of the image, if 'type' = 'image'.
  *
  * @param string $fieldName    Extends of BsFormHelper::input()
@@ -299,9 +300,12 @@ class BsFormHelper extends FormHelper {
 		$after .= '</div>'. BL;
 		$options['between'] = $between;
 		$options['after'] = $after;
-		$options['before'] = null;
-		$options['div'] = false;
-		$options['label'] = false;
+		if (!isset($options['before']))
+			$options['before'] = null;
+		if (!isset($options['div']))
+			$options['div'] = false;
+		if (!isset($options['label']))
+			$options['label'] = false;
 
 		$out = $this->input($fieldName, $options);
 		return $out;
