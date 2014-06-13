@@ -84,7 +84,7 @@ class BsFormHelper extends FormHelper {
  *
  * @var string
  */
-	protected function _setFormType($val){
+	public function setFormType($val){
 		$this->_typeForm = $val;
 	}
 
@@ -127,9 +127,9 @@ class BsFormHelper extends FormHelper {
 
 		if (isset($options['class'])) {
 			if (is_integer(strpos($options['class'], 'form-horizontal'))){
-				$this->_setFormType('horizontal');
+				$this->setFormType('horizontal');
 			}elseif (is_integer(strpos($options['class'], 'form-inline'))) {
-				$this->_setFormType('inline');
+				$this->setFormType('inline');
 			}
 		}else{
 			$options['class'] = 'form-horizontal';
@@ -171,6 +171,20 @@ class BsFormHelper extends FormHelper {
  */
 	public function input($fieldName, $options = array()){
 
+		$form_type = $this->_getFormType();
+
+		if (isset($options['type']) and $options['type'] == 'date') {
+			$options['between'] = '<div class="col-md-'.$this->right.'">';
+			$options['after'] = '</div></div>';
+
+			$this->_setFormType('inline');
+			if (isset($options['class'])) {
+				$options['class'] .= ' input_date';
+			} else {
+				$options['class'] = 'input_date';
+			}
+		}
+
 		//----- [before], [state] and [after] options
 		if (!isset($options['before'])) {
 			if (isset($options['state'])) {
@@ -184,15 +198,15 @@ class BsFormHelper extends FormHelper {
 					case 'success':
 						$state = ' has-success';
 						break;
-					
+
 					default:
 						$state = '';
 						break;
 				}
 				$options['before'] = '<div class="form-group'.$state.'">';
 			}else{
-				$options['before'] = '<div class="form-group">'; 
-			}	
+				$options['before'] = '<div class="form-group">';
+			}
 			if (!isset($options['after'])) {
 				$options['after'] = '</div>';
 			}
@@ -217,7 +231,7 @@ class BsFormHelper extends FormHelper {
 			}else{
 				$options['label'] = array('class' => 'control-label sr-only');
 			}
-		}else{
+		} else if ($options['label'] != false) {
 			if (!is_array($options['label'])) {
 				$options['label'] = array('class' => 'control-label col-md-'.$this->left, 'text' => $options['label']);
 			}else{
@@ -231,8 +245,10 @@ class BsFormHelper extends FormHelper {
 
 		//----- [between], [after] and [help] options
 		if ($this->_getFormType() == 'horizontal') {
-			$options['between'] = '<div class="col-md-'.$this->right.'">';
-			if ($options['after'] == '</div>'){	
+			if (!isset($options['between'])) {
+				$options['between'] = '<div class="col-md-'.$this->right.'">';
+			}
+			if ($options['after'] == '</div>'){
 				if (isset($options['help']) && !empty($options['help'])) {
 					$options['after'] = '<span class="help-block">'.$options['help'].'</span></div></div>';
 				}else{
@@ -241,8 +257,125 @@ class BsFormHelper extends FormHelper {
 			}
 		}
 
-		return parent::input($fieldName, $options).SP;
+		return parent::input($fieldName, $options).$this->setFormType($form_type).SP;
+
+
 	}
+
+
+/**
+ * Generate a form input element with an addon or button on his side.
+ *
+ *  ### Addon Options
+ *
+ * - 'content' - The addon content.
+ * - 'side'    - Which side the addon will be. Be default 'left'.
+ * - 'class'   - Add HTML class attribute.
+ * - 'type'    - Change the type of the addon. Values : 'button', 'submit', 'image'.
+ * - 'state'   - Change bootstrap button state. Values : 'default', 'primary', 'secondary', 'warning', 'danger'.
+ * - 'src'	   - URL of the image, if 'type' = 'image'.
+ *
+ * @param string $fieldName    Extends of BsFormHelper::input()
+ * @param array  $addonOptions Array of options, see above for more informations
+ * @param mixed  $options      Extends of BsFormHelper::input() so get same options
+ *
+ * @return string Input-group de Bootstrap
+ */
+	public function inputGroup($fieldName, $addonOptions, $options = array())
+	{
+
+		$between = '<div class="col-md-'.$this->right.'">'. BL;
+		$between .= '<div class="input-group">'. BL;
+
+		// Check if the addon is on the right
+		if (isset($addonOptions['side']) && $addonOptions['side'] == 'right') {
+			$after = $this->_createAddon($addonOptions).'</div>'.'</div>'. BL;
+			unset($addonOptions['side']);
+		} else {
+			$between .= $this->_createAddon($addonOptions). BL;
+			$after = '</div>'.'</div>'. BL;
+		}
+
+		$after .= '</div>'. BL;
+		$options['between'] = $between;
+		$options['after'] = $after;
+		if (!isset($options['before']))
+			$options['before'] = null;
+		if (!isset($options['div']))
+			$options['div'] = false;
+		if (!isset($options['label']))
+			$options['label'] = false;
+
+		$out = $this->input($fieldName, $options);
+		return $out;
+	}
+
+
+	/**
+	 * Generate a span element for BsFormHelper::inputGroup() with his content.
+	 *
+	 * @param string/array $options Array of options
+	 *
+	 * @return string HTML <span> element
+	 */
+	private function _createAddon($options)
+	{
+		if (is_array($options)) {
+
+			// Check if the span content is a button
+			if (isset($options['type'])) {
+
+				$buttonOptions = array();
+
+				if (isset($options['state'])) {
+					$state = 'btn btn-'.$options['state'];
+				} else {
+					$state = 'btn btn-default';
+				}
+
+				$out = '<span class="input-group-btn">'. BL;
+
+				if (isset($options['class'])) {
+					$options['class'] .= ' '.$state;
+				} else {
+					$options['class'] = $state;
+				}
+
+
+				$buttonOptions['div'] = false;
+				$buttonOptions['escape'] = false;
+				$buttonOptions['type'] = $options['type'];
+				$buttonOptions['class'] =  $options['class'];
+				if ($options['type'] == 'image') {
+					$buttonOptions['src'] = $options['src'];
+					$buttonOptions['type'] = 'image';
+					$buttonOptions['label'] = false;
+					$out .= parent::input($options['content'], $buttonOptions). BL;
+				} else {
+					$out .= parent::button($options['content'], $buttonOptions). BL;
+				}
+
+				$out .= '</span>'. BL;
+
+			} else {
+
+				if (isset($options['class'])) {
+					$options['class'] .= ' input-group-addon';
+				} else {
+					$options['class'] = 'input-group-addon';
+				}
+
+				$out = '<span class="'.$options['class'].'">'.$options['content'].'</span>'. BL;
+			}
+		} else {
+			$out = '<span class="input-group-addon">'.$options.'</span>'. BL;
+		}
+
+		return $out;
+	}
+
+
+
 
 /**
  * Creates a checkbox input widget.
@@ -257,7 +390,7 @@ class BsFormHelper extends FormHelper {
  * - `help` - Add a message under the checkbox to give more informations
  *			  Use this option in an array with the label
  *			  Example : input('foo', array(
- *											'label' => 'name', 
+ *											'label' => 'name',
  *											'help' => 'informations'
  *										)
  *							);
@@ -281,6 +414,7 @@ class BsFormHelper extends FormHelper {
  *
  * @param string $fieldName Name of a field, like this "Modelname.fieldname"
  * @param array $options Array of HTML attributes.
+ *
  * @return string An HTML text input element.
  */
 
@@ -291,64 +425,54 @@ class BsFormHelper extends FormHelper {
 			$options['div'] = false;
 		}
 
-		//----- [label] option
-		if (!isset($options['label'])) {
-			$options['label'] = false;
+		//----- [label]
+		if(isset($options['label'])) {
+			$label = $options['label'];
+		} else {
+			$label = Inflector::camelize($fieldName);
+		}
+
+		//----- [label] class
+		if (isset($options['label-class'])) {
+			$label_class = array('class' => $options['label-class']);
+		} else {
+			$label_class = array();
 		}
 
 		$out = '';
 
-		if ($this->_getFormType() == 'horizontal') {
+		if ($this->_getFormType() == 'horizontal' && !isset($options['inline'])) {
 			$out .= '<div class="form-group">';
 			$out .= '<div class="col-md-offset-'.$this->left.' col-md-'.$this->right.'">';
 		}
 
-		//----- [inline] option
-		if (!(isset($options['inline']) && ($options['inline'] == 'inline' || $options['inline'] == true))) {
-			$out .= '<div class="checkbox">';
-			$out .= '<label>';
-		}else{
-			$out .= '<label class="checkbox-inline">';
-		}
-
-		$out .= parent::checkbox($fieldName, $options);
-
-		//----- [label] option
-		if ($options['label'] != false) {
-			// If options are array('label' => 'text')
-			if (is_array($options['label'])) {
-				$out .= ' '.$options['label']['label'];
-			}else{
-				$out .= ' '.$options['label'];
-			}
-		}else{
-			$out .= ' '.Inflector::camelize($fieldName);
-		}
-
-		$out .= '</label>';
-
-
-
 		//----- [help] option for multiple checkboxes ([label] is an array)
-		if (is_array($options['label']) && isset($options['label']['help']) && !empty($options['label']['help'])) {
+		if (isset($options['label']) && is_array($options['label']) && isset($options['label']['help']) && !empty($options['label']['help'])) {
 			$out .= '<span class="help-block">'.$options['label']['help'].'</span>';
 		}
 
 		//----- [inline] option
 		if (!(isset($options['inline']) && ($options['inline'] == 'inline' || $options['inline'] == true))) {
-			$out .= '</div>';
+			$out .= '<div class="checkbox">';
+			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options).' '.$label, $label_class);
+		} else {
+			if (isset($label_class['class'])) {
+				$label= $label_class['class'].' checkbox-inline';
+			}
+
+			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options).' '.$label, $label_class);
 		}
 
 		$out .= SP;
 
 		//----- [help] option for single checkbox
-		if ($this->_getFormType() == 'horizontal') {
+		if ($this->_getFormType() == 'horizontal' && !isset($options['inline'])) {
 			if (isset($options['help']) && !empty($options['help'])) {
 				$out .= '<span class="help-block">'.$options['help'].'</span>';
 			}
-			$out .= '</div></div>';
+			$out .= '</div></div></div>';
+		} else if ($this->_getFormType() == 'horizontal') {
 		}
-
 		return $out;
 	}
 
@@ -375,7 +499,7 @@ class BsFormHelper extends FormHelper {
 
 		$out = '';
 
-		// MULTIPLE CHECKBOX			
+		// MULTIPLE CHECKBOX
 		if ((isset($attributes['multiple']) && $attributes['multiple'] != 'checkbox') || !isset($attributes['multiple'])) {
 			if (!isset($attributes['class'])) {
 				$attributes['class'] = 'form-control';
@@ -557,7 +681,7 @@ class BsFormHelper extends FormHelper {
 			$out .= '<div class="form-group">';
 			$out .= '<div class="col-md-offset-'.$this->left.' col-md-'.$this->right.'">';
 		}
-		
+
 		//----- [div] option
 		if (!isset($options['div'])) {
 			$options['div'] = false;
@@ -572,7 +696,7 @@ class BsFormHelper extends FormHelper {
 		if (!isset($options['class'])) {
 			$options['class'] = 'btn btn-success';
 		}else{
-			if(is_integer(strpos($options['class'], 'btn-danger')) || is_integer(strpos($options['class'], 'btn-warning')) || is_integer(strpos($options['class'], 'btn-info'))){	
+			if(is_integer(strpos($options['class'], 'btn-danger')) || is_integer(strpos($options['class'], 'btn-warning')) || is_integer(strpos($options['class'], 'btn-info'))){
 				$options['class'] = 'btn '.$options['class'];
 			}else{
 				$options['class'] = 'btn '.$options['class'].' btn-success';
@@ -589,6 +713,150 @@ class BsFormHelper extends FormHelper {
 	}
 
 
+	/**
+	 * Create an input-datepicker element
+	 *
+	 * ### options datepicker
+	 * - format 		Input Date format.
+	 * - startview      Datepicker startview (days, months, years).
+	 * - orientation    Orientation of the datepicker window (top left, bottom right, ...).
+	 * - language       Datepicker langage (en, fr, ...).
+	 * - autoclose      True to close automaticly the window when you clic.
+	 * - ... and more at http://eternicode.github.io/bootstrap-datepicker/
+	 *
+	 * @param string $fieldName This should be "Modelname.fieldname"
+	 * @param array  $optionsDP Datepicker options.
+	 * @param array  $options   Each type of input takes different options
+	 *
+	 * @return string Input datepicker element
+	 */
+	public function datepicker($fieldName, $optionsDP = array(), $options = array())
+	{
+		// Set some default parameters
+		if (!isset($optionsDP['format'])) {
+			$optionsDP['format'] = 'dd/mm/yyyy';
+		}
+		if (!isset($optionsDP['language'])) {
+			$optionsDP['language'] = 'fr';
+		}
+
+		// If it's a datepicker range
+		if (is_array($fieldName)) {
+
+			$script = "$('.dp-container .input-daterange').datepicker({". BL;
+			$script .= $this->_scriptDP($optionsDP).'})'. BL;
+			$script .= '.on(\'changeDate\', function(){'. BL;
+
+			$_left = $this->left;
+
+			if (!isset($optionsDP['addon'])) {
+				$optionsDP['addon'] = 'à';
+			}
+			if (!isset($optionsDP['label'])) {
+				$optionsDP['label'] = '';
+			}
+
+			$out = '<div class="form-group">';
+			$out .= '<label class="control-label col-md-'.$this->left.'">'.$optionsDP['label'].'</label>';
+			unset($optionsDP['label']);
+			$out .= '<div class="dp-container">';
+			$out .= '<div class=" col-md-'.$this->right.'">';
+			$out .= '<div class="input-daterange input-group" id="datepicker">';
+
+			$this->left= 0;
+
+			foreach ($fieldName as $key => $field) {
+				if($key == 1){
+					$out .= '<span class="input-group-addon">'.$optionsDP['addon'].'</span>'. BL;
+					unset($optionsDP['addon']);
+				}
+
+				$options[$field]['label'] = false;
+				$options[$field]['before'] = '';
+    			$options[$field]['between'] = '';
+				$options[$field]['after'] = '';
+
+				if (isset($options[$field])) {
+					$out .= $this->input($field, $options[$field]). BL;
+				}else{
+					$out .= $this->input($field, $options). BL;
+				}
+				$options[$field]['type'] = 'hidden';
+    			$options[$field]['id'] = 'alt_dp_'.$key;
+
+    			if (isset($options[$field])) {
+					$out .= $this->input($field, $options[$field]). BL;
+				}else{
+					$out .= $this->input($field, $options). BL;
+				}
+
+				$script .= 'var date_'.$key.' = $(\'#'.parent::domId($field).'\').datepicker(\'getDate\');
+				date_'.$key.'.setHours(0, -date_'.$key.'.getTimezoneOffset(), 0, 0);
+				date_'.$key.' = date_'.$key.'.toISOString().slice(0,19).replace(\'T\', " ");
+			    $(\'#alt_dp_'.$key.'\').attr(\'value\', date_'.$key.');';
+
+			}
+
+    		$this->left = $_left;
+    		$out.= '</div></div>';
+    		$out .= '</div></div>';
+
+			$script .= '});';
+			$out.= '<script>'.$script.'</script>';
+
+		} else {
+			$out = '<div class="dp-container">'. BL;
+			$out .= $this->input($fieldName, $options). BL;
+			$options['id'] = 'alt_dp';
+			$options['type'] = 'hidden';
+			$out .= $this->input($fieldName, $options). BL;
+			$out .= '</div>'. BL;
+
+			$script = "$('.dp-container input').datepicker({". BL;
+			$script .= $this->_scriptDP($optionsDP).'})'. BL;
+
+			$script .= '.on(\'changeDate\', function(){
+				var date = $(\'#'.parent::domId($fieldName).'\').datepicker(\'getDate\');
+				date.setHours(0, -date.getTimezoneOffset(), 0, 0);
+				date = date.toISOString().slice(0,19).replace(\'T\', " ");
+			    $(\'#alt_dp\').attr(\'value\', date);';
+			$script .= '});';
+			$out.= '<script>'.$script.'</script>';
+
+		}
+		return $out;
+	}
+
+
+/**
+ * Create a datepicker script body.
+ *
+ * @param array $options $optionsDP from $this->datepicker()
+ *
+ * @return string Formated script body
+ */
+	private function _scriptDP($options)
+	{
+		$script = '';
+		foreach ($options as $key => $value) {
+			if (is_bool($value)) {
+				if ($value === true) {
+					$script .= $key.' : true,'. BL;
+				} else {
+					$script .= $key.' : false,'. BL;
+				}
+			} else {
+				if (is_int($value) or is_bool($value)) {
+					$script .= $key.' : '.$value.','. BL;
+				} else {
+					$script .= $key.' : "'.$value.'",'. BL;
+				}
+			}
+		}
+		return $script;
+	}
+
+
 /**
  * Closes an HTML form, cleans up values set by Bs3FormHelper::create(), and writes hidden
  * input fields where appropriate.
@@ -597,7 +865,7 @@ class BsFormHelper extends FormHelper {
  * @return string a closing FORM tag optional submit button.
  */
 
-	public function end($options = null){
-		return parent::end($options);
+	public function end($options = null, $secureAttributes = array()){
+		return parent::end($options, $secureAttributes);
 	}
 }
