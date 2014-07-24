@@ -2,6 +2,7 @@
 
 App::uses('View', 'View');
 App::uses('BsFormHelper', 'BsHelpers.View/Helper');
+App::uses('FormHelper', 'View/Helper');
 
 class BsFormHelperTest extends CakeTestCase {
 
