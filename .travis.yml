@@ -13,20 +13,6 @@ env:
     - DB=mysql CAKE_VERSION=2.4
     - DB=mysql CAKE_VERSION=2.5
 
-matrix:
-  include:
-    - php: 5.3
-      env:
-        - PHPCS=0
-  include:
-    - php: 5.4
-      env:
-        - PHPCS=0
-  include:
-    - php: 5.5
-      env:
-        - PHPCS=0
-
 before_script:
   - git clone https://github.com/FriendsOfCake/travis.git --depth 1 ../travis
   - ../travis/before_script.sh
