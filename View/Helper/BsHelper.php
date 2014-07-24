@@ -1,5 +1,8 @@
 <?php
 
+App::uses('HtmlHelper', 'View/Helper');
+App::uses('Inflector', 'Utility');
+
 /**
  *
  * Helper CakePHP to create Twitter Bootstrap elements
