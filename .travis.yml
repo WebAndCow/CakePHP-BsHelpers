@@ -1,7 +1,5 @@
 language: php
 
-language: php
-
 php:
   - 5.3
   - 5.4
@@ -20,17 +18,14 @@ matrix:
     - php: 5.3
       env:
         - PHPCS=0
-        - COVERALLS=1
   include:
     - php: 5.4
       env:
         - PHPCS=0
-        - COVERALLS=1
   include:
     - php: 5.5
       env:
         - PHPCS=0
-        - COVERALLS=1
 
 before_script:
   - git clone https://github.com/FriendsOfCake/travis.git --depth 1 ../travis
