@@ -1,0 +1,34 @@
+language: php
+
+php:
+    - 5.3
+    - 5.4
+    - 5.5
+
+env:
+    - CAKE_VERSION=master
+
+before_script:
+    - git clone --depth 1 --branch $CAKE_VERSION git://github.com/cakephp/cakephp ../cake && cd ../cake
+    - mv ../CakePHP-Bootstrap-3-FormHelper/View/Helper/BsHelper.php app/View/Helper/BsHelper.php
+    - mv ../CakePHP-Bootstrap-3-FormHelper/View/Helper/BsFormHelper.php app/View/Helper/BsFormHelper.php
+    - mv ../CakePHP-Bootstrap-3-FormHelper/Test/Case/View/Helper/BsHelperTest.php app/Test/Case/View/Helper/BsHelperTest.php
+    - mv ../CakePHP-Bootstrap-3-FormHelper/Test/Case/View/Helper/BsFormHelperTest.php app/Test/Case/View/Helper/BsFormHelperTest.php
+    - sh -c "if [ '$TRAVIS_PHP_VERSION' != '5.2' ]; then composer global require 'phpunit/phpunit=3.7.33'; fi"
+    - sh -c "if [ '$TRAVIS_PHP_VERSION' != '5.2' ]; then ln -s ~/.composer/vendor/phpunit/phpunit/PHPUnit ./vendors/PHPUnit; fi"
+    - sh -c "mysql -e 'CREATE DATABASE cakephp_test;'"
+    - echo "<?php
+        class DATABASE_CONFIG {
+        public \$test = array(
+          'persistent' => false,
+          'host' => '',
+          'login' => '',
+          'password' => '',
+          'database' => 'cakephp_test',
+          'prefix' => ''
+        );
+        }" > ../cake/app/Config/database.php
+
+script:
+    - ./lib/Cake/Console/cake test app View/Helper/BsHelper --stderr
+    - ./lib/Cake/Console/cake test app View/Helper/BsFormHelper --stderr
