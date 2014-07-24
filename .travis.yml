@@ -1,34 +1,47 @@
 language: php
 
+language: php
+
 php:
-    - 5.3
-    - 5.4
-    - 5.5
+  - 5.3
+  - 5.4
+  - 5.5
 
 env:
-    - CAKE_VERSION=master
+  global:
+    - PLUGIN_NAME=BsHelpers
+
+  matrix:
+    - DB=mysql CAKE_VERSION=2.4
+    - DB=mysql CAKE_VERSION=2.5
+
+matrix:
+  include:
+    - php: 5.3
+      env:
+        - PHPCS=0
+        - COVERALLS=1
+  include:
+    - php: 5.4
+      env:
+        - PHPCS=0
+        - COVERALLS=1
+  include:
+    - php: 5.5
+      env:
+        - PHPCS=0
+        - COVERALLS=1
 
 before_script:
-    - git clone --depth 1 --branch $CAKE_VERSION git://github.com/cakephp/cakephp ../cake && cd ../cake
-    - mv ../CakePHP-Bootstrap-3-FormHelper/View/Helper/BsHelper.php app/View/Helper/BsHelper.php
-    - mv ../CakePHP-Bootstrap-3-FormHelper/View/Helper/BsFormHelper.php app/View/Helper/BsFormHelper.php
-    - mv ../CakePHP-Bootstrap-3-FormHelper/Test/Case/View/Helper/BsHelperTest.php app/Test/Case/View/Helper/BsHelperTest.php
-    - mv ../CakePHP-Bootstrap-3-FormHelper/Test/Case/View/Helper/BsFormHelperTest.php app/Test/Case/View/Helper/BsFormHelperTest.php
-    - sh -c "if [ '$TRAVIS_PHP_VERSION' != '5.2' ]; then composer global require 'phpunit/phpunit=3.7.33'; fi"
-    - sh -c "if [ '$TRAVIS_PHP_VERSION' != '5.2' ]; then ln -s ~/.composer/vendor/phpunit/phpunit/PHPUnit ./vendors/PHPUnit; fi"
-    - sh -c "mysql -e 'CREATE DATABASE cakephp_test;'"
-    - echo "<?php
-        class DATABASE_CONFIG {
-        public \$test = array(
-          'persistent' => false,
-          'host' => '',
-          'login' => '',
-          'password' => '',
-          'database' => 'cakephp_test',
-          'prefix' => ''
-        );
-        }" > ../cake/app/Config/database.php
+  - git clone https://github.com/FriendsOfCake/travis.git --depth 1 ../travis
+  - ../travis/before_script.sh
+  - sh -c "if [ '$TRAVIS_PHP_VERSION' != '5.2' ]; then ln -s ~/.composer/vendor/phpunit/phpunit/PHPUnit ../cakephp/vendors/PHPUnit; fi"
 
 script:
-    - ./lib/Cake/Console/cake test app View/Helper/BsHelper --stderr
-    - ./lib/Cake/Console/cake test app View/Helper/BsFormHelper --stderr
+  - ../travis/script.sh
+
+after_success:
+  - ../travis/after_success.sh
+
+notifications:
+  email: false
