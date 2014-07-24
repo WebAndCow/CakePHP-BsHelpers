@@ -29,14 +29,14 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $pathCSS = '../bower_components/twitter/dist/css/bootstrap.min';
+	public $pathCSS = '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css';
 
 /**
  * Path for Font Awesome
  *
  * @var string
  */
-	public $faPath = '../bower_components/fontawesome/css/font-awesome.min';
+	public $faPath = '//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css';
 
 /**
  * Path for Bootstrap addon
@@ -68,14 +68,14 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $pathJS = '../bower_components/twitter/dist/js/bootstrap.min';
+	public $pathJS = '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js';
 
 /**
  * Path for JQuery
  *
  * @var string
  */
-	public $pathJquery = '../bower_components/jquery/dist/jquery.min';
+	public $pathJquery = 'http://code.jquery.com/jquery-1.11.1.min.js';
 
 				/*--------------------------*
 				*						    *
