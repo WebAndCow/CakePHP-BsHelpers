@@ -1,8 +1,6 @@
 <?php
 
 App::uses('View', 'View');
-App::uses('AppHelper', 'View/Helper');
-App::uses('FormHelper', 'View/Helper');
 App::uses('BsFormHelper', 'BsHelpers.View/Helper');
 
 class BsFormHelperTest extends CakeTestCase {
