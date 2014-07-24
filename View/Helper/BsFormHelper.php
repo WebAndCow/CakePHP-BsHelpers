@@ -1,5 +1,8 @@
 <?php
 
+App::uses('FormHelper', 'View/Helper');
+App::uses('Set', 'Utility');
+
 /**
  *
  * Helper CakePHP pour créer des éléments formulaires du Bootstrap Twitter version 3
