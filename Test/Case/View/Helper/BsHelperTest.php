@@ -1,10 +1,7 @@
 <?php
 App::uses('View', 'View');
-App::uses('Helper', 'View');
 App::uses('BsHelper', 'BsHelpers.View/Helper');
 App::uses('BsFormHelper', 'BsHelpers.View/Helper');
-App::uses('HtmlHelper', 'View/Helper');
-App::uses('FormHelper', 'View/Helper');
 
 /**
  * BsHelper Test Case
