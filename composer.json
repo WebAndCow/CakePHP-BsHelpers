@@ -7,7 +7,7 @@
         "bootstrap",
         "twitter"
     ],
-    "homepage": "http://github.com/WebAndCow/CakePHP-BsHelpers",
+    "homepage": "https://github.com/WebAndCow/CakePHP-Bootstrap-3-FormHelper",
     "license": "MIT",
     "authors": [
         {
@@ -16,15 +16,12 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/WebAndCow/CakePHP-BsHelpers/issues",
-        "source": "https://github.com/WebAndCow/CakePHP-BsHelpers"
+        "issues": "https://github.com/WebAndCow/CakePHP-Bootstrap-3-FormHelper/issues",
+        "source": "https://github.com/WebAndCow/CakePHP-Bootstrap-3-FormHelper"
     },
     "require": {
         "php": ">=5.3.0",
         "composer/installers": "*"
-    },
-    "extra": {
-        "installer-name": "BsHelpers"
     },
     "suggest": {
         "twbs/bootstrap": "Bootstrap framework"
