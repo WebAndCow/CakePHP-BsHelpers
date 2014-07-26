@@ -12,6 +12,20 @@ class BsFormHelperTest extends CakeTestCase {
 	    $this->BsForm = new BsFormHelper($View);
     }
 
+    public function testSetLeft()
+    {
+    	$result = $this->BsForm->setLeft(3);
+
+		$this->assertEquals(3, $this->BsForm->getLeft());
+    }
+
+    public function testSetRight()
+    {
+    	$result = $this->BsForm->setRight(3);
+
+		$this->assertEquals(3, $this->BsForm->getRight());
+    }
+
 /**
  * Create function
  * @return void
@@ -78,6 +92,54 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 
+		////////////////
+		// WITH LABEL //
+		////////////////
+
+    	$result = $this->BsForm->input('Name', array('label' => 'Other Name'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+				array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'Other Name', '/label',
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+					array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
+				'/div',
+			'/div'
+		);
+		$this->assertTags($result, $expected);
+
+		//////////////////////
+		// WITH LABEL ARRAY //
+		//////////////////////
+
+    	$result = $this->BsForm->input('Name', array('label' => array('text' => 'Other Name', 'class' => 'labelClass')));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+				array('label' => array('for', 'class' => 'labelClass control-label col-md-'.$this->BsForm->getLeft())), 'Other Name', '/label',
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+					array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
+				'/div',
+			'/div'
+		);
+		$this->assertTags($result, $expected);
+
+		////////////////////////////////////////////////
+		// WITH LABEL ARRAY AND NO CLASS ON THE LABEL //
+		////////////////////////////////////////////////
+
+    	$result = $this->BsForm->input('Name', array('label' => array('text' => 'Other Name')));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+				array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'Other Name', '/label',
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+					array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
+				'/div',
+			'/div'
+		);
+		$this->assertTags($result, $expected);
+
 		///////////////////
 		// WITHOUT LABEL //
 		///////////////////
@@ -89,6 +151,23 @@ class BsFormHelperTest extends CakeTestCase {
 				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-'.$this->BsForm->getLeft())),
 					array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
 				'/div',
+			'/div'
+		);
+		$this->assertTags($result, $expected);
+
+		/////////////////
+		// FORM-INLINE //
+		/////////////////
+
+		$this->BsForm->create('Model', array('class' => 'form-inline'));
+    	$result = $this->BsForm->input('Name');
+    	$this->BsForm->end();
+    	$this->BsForm->setFormType('horizontal');
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+				array('label' => array('for', 'class' => 'control-label sr-only')), 'Name', '/label',
+				array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
 			'/div'
 		);
 		$this->assertTags($result, $expected);
@@ -126,6 +205,54 @@ class BsFormHelperTest extends CakeTestCase {
 					array('span' => array('class' => 'help-block')),
 						'this is a warning',
 					'/span',
+				'/div',
+			'/div'
+		);
+		$this->assertTags($result, $expected);
+
+		//////////////////
+    	// STATE SUCESS //
+	    //////////////////
+
+    	$result = $this->BsForm->input('Name', array('state' => 'success'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group has-success')),
+				array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'Name', '/label',
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+					array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
+				'/div',
+			'/div'
+		);
+		$this->assertTags($result, $expected);
+
+		/////////////////
+    	// STATE ERROR //
+	    /////////////////
+
+    	$result = $this->BsForm->input('Name', array('state' => 'error'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group has-error')),
+				array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'Name', '/label',
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+					array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
+				'/div',
+			'/div'
+		);
+		$this->assertTags($result, $expected);
+
+		/////////////////
+    	// WRONG STATE //
+	    /////////////////
+
+    	$result = $this->BsForm->input('Name', array('state' => 'nostate'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+				array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'Name', '/label',
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+					array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
 				'/div',
 			'/div'
 		);
@@ -169,9 +296,42 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 
-		////////////////////
-		// INPUT DATETIME //
-		////////////////////
+		///////////////////////////
+		// INPUT DATE WITH CLASS //
+		///////////////////////////
+
+		$result = $this->BsForm->input('Date', array('type' => 'date', 'class' => 'classTest'));
+ 
+		$now = strtotime('now');
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+				array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'Date', '/label',
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+					array('select' => array('name', 'class' => 'classTest input_date form-control', 'id')),
+						$monthsRegex,
+						array('option' => array('value' => date('m', $now), 'selected' => 'selected')),
+							date('F', $now),
+						'/option',
+					'*/select',
+					'-',
+					array('select' => array('name', 'class' => 'classTest input_date form-control', 'id')),
+						$daysRegex,
+						array('option' => array('value' => date('d', $now), 'selected' => 'selected')),
+							date('j', $now),
+						'/option',
+					'*/select',
+					'-',
+					array('select' => array('name', 'class' => 'classTest input_date form-control', 'id')),
+						$yearsRegex,
+						array('option' => array('value' => date('Y', $now), 'selected' => 'selected')),
+							date('Y', $now),
+						'/option',
+					'*/select',
+				'/div',
+			'/div'
+		);
+		$this->assertTags($result, $expected);
 
 
     }

@@ -218,22 +218,9 @@ class BsFormHelper extends FormHelper {
 
 		//----- [before], [state] and [after] options
 		if (!isset($options['before'])) {
+			$states = array('error', 'warning', 'success');
 			if ($state) {
-				switch ($state) {
-					case 'error':
-						$state = ' has-error';
-						break;
-					case 'warning':
-						$state = ' has-warning';
-						break;
-					case 'success':
-						$state = ' has-success';
-						break;
-
-					default:
-						$state = '';
-						break;
-				}
+				$state = (in_array($state, $states)) ? ' has-' . $state : '';
 				$options['before'] = '<div class="form-group' . $state . '">';
 			} else {
 				$options['before'] = '<div class="form-group">';
