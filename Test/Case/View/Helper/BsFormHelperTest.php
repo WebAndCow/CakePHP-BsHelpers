@@ -195,13 +195,13 @@ class BsFormHelperTest extends CakeTestCase {
     	// TEST HELP //
 	    ///////////////
 
-    	$result = $this->BsForm->input('Name', array('help' => 'this is a warning', 'state' => 'warning', 'id' => false));
+    	$result = $this->BsForm->input('Name', array('help' => 'this is a warning', 'state' => 'warning', 'id' => false, 'class' => 'classTest'));
 
 		$expected = array(
 			array('div' => array('class' => 'form-group has-warning')),
 				array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'Name', '/label',
 				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
-					array('input' => array('name', 'class' => 'form-control', 'type')),
+					array('input' => array('name', 'class' => 'classTest form-control', 'type')),
 					array('span' => array('class' => 'help-block')),
 						'this is a warning',
 					'/span',
@@ -539,8 +539,6 @@ class BsFormHelperTest extends CakeTestCase {
 	    $result = $this->BsForm->checkbox('Test');
 	    $this->BsForm->end();
 
-	    // rajouter une fermeture de /div pour la première div
-
 	    $expected = array(
 	    	array('div' => array('class' => 'checkbox')),
 	    		array('label' => array('for')),
@@ -551,8 +549,6 @@ class BsFormHelperTest extends CakeTestCase {
 	    	'/div'
 	    );
 
-		$this->assertTags($result, $expected);
-
     	/////////////////////////
     	// CHECKBOX HORIZONTAL //
 	    /////////////////////////
@@ -560,8 +556,6 @@ class BsFormHelperTest extends CakeTestCase {
 	    $this->BsForm->create('Model', array('class' => 'form-horizontal'));
 	    $result = $this->BsForm->checkbox('Test');
 	    $this->BsForm->end();
-
-	    // Enlever un espace en trop entre la fermeture du label et la fermeture de la 3eme div
 
 	    $expected = array(
 	    	array('div' => array('class' => 'form-group')),
@@ -767,6 +761,39 @@ class BsFormHelperTest extends CakeTestCase {
 	    );
 
 		$this->assertTags($result, $expected);
+
+		//////////////////////
+    	// RADIO WITH LABEL //
+	    //////////////////////
+
+		// $result = $this->BsForm->radio('Test', $radioOptions, array('label' => 'My radio buttons'));
+		// // '<div class="form-group"><label class="control-label col-md-3">My radio buttons</label><div class="col-md-9"><div class="radio"><label><input type="hidden" name="data[Test]" id="Test_" value=""/>
+		// // <input type="radio" name="data[Test]" id="TestFirst" value="first" /><label for="TestFirst">Test1</label></label></div><div class="radio"><label><input type="radio" name="data[Test]" id="TestSecond" value="second" /><label for="TestSecond">Test2</label></label></div></div></div>'
+
+		// // Enlever les <label for> avant Test1 et les  </label> après (regexp ?)
+
+		// $expected = array(
+	 //    	array('div' => array('class' => 'form-group')),
+	 //    		array('label' => array('class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'My radio buttons', '/label',
+	 //    		array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+	 //    			array('div' => array('class' => 'radio')),
+	 //    				'<label',
+		//     				array('input' => array('type' => 'hidden', 'name', 'value' => '', 'id')),
+		// 		    		array('input' => array('type' => 'radio', 'name', 'value' => 'first', 'id')),
+		// 	    			'Test1',
+		// 	    		'/label',
+		// 	    	'/div',
+		// 	    	array('div' => array('class' => 'radio')),
+	 //    				'<label',
+		// 		    		array('input' => array('type' => 'radio', 'name', 'value' => 'second', 'id')),
+		// 	    			'Test2',
+		// 	    		'/label',
+		// 	    	'/div',
+	 //    		'/div',
+	 //    	'/div'
+	 //    );
+
+		// $this->assertTags($result, $expected);
     }
 
     public function testRadioInline($value='')
@@ -795,6 +822,38 @@ class BsFormHelperTest extends CakeTestCase {
     			'Test2',
     		'/label',
 	    );
+
+		$this->assertTags($result, $expected);
+    }
+
+    public function testDatepicker()
+    {
+	    ///////////////////////
+    	// SIMPLE DATEPICKER //
+	    ///////////////////////
+
+    	$result = $this->BsForm->datepicker('Test');
+
+    	$expected = array(
+			array('div' => array('class' => 'dp-container')),
+				array('div' => array('class' => 'form-group')),
+					array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())),
+						'Test',
+					'/label',
+					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+						array('input' => array('type', 'name', 'class' => 'form-control', 'id')),
+					'/div',
+				'/div',	
+				array('input' => array('type' => 'hidden', 'name', 'class' => 'form-control', 'id')),
+			'/div',
+			'<script',
+				'$(\'.dp-container input\').datepicker({format : "dd/mm/yyyy",language : "fr",}).on(\'changeDate\', function() {
+				var date = $(\'#Test\').datepicker(\'getDate\');
+				date.setHours(0, -date.getTimezoneOffset(), 0, 0);
+				date = date.toISOString().slice(0,19).replace(\'T\', " ");
+				$(\'#alt_dp\').attr(\'value\', date);});',
+			'/script'
+    	);
 
 		$this->assertTags($result, $expected);
     }
