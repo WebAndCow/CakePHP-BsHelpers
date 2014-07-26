@@ -65,7 +65,9 @@ class BsHelperTest extends CakeTestCase {
 
 	public function testHtml5()
 	{
-		$result = $this->Bs->html('my title', 'my description', 'en');
+		$result = $this->Bs->html5('my title', 'my description', 'en');
+
+		// I don't know actually how to test the html comment return
 
 		$expected = array(
 			'<!DOCTYPE html',
@@ -74,7 +76,7 @@ class BsHelperTest extends CakeTestCase {
 			array('meta' => array('charset' => 'utf-8')),
 			'<title', 'my title', '/title',
 			array('meta' => array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1.0')),
-			array('meta' => array('name' => 'description', 'content' => 'my description'))
+			array('meta' => array('name' => 'description', 'content' => 'my description')),
 		);
 
 		$this->assertTags($result, $expected);
