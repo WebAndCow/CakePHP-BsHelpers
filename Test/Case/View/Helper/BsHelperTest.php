@@ -135,8 +135,26 @@ class BsHelperTest extends CakeTestCase {
 		//////////////
 
 		$result = $this->Bs->css(array('myCss.css', 'myOther'));
-
+		
 		$expected = array(
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => '/css/myCss.css')),
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => '/css/myOther.css'))
+		);
+
+		$this->assertTags($result, $expected);
+
+		/////////////////////////
+		// WITH DATEPICKER CSS //
+		/////////////////////////
+
+		$this->Bs->dpLoad = true;
+		$result = $this->Bs->css(array('myCss.css', 'myOther'));
+		
+		$expected = array(
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
@@ -157,6 +175,23 @@ class BsHelperTest extends CakeTestCase {
 
 		$expected = array(
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
+			array('script' => array('type' => 'text/javascript', 'src')), '/script'
+		);
+
+		$this->assertTags($result, $expected);
+	}
+
+	public function testJsDatepicker()
+	{
+		////////////////////////
+		// WITH DATEPICKER JS //
+		////////////////////////
+
+		$this->Bs->dpLoad = true;
+		$result = $this->Bs->js();
+
+		$expected = array(
+			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script'
 		);
@@ -173,7 +208,6 @@ class BsHelperTest extends CakeTestCase {
 		$result = $this->Bs->js(array('myJs', 'myOther'));
 
 		$expected = array(
-			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src' => '/js/myJs.js')), '/script',

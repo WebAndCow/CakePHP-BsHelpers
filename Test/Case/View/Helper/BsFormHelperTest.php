@@ -693,6 +693,24 @@ class BsFormHelperTest extends CakeTestCase {
 	    );
 
 		$this->assertTags($result, $expected);
+
+		///////////////////
+		// OTHER OPTIONS //
+		///////////////////
+
+		$this->BsForm->create('Model', array('class' => 'form-horizontal'));
+		$result = $this->BsForm->submit('Send', array('class' => 'classTest'));
+	    $this->BsForm->end();
+
+	    $expected = array(
+	    	array('div' => array('class' => 'form-group')),
+	    		array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
+	    			array('input' => array('class' => 'btn classTest btn-success', 'type' => 'submit', 'value')),
+	    		'/div',
+	    	'/div'
+	    );
+
+		$this->assertTags($result, $expected);
     }
 
 /**

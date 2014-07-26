@@ -208,10 +208,6 @@ class BsFormHelper extends FormHelper {
 
 		// Dans le cas d'un input de type date ou datetime
 		if ($date) {
-			// $options['between'] = '<div class="col-md-' . $this->__right;
-			// $options['between'] .= ($options['label'] == false) ? ' col-md-offset-' . $this->__left : '';
-			// $options['after'] = '</div></div>';
-
 			$this->setFormType('inline');
 			if (isset($options['class'])) {
 				$options['class'] .= ' input_date';
