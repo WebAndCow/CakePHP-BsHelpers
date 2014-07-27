@@ -756,7 +756,7 @@ class BsFormHelper extends FormHelper {
 			if (!isset($optionsDP['label'])) {
 				$out .= '<div class="dp-container">';
 				$out .= '<div class="col-md-' . $this->__right . ' col-md-offset-' . $this->__left . '">';
-			}else{
+			} else {
 				$out .= '<label class="control-label col-md-' . $this->__left . '">' . $optionsDP['label'] . '</label>';
 				unset($optionsDP['label']);
 				$out .= '<div class="dp-container">';
