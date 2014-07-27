@@ -301,7 +301,7 @@ class BsFormHelper extends FormHelper {
  * @return string Input-group de Bootstrap
  */
 	public function inputGroup($fieldName, $addonOptions, $options = array()) {
-		$between = '<div class="col-md-' . $this->__right . ' col-md-offset-'.$this->__left.'">';
+		$between = '<div class="col-md-' . $this->__right . ' col-md-offset-' . $this->__left . '">';
 		$between .= '<div class="input-group">';
 
 		// Check if the addon is on the right
@@ -755,7 +755,7 @@ class BsFormHelper extends FormHelper {
 			}
 			if (!isset($optionsDP['label'])) {
 				$out .= '<div class="dp-container">';
-				$out .= '<div class="col-md-' . $this->__right . ' col-md-offset-'.$this->__left.'">';
+				$out .= '<div class="col-md-' . $this->__right . ' col-md-offset-' . $this->__left . '">';
 			}else{
 				$out .= '<label class="control-label col-md-' . $this->__left . '">' . $optionsDP['label'] . '</label>';
 				unset($optionsDP['label']);

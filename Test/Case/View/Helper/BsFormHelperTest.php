@@ -337,8 +337,12 @@ class BsFormHelperTest extends CakeTestCase {
     }
 
 
-    public function testInputGroupSimple()
+    public function testInputGroup()
     {
+	    ///////////////////////
+    	// SIMPLE INPUTGROUP //
+	    ///////////////////////
+
     	$result = $this->BsForm->inputGroup('Test', array('content' => 'Simple'));
 
 		$expected = array(
@@ -347,6 +351,63 @@ class BsFormHelperTest extends CakeTestCase {
 					array('div' => array('class' => 'input-group')),
 						array('span' => array('class' => 'input-group-addon')),
 							'Simple',
+						'/span',
+						array('input' => array('name', 'type', 'id', 'class' => 'form-control')),
+					'/div',
+				'/div',
+			'/div'
+		);
+
+    	$this->assertTags($result, $expected);
+
+    	/////////////////////////////
+    	// WITH DIFFERENTS OPTIONS //
+	    /////////////////////////////
+
+    	$result = $this->BsForm->inputGroup('Test', array('content' => 'Simple', 'side' => 'right', 'type' => 'submit', 'state' => 'warning', 'class' => 'classTest'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-'.$this->BsForm->getLeft())),
+					array('div' => array('class' => 'input-group')),
+						array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
+						array('span' => array('class' => 'input-group-btn')),
+							array('button' => array('type' => 'submit', 'class' => 'classTest btn btn-warning')),
+								'Simple',
+							'/button',
+						'/span',
+					'/div',
+				'/div',
+			'/div'
+		);
+
+    	$this->assertTags($result, $expected);
+
+    	$result = $this->BsForm->inputGroup('Test', array('content' => 'Simple', 'class' => 'classTest'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-'.$this->BsForm->getLeft())),
+					array('div' => array('class' => 'input-group')),
+						array('span' => array('class' => 'classTest input-group-addon')),
+							'Simple',
+						'/span',
+						array('input' => array('name', 'type', 'id', 'class' => 'form-control')),
+					'/div',
+				'/div',
+			'/div'
+		);
+
+    	$this->assertTags($result, $expected);
+
+    	$result = $this->BsForm->inputGroup('Test', array('content' => 'Simple', 'type' => 'image', 'src' => 'http://myimage.com'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-'.$this->BsForm->getLeft())),
+					array('div' => array('class' => 'input-group')),
+						array('span' => array('class' => 'input-group-btn')),
+							array('input' => array('name', 'type' => 'image', 'id', 'class' => 'btn btn-default', 'src' => 'http://myimage.com')),
 						'/span',
 						array('input' => array('name', 'type', 'id', 'class' => 'form-control')),
 					'/div',
@@ -773,12 +834,44 @@ class BsFormHelperTest extends CakeTestCase {
     	// DATEPICKER RANGE //
 	    //////////////////////
 
-    	$result = $this->BsForm->datepicker(array('Test1', 'Test2'), array('autoclose' => true, 'todayHighlight' => false, 'daysOfWeekDisabled' => 3));
+    	$result = $this->BsForm->datepicker(array('Test1', 'Test2'), array('label' => 'Label', 'autoclose' => true, 'todayHighlight' => false, 'daysOfWeekDisabled' => 3));
+
+    	$expected = array(
+    		array('div' => array('class' => 'form-group')),
+    			array('label' => array('class' => 'control-label col-md-' . $this->BsForm->getLeft())), 'Label', '/label',
+				array('div' => array('class' => 'dp-container')),
+					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+						array('div' => array('class' => 'input-daterange input-group', 'id' => 'datepicker')),
+							array('input' => array('type', 'name', 'class' => 'form-control', 'id')),
+							array('input' => array('type' => 'hidden', 'name', 'class' => 'form-control', 'id')),
+							array('span' => array('class' => 'input-group-addon')),
+								'à',
+							'/span',
+							array('input' => array('type', 'name', 'class' => 'form-control', 'id')),
+							array('input' => array('type' => 'hidden', 'name', 'class' => 'form-control', 'id')),
+						'/div',
+					'/div',	
+				'/div',
+			'/div',
+			'<script',
+				'$(\'.dp-container .input-daterange\').datepicker({label : "Label",autoclose : true,todayHighlight : false,daysOfWeekDisabled : 3,format : "dd/mm/yyyy",language : "fr",}).on(\'changeDate\', function() {var date_0 = $(\'#Test1\').datepicker(\'getDate\');
+				date_0.setHours(0, -date_0.getTimezoneOffset(), 0, 0);
+				date_0 = date_0.toISOString().slice(0,19).replace(\'T\', " ");
+				$(\'#alt_dp_0\').attr(\'value\', date_0);var date_1 = $(\'#Test2\').datepicker(\'getDate\');
+				date_1.setHours(0, -date_1.getTimezoneOffset(), 0, 0);
+				date_1 = date_1.toISOString().slice(0,19).replace(\'T\', " ");
+				$(\'#alt_dp_1\').attr(\'value\', date_1);});',
+			'/script'
+    	);
+
+		$this->assertTags($result, $expected);
+
+		$result = $this->BsForm->datepicker(array('Test1', 'Test2'), array('autoclose' => true, 'todayHighlight' => false, 'daysOfWeekDisabled' => 3));
 
     	$expected = array(
     		array('div' => array('class' => 'form-group')),
 				array('div' => array('class' => 'dp-container')),
-					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-'.$this->BsForm->getLeft())),
+					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-' . $this->BsForm->getLeft())),
 						array('div' => array('class' => 'input-daterange input-group', 'id' => 'datepicker')),
 							array('input' => array('type', 'name', 'class' => 'form-control', 'id')),
 							array('input' => array('type' => 'hidden', 'name', 'class' => 'form-control', 'id')),
