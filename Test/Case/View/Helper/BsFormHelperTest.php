@@ -337,35 +337,25 @@ class BsFormHelperTest extends CakeTestCase {
     }
 
 
-    /////////////////////////////////
-	    // BsFormHelper::inputGroup()  //
-	    /////////////////////////////////
+    public function testInputGroupSimple()
+    {
+    	$result = $this->BsForm->inputGroup('Test', array('content' => 'Simple'));
 
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-'.$this->BsForm->getLeft())),
+					array('div' => array('class' => 'input-group')),
+						array('span' => array('class' => 'input-group-addon')),
+							'Simple',
+						'/span',
+						array('input' => array('name', 'type', 'id', 'class' => 'form-control')),
+					'/div',
+				'/div',
+			'/div'
+		);
 
-	  //   public function testInputGroupSimple()
-	  //   {
-	  //   	$result = $this->BsForm->inputGroup('User.test', array('content' => 'Simple'));
-
-			// $expected = array(
-			// 	array("div" => array("class" => "form-group")),
-			// 	array("div" => array("class" => "col-md-9")),
-			// 	array("div" => array("class" => "input-group")),
-			// 	array("span" => array("class" => "input-group-addon")),
-			// 	"Simple",
-			// 	"/span",
-			// 	"input" => array(
-			// 		"name" => "data[User][test]",
-			// 		"type" => "text",
-			// 		"id" => "UserTest",
-			// 		"class" => "form-control"
-			// 	),
-			// 	"/div",
-			// 	"/div",
-			// 	"/div"
-			// );
-
-	  //   	$this->assertTags($result, $expected);
-	  //   }
+    	$this->assertTags($result, $expected);
+    }
 
 	  //   public function testInputGroupWithLabel()
 	  //   {
@@ -450,84 +440,6 @@ class BsFormHelperTest extends CakeTestCase {
 
 	  //   	$this->assertTags($result, $expected);
 	  //   }
-
-
-	    /////////////////////////////////
-	    // BsFormHelper::datepicker()  //
-	    /////////////////////////////////
-
-	    // public function testDatepickerSimple()
-	    // {
-	    // 	$result = $this->BsForm->datepicker('Date.test');
-	    // 	$expected = array(
-	    // 			array("div" => array("class" => "dp-container")),
-	    // 			array("div" => array("class" => "form-group")),
-	    // 			"label" => array("for" => "DateTest", "class" => "control-label col-md-3"),
-	    // 			"Test",
-	    // 			"/label",
-	    // 			array("div" => array("class" => "col-md-9")),
-	    // 			array("input" => array(
-	    // 				"class" => "form-control", "name" => "data[Date][test]", "type" => "text"
-	    // 			)),
-	    // 			"/div",
-	    // 			"/div",
-	    // 			array("input" => array(
-	    // 				"type" => "hidden", "name" => "data[Date][test]", "id" => "alt_dp", "class" => "form-control"
-	    // 			)),
-	    // 			"/div"
-	    // 	);
-
-	    // 	$this->assertTags($result, $expected);
-	    // }
-
-	    // public function testDatepickerRange()
-	    // {
-	    // 	$result = $this->BsForm->datepicker(array('Date.start', 'Field.end'), array('label' => 'Date'));
-
-	    // 	$expected = array(
-	    // 			array("div" => array("class" => "form-group")),
-	    // 			"label" => array("class" => "control-label col-md-3"),
-	    // 			"Date",
-	    // 			"/label",
-	    // 			array("div" => array("class" => "dp-container")),
-	    // 			array("div" => array("class" => "col-md-9")),
-	    // 			array("div" => array("class" => "input-daterange input-group", "id" => "datepicker")),
-	    // 			array("input" => array(
-	    // 				"class" => "form-control", "name" => "data[Date][start]", "type" => "text", "id" => "DateStart"
-	    // 			)),
-	    // 			array("input" => array(
-	    // 				"type" => "hidden", "name" => "data[Date][start]", "id" => "alt_dp_0", "class" => "form-control"
-	    // 			)),
-	    // 			"span" => array("class" => "input-group-addon"),
-	    // 			"à",
-	    // 			"/span",
-	    // 			array("input" => array(
-	    // 				"class" => "form-control", "name" => "data[Date][end]", "type" => "text", "id" => "DateEnd"
-	    // 			)),
-	    // 			array("input" => array(
-	    // 				"type" => "hidden", "name" => "data[Date][end]", "id" => "alt_dp_1", "class" => "form-control"
-	    // 			)),
-	    // 			"/div",
-	    // 			"/div",
-	    // 			array("input" => array(
-	    // 				"type" => "hidden", "name" => "data[Date][test]", "id" => "alt_dp", "class" => "form-control"
-	    // 			)),
-	    // 			"/div",
-	    // 			"/div",
-	    // 			"/div",
-	    // 			"/div"
-	    // 	);
-
-	    // 	$this->assertTags($result, $expected);
-	    // }
-
-	    // public function testDatepickerSimpleScript()
-	    // {
-	    // 	$result = $this->BsForm->datepicker('Date.test');
-
-	    // 	$this->assertContains("format : dd/mm/yyyy", $result);
-	    // 	$this->assertContains("language : fr", $result);
-	    // }
 
     public function testCheckbox()
     {
@@ -852,6 +764,41 @@ class BsFormHelperTest extends CakeTestCase {
 				date.setHours(0, -date.getTimezoneOffset(), 0, 0);
 				date = date.toISOString().slice(0,19).replace(\'T\', " ");
 				$(\'#alt_dp\').attr(\'value\', date);});',
+			'/script'
+    	);
+
+		$this->assertTags($result, $expected);
+
+		//////////////////////
+    	// DATEPICKER RANGE //
+	    //////////////////////
+
+    	$result = $this->BsForm->datepicker(array('Test1', 'Test2'), array('autoclose' => true, 'todayHighlight' => false, 'daysOfWeekDisabled' => 3));
+
+    	$expected = array(
+    		array('div' => array('class' => 'form-group')),
+				array('div' => array('class' => 'dp-container')),
+					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-'.$this->BsForm->getLeft())),
+						array('div' => array('class' => 'input-daterange input-group', 'id' => 'datepicker')),
+							array('input' => array('type', 'name', 'class' => 'form-control', 'id')),
+							array('input' => array('type' => 'hidden', 'name', 'class' => 'form-control', 'id')),
+							array('span' => array('class' => 'input-group-addon')),
+								'à',
+							'/span',
+							array('input' => array('type', 'name', 'class' => 'form-control', 'id')),
+							array('input' => array('type' => 'hidden', 'name', 'class' => 'form-control', 'id')),
+						'/div',
+					'/div',	
+				'/div',
+			'/div',
+			'<script',
+				'$(\'.dp-container .input-daterange\').datepicker({autoclose : true,todayHighlight : false,daysOfWeekDisabled : 3,format : "dd/mm/yyyy",language : "fr",}).on(\'changeDate\', function() {var date_0 = $(\'#Test1\').datepicker(\'getDate\');
+				date_0.setHours(0, -date_0.getTimezoneOffset(), 0, 0);
+				date_0 = date_0.toISOString().slice(0,19).replace(\'T\', " ");
+				$(\'#alt_dp_0\').attr(\'value\', date_0);var date_1 = $(\'#Test2\').datepicker(\'getDate\');
+				date_1.setHours(0, -date_1.getTimezoneOffset(), 0, 0);
+				date_1 = date_1.toISOString().slice(0,19).replace(\'T\', " ");
+				$(\'#alt_dp_1\').attr(\'value\', date_1);});',
 			'/script'
     	);
 
