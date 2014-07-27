@@ -63,6 +63,25 @@ class BsHelperTest extends CakeTestCase {
 		$this->assertTags($result, $expected);
 	}
 
+	public function testHtml5()
+	{
+		$result = $this->Bs->html5('my title', 'my description', 'en');
+
+		// I don't know actually how to test the html comment return
+
+		$expected = array(
+			'<!DOCTYPE html',
+			array('html' => array('lang' => 'en')),
+			'<head',
+			array('meta' => array('charset' => 'utf-8')),
+			'<title', 'my title', '/title',
+			array('meta' => array('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1.0')),
+			array('meta' => array('name' => 'description', 'content' => 'my description')),
+		);
+
+		$this->assertTags($result, $expected);
+	}
+
 	public function testBody()
 	{
 		///////////////////
@@ -116,8 +135,26 @@ class BsHelperTest extends CakeTestCase {
 		//////////////
 
 		$result = $this->Bs->css(array('myCss.css', 'myOther'));
-
+		
 		$expected = array(
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => '/css/myCss.css')),
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => '/css/myOther.css'))
+		);
+
+		$this->assertTags($result, $expected);
+
+		/////////////////////////
+		// WITH DATEPICKER CSS //
+		/////////////////////////
+
+		$this->Bs->dpLoad = true;
+		$result = $this->Bs->css(array('myCss.css', 'myOther'));
+		
+		$expected = array(
+			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
@@ -138,6 +175,23 @@ class BsHelperTest extends CakeTestCase {
 
 		$expected = array(
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
+			array('script' => array('type' => 'text/javascript', 'src')), '/script'
+		);
+
+		$this->assertTags($result, $expected);
+	}
+
+	public function testJsDatepicker()
+	{
+		////////////////////////
+		// WITH DATEPICKER JS //
+		////////////////////////
+
+		$this->Bs->dpLoad = true;
+		$result = $this->Bs->js();
+
+		$expected = array(
+			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script'
 		);
@@ -154,7 +208,6 @@ class BsHelperTest extends CakeTestCase {
 		$result = $this->Bs->js(array('myJs', 'myOther'));
 
 		$expected = array(
-			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src' => '/js/myJs.js')), '/script',
@@ -265,12 +318,26 @@ class BsHelperTest extends CakeTestCase {
 
 	public function testCol()
 	{
-		$result = $this->Bs->col('xs12', 'sm3 of1', 'md2 pl2', 'lg4 ph9', array('id' => 'idTest', 'class' => 'classeTest'));
+		$result = $this->Bs->col('xs12', 'sm3 of1', 'md2 pl2', 'lg4 ph9 of2', array('id' => 'idTest', 'class' => 'classeTest'));
 
 		$expected = array(
 			array('div' => array(
 				'id' => 'idTest',
-				'class' => 'col-xs-12 col-sm-3 col-sm-offset-1 col-md-2 col-md-pull-2 col-lg-4 col-lg-push-9 classeTest')
+				'class' => 'col-xs-12 col-sm-3 col-sm-offset-1 col-md-2 col-md-pull-2 col-lg-4 col-lg-push-9 col-lg-offset-2 classeTest')
+			)
+		);
+
+		$this->assertTags($result, $expected);
+
+		///////////////////////
+		// WITH WRONG PARAMS //
+		///////////////////////
+
+		$result = $this->Bs->col('xs12 md-3', 'sm3 or2');
+
+		$expected = array(
+			array('div' => array(
+				'class' => 'col-xs-12 col-sm-3')
 			)
 		);
 
@@ -346,6 +413,8 @@ class BsHelperTest extends CakeTestCase {
 		$result = $this->Bs->cell('Test1').
 				  $this->Bs->cell('Test2');
 
+		$this->Bs->endTable();
+
 		$expected = array(
 			'<tr',
 				array('td' => array('class' => 'hidden-xs')),
@@ -363,8 +432,10 @@ class BsHelperTest extends CakeTestCase {
 		// WITH OPTIONS //
 		//////////////////
 
+		$this->Bs->table($titles);
 		$result = $this->Bs->cell('Test1', 'classTest').
 				  $this->Bs->cell('Test2', '', false);
+		$this->Bs->endTable();
 
 		$expected = array(
 			'<tr',
@@ -373,6 +444,25 @@ class BsHelperTest extends CakeTestCase {
 				'/td',
 				'<td',
 					'Test2'
+		);
+
+		$this->assertTags($result, $expected);
+
+		$this->Bs->table($titles);
+		$result = $this->Bs->cell('Test1', 'classTest', false).
+				  $this->Bs->cell('Test2', '', false).
+				  $this->Bs->cell('Test3', '', false);
+		$this->Bs->endTable();
+
+		$expected = array(
+			'<tr',
+				array('td' => array('class' => 'classTest hidden-xs')),
+					'Test1',
+				'<td',
+					'Test2',
+			'<tr',
+				array('td' => array('class' => 'hidden-xs')),
+					'Test3',
 		);
 
 		$this->assertTags($result, $expected);
@@ -661,6 +751,155 @@ class BsHelperTest extends CakeTestCase {
 		);
 
 		$this->assertTags($result, $expected);
+
+		///////////////////////////////
+		// MODAL WITH CUSTOM BUTTONS //
+		///////////////////////////////
+
+		$buttons = array(
+			'open' => 'Open'
+		);
+		$result = $this->Bs->modal('Modal title', 'Modal content', array(), $buttons);
+
+		$expected = array(
+			array('button' => array('class' => 'btn btn-primary btn-lg', 'data-target', 'data-toggle' => 'modal')), 'Open', '/button',
+			array('div' => array('class' => 'modal fade ', 'id', 'tabindex', 'role', 'aria-labelledby', 'aria-hidden')),
+				array('div' => array('class' => 'modal-dialog')),
+					array('div' => array('class' => 'modal-content')),
+						array('div' => array('class' => 'modal-header')),
+							array('button' => array('type', 'class' => 'close', 'data-dismiss' => 'modal', 'aria-hidden' => 'true')), '&times;', '/button',
+							array('h4' => array('class' => 'modal-title', 'id')), 'Modal title', '/h4',
+						'/div',
+						array('div' => array('class' => 'modal-body')),
+							'<p',
+								'Modal content',
+							'/p',
+						'/div',
+					'/div',
+				'/div',
+			'/div'
+		);
+
+		$this->assertTags($result, $expected);
+
+		$buttons = array(
+			'open' => array('button' => false, 'name' => 'users'),
+			'close' => 'Close'
+		);
+		$result = $this->Bs->modal('Modal title', 'Modal content', array(), $buttons);
+
+		$expected = array(
+			array('i' => array('class' => 'fa fa-users fa-open-modal', 'data-target', 'data-toggle' => 'modal')), '/i',
+			array('div' => array('class' => 'modal fade ', 'id', 'tabindex', 'role', 'aria-labelledby', 'aria-hidden')),
+				array('div' => array('class' => 'modal-dialog')),
+					array('div' => array('class' => 'modal-content')),
+						array('div' => array('class' => 'modal-header')),
+							array('button' => array('type', 'class' => 'close', 'data-dismiss' => 'modal', 'aria-hidden' => 'true')), '&times;', '/button',
+							array('h4' => array('class' => 'modal-title', 'id')), 'Modal title', '/h4',
+						'/div',
+						array('div' => array('class' => 'modal-body')),
+							'<p',
+								'Modal content',
+							'/p',
+						'/div',
+						array('div' => array('class' => 'modal-footer')),
+							array('button' => array('class' => 'btn btn-link', 'data-dismiss' => 'modal')),
+								'Close',
+							'/button',
+						'/div',
+					'/div',
+				'/div',
+			'/div'
+		);
+
+		$this->assertTags($result, $expected);
+
+		$buttons = array(
+			'close' => array('name' => 'Close', 'class' => 'closeClass'),
+			'confirm'
+		);
+
+		$result = $this->Bs->modal('Modal title', 'Modal content', array(), $buttons);
+
+		$expected = array(
+			array('button' => array('class' => 'btn btn-primary btn-lg', 'data-target', 'data-toggle' => 'modal')), 'Voir', '/button',
+			array('div' => array('class' => 'modal fade ', 'id', 'tabindex', 'role', 'aria-labelledby', 'aria-hidden')),
+				array('div' => array('class' => 'modal-dialog')),
+					array('div' => array('class' => 'modal-content')),
+						array('div' => array('class' => 'modal-header')),
+							array('button' => array('type', 'class' => 'close', 'data-dismiss' => 'modal', 'aria-hidden' => 'true')), '&times;', '/button',
+							array('h4' => array('class' => 'modal-title', 'id')), 'Modal title', '/h4',
+						'/div',
+						array('div' => array('class' => 'modal-body')),
+							'<p',
+								'Modal content',
+							'/p',
+						'/div',
+						array('div' => array('class' => 'modal-footer')),
+							array('button' => array('class' => 'btn closeClass', 'data-dismiss' => 'modal')),
+								'Close',
+							'/button',
+							array('button' => array('class' => 'btn btn-button btn-success')),
+								'Confirmer',
+							'/button',
+						'/div',
+					'/div',
+				'/div',
+			'/div'
+		);
+
+		$this->assertTags($result, $expected);
+
+		//////////////////////////////////////
+		// SPECIAL CASE : FORM WITH CONFIRM //
+		//////////////////////////////////////
+
+		$options = array(
+			'form' => true
+		);
+		$buttons = array(
+			'confirm' => array('name' => 'Confirm', 'class' => 'confirmClass')
+		);
+
+		$body = $this->BsForm->create('myModel' , array('action' => 'myAction'));
+		$body .= $this->BsForm->input('myField');
+		$body .= $this->BsForm->end();
+
+		$result = $this->Bs->modal('Modal title', $body, $options, $buttons);
+
+		$expected = array(
+			array('button' => array('class' => 'btn btn-primary btn-lg', 'data-target', 'data-toggle' => 'modal')), 'Voir', '/button',
+			array('div' => array('class' => 'modal fade ', 'id', 'tabindex', 'role', 'aria-labelledby', 'aria-hidden')),
+				array('div' => array('class' => 'modal-dialog')),
+					array('div' => array('class' => 'modal-content')),
+						array('form' => array('action' => '/my_models/myAction', 'role' => 'form', 'class' => 'form-horizontal', 'id', 'method' => 'post', 'accept-charset')),
+							array('div' => array('class' => 'modal-header')),
+								array('button' => array('type', 'class' => 'close', 'data-dismiss' => 'modal', 'aria-hidden' => 'true')), '&times;', '/button',
+								array('h4' => array('class' => 'modal-title', 'id')), 'Modal title', '/h4',
+							'/div',
+							array('div' => array('class' => 'modal-body')),
+								array('div' => array('style' => 'display:none;')),
+									array('input' => array('type' => 'hidden', 'name', 'value')),
+								'/div',
+								array('div' => array('class' => 'form-group')),
+									array('label' => array('for', 'class' => 'control-label col-md-3')), 'My Field' ,'/label',
+									array('div' => array('class' => 'col-md-9')),
+										array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
+									'/div',
+								'/div',
+							'/div',
+							array('div' => array('class' => 'modal-footer')),
+								array('button' => array('class' => 'btn btn-submit confirmClass')),
+									'Confirm',
+								'/button',
+							'/div',
+						'/form',
+					'/div',
+				'/div',
+			'/div'
+		);
+
+		$this->assertTags($result, $expected);	
 	}
 
 	public function testConfirm()

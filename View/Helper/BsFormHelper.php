@@ -208,10 +208,6 @@ class BsFormHelper extends FormHelper {
 
 		// Dans le cas d'un input de type date ou datetime
 		if ($date) {
-			// $options['between'] = '<div class="col-md-' . $this->__right;
-			// $options['between'] .= ($options['label'] == false) ? ' col-md-offset-' . $this->__left : '';
-			// $options['after'] = '</div></div>';
-
 			$this->setFormType('inline');
 			if (isset($options['class'])) {
 				$options['class'] .= ' input_date';
@@ -222,22 +218,9 @@ class BsFormHelper extends FormHelper {
 
 		//----- [before], [state] and [after] options
 		if (!isset($options['before'])) {
+			$states = array('error', 'warning', 'success');
 			if ($state) {
-				switch ($state) {
-					case 'error':
-						$state = ' has-error';
-						break;
-					case 'warning':
-						$state = ' has-warning';
-						break;
-					case 'success':
-						$state = ' has-success';
-						break;
-
-					default:
-						$state = '';
-						break;
-				}
+				$state = (in_array($state, $states)) ? ' has-' . $state : '';
 				$options['before'] = '<div class="form-group' . $state . '">';
 			} else {
 				$options['before'] = '<div class="form-group">';
@@ -318,7 +301,7 @@ class BsFormHelper extends FormHelper {
  * @return string Input-group de Bootstrap
  */
 	public function inputGroup($fieldName, $addonOptions, $options = array()) {
-		$between = '<div class="col-md-' . $this->__right . '">';
+		$between = '<div class="col-md-' . $this->__right . ' col-md-offset-' . $this->__left . '">';
 		$between .= '<div class="input-group">';
 
 		// Check if the addon is on the right
@@ -765,18 +748,20 @@ class BsFormHelper extends FormHelper {
 
 			$tempLeft = $this->__left;
 
+			$out = '<div class="form-group">';
+
 			if (!isset($optionsDP['addon'])) {
 				$optionsDP['addon'] = 'à';
 			}
 			if (!isset($optionsDP['label'])) {
-				$optionsDP['label'] = '';
+				$out .= '<div class="dp-container">';
+				$out .= '<div class="col-md-' . $this->__right . ' col-md-offset-' . $this->__left . '">';
+			} else {
+				$out .= '<label class="control-label col-md-' . $this->__left . '">' . $optionsDP['label'] . '</label>';
+				unset($optionsDP['label']);
+				$out .= '<div class="dp-container">';
+				$out .= '<div class="col-md-' . $this->__right . '">';
 			}
-
-			$out = '<div class="form-group">';
-			$out .= '<label class="control-label col-md-' . $this->__left . '">' . $optionsDP['label'] . '</label>';
-			unset($optionsDP['label']);
-			$out .= '<div class="dp-container">';
-			$out .= '<div class=" col-md-' . $this->__right . '">';
 			$out .= '<div class="input-daterange input-group" id="datepicker">';
 
 			$this->__left = 0;

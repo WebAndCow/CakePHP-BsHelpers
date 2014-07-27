@@ -43,7 +43,14 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $bsAddonPath = 'bs_addon';
+	public $bsAddonPath = 'BsHelpers.bs_addon';
+
+/**
+ * Path for CSS datapicker bootstrap
+ *
+ * @var string
+ */
+	public $dpCssPath = 'BsHelpers.datepicker';
 
 /**
  * If Font Awesome is loaded
@@ -56,6 +63,12 @@ class BsHelper extends HtmlHelper {
  * @var bool
  */
 	public $bsAddonLoad = true;
+
+/**
+ * If Datepicker Bootrstrap is loaded
+ * @var bool
+ */
+	public $dpLoad = false;
 
 /**
  * Prefix version for Font Awesome
@@ -76,6 +89,13 @@ class BsHelper extends HtmlHelper {
  * @var string
  */
 	public $pathJquery = 'http://code.jquery.com/jquery-1.11.1.min.js';
+
+/**
+ * Path for JS datapicker bootstrap
+ *
+ * @var string
+ */
+	public $dpJsPath = 'BsHelpers.datepicker';
 
 				/*--------------------------*
 				*						    *
@@ -161,8 +181,8 @@ class BsHelper extends HtmlHelper {
 		if ($this->bsAddonLoad) {
 			$out .= parent::css($this->bsAddonPath);
 		}
-		if ($this->dp_css_path) {
-			$out .= parent::css($this->dp_css_path);
+		if ($this->dpLoad) {
+			$out .= parent::css($this->dpCssPath);
 		}
 
 		// Others CSS
@@ -182,7 +202,9 @@ class BsHelper extends HtmlHelper {
 	public function js($arrayJs = array()) {
 		$out = parent::script($this->pathJquery);
 		$out .= parent::script($this->pathJS);
-		$out .= parent::script($this->dp_js_path);
+		if ($this->dpLoad) {
+			$out .= parent::script($this->dpJsPath);
+		}
 
 		// Others JS
 		foreach ($arrayJs as $js) {

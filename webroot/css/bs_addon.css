@@ -19,8 +19,3 @@
 .l_85 {width: 85%}
 .l_90 {width: 90%}
 .l_95 {width: 95%}
-
-
-/* Add the class .info for tables lines */
-
-.table > tbody > tr > td.info{background-color: #d9edf7;border-top-color: #bce8f1;}
