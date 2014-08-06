@@ -1,0 +1,62 @@
+---
+layout: default
+title: Cakephp-BsHelpers - Installation
+description: "Cakephp-BsHelpers : Extension of the CakePHP's FormHelper and HtmlHelper to use the framework Twitter Bootstrap v3.0.0 more easily - Installation Composer"
+---
+<div class="container">
+      <br />
+      <div class="row">
+        <div class="col-xs-12">
+          <h2>Installation</h2>
+          <p>Vous avez deux choix d'installation pour ce plugin</p>
+          <ul>
+            <li>Par <a href="https://getcomposer.org/">Composer</a></li>
+            <li>Par copier/coller</li>
+          </ul>
+          <p>Il est préférable de le faire par Composer.</p>
+          <h3>Composer</h3>
+          <hr>
+          <p>Ajouter simplement cette ligne dans votre composer.json puis faites un <code>composer update</code></p>
+          <pre class="highlight"><span class="p">{</span>
+  <span class="s2">"require"</span><span class="o">:</span><span class="p">{</span>
+      <span class="s2">"webandcow/bs_helpers"</span><span class="o">:</span> <span class="s2">"1.1.3"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+          <h3>Copier/coller</h3>
+          <hr>
+          <p>Copiez/collez tout le projet Github dans votre dossier <code>app/Plugin/BsHelpers</code></p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <h2>Activation du plugin</h2>
+          <p>Ajoutez cette ligne dans votre fichier <code>app/Config/bootstrap.php</code></p>
+          <pre class="highlight"><span class="nx">CakePlugin</span><span class="o">::</span><span class="na">load</span><span class="p">(</span><span class="s1">'BsHelpers'</span><span class="p">);</span>
+</pre><p>ou si vous avez déjà d'autres plugins de chargés : </p><pre class="highlight"><span class="nx">CakePlugin</span><span class="o">::</span><span class="na">loadAll</span><span class="p">();</span>
+</pre>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <h2>Acitvation des helpers</h2>
+          <p>Enfin, ajoutez les helpers dans le fichier <code>app/Controller/AppController.php</code></p>
+          <pre class="highlight"><span class="cp">&lt;?php</span>
+
+<span class="k">class</span> <span class="nc">AppController</span> <span class="k">extends</span> <span class="nx">Controller</span> <span class="p">{</span>
+
+  <span class="k">public</span> <span class="nv">$helpers</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span><span class="s1">'BsHelpers.Bs'</span><span class="p">,</span> <span class="s1">'BsHelpers.BsForm'</span><span class="p">));</span>
+
+<span class="p">}</span>  
+</pre>
+        </div>
+      </div>
+      <br />
+      <div class="row">
+        <div class="col-xs-12">
+          <strong>Et voilà, vous pouvez commencer à utiliser le BsHelper et le BsFormHelper !</strong>
+        </div>
+      </div>
+      <br />
+      <br />
+    </div>
