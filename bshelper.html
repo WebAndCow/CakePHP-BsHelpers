@@ -1,0 +1,83 @@
+---
+layout: default
+title: Cakephp-BsHelpers
+description: "Cakephp-BsHelpers : Extension of the CakePHP's FormHelper and HtmlHelper to use the framework Twitter Bootstrap v3.0.0 more easily"
+---
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+    	<h1>BsHelper</h1>
+    	<h2 class="page-header">Layout</h2>
+    	<h3>Doctype HTML&lt;5 ou HTML5</h3>
+
+    	<!-- Fonction HTML -->
+<div class="highlight"><pre><span class="cp">&lt;?</span><span class="o">=</span> 
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Bs</span><span class="o">-&gt;</span><span class="na">html</span><span class="p">(</span><span class="s1">&#39;Title&#39;</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">,</span> <span class="s1">&#39;fr&#39;</span><span class="p">);</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+
+		<!-- Rendu Fonction HTML -->
+<div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;fr&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;width=device-width, initial-scale=1.0&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;description&quot;</span> <span class="na">content=</span><span class="s">&quot;Description&quot;</span><span class="nt">&gt;</span>
+</pre></div>
+
+		<br>
+
+    	<!-- Fonction HTML5 -->
+<div class="highlight"><pre><span class="cp">&lt;?</span><span class="o">=</span> 
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Bs</span><span class="o">-&gt;</span><span class="na">html5</span><span class="p">(</span><span class="s1">&#39;Title&#39;</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">,</span> <span class="s1">&#39;fr&#39;</span><span class="p">);</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+
+		<!-- Rendu Fonction HTML5 -->
+<div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;fr&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;width=device-width, initial-scale=1.0&quot;</span><span class="nt">&gt;</span>
+<span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;description&quot;</span> <span class="na">content=</span><span class="s">&quot;Description&quot;</span><span class="nt">&gt;</span>
+<span class="c">&lt;!--[if lt IE 9]&gt;</span>
+<span class="c">	&lt;script src=&quot;http://html5shim.googlecode.com/svn/trunk/html5.js&quot;&gt;&lt;/script&gt;</span>
+<span class="c">&lt;![endif]--&gt;</span>
+</pre></div>
+		
+		<!-- Paramètres Fonction HTML -->
+		<h4 class="parameters">Paramètres</h4>
+		<ul>
+			<li><code>[string] titre</code> - Donne un titre à la page (defaut = '')</li>
+			<li><code>[string] description</code> - Donne une description à la page (defaut = '')</li>
+			<li><code>[string] lang</code> - Attribut une langue pour la balise (defaut = 'fr')</li>
+		</ul>
+
+		<br>
+
+		<h3>Body</h3>
+
+    	<!-- Fonction BODY -->
+<div class="highlight"><pre><span class="cp">&lt;?</span><span class="o">=</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Bs</span><span class="o">-&gt;</span><span class="na">body</span><span class="p">();</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
+
+		<!-- Rendu Fonction BODY -->
+<div class="highlight"><pre><span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+</pre></div>
+
+		<!-- Paramètres Fonction HTML -->
+		<h4 class="parameters">Paramètres</h4>
+		<ul>
+			<li><code>[string] classBody</code> - Donne une classe au body (defaut = '')</li>
+		</ul>
+
+		<br>
+
+  	</div>
+  </div>
+</div>
