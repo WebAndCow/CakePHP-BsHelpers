@@ -19,6 +19,17 @@
 	background: #fff;
 }
 
+.btn-wac{
+	color: #fff;
+	background-color: #40a0e5;
+	border-color: #40a0e5;
+}
+.btn-wac:hover, .btn-wac:active, .btn-wac:focus{
+	color: #fff;
+	background-color: #47b2ff;
+	border-color: #47b2ff;
+}
+
 hr{
 	border-top-color: #C8CED2;
 }
