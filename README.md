@@ -46,8 +46,8 @@ with the following format:
 And constructed with the following guidelines:
 
 * Breaking backward compatibility bumps the major (and resets the minor and patch)
-* New additions, including new icons, without breaking backward compatibility bumps the minor (and resets the patch)
-* Bug fixes and misc changes bumps the patch
+* New features, without breaking backward compatibility bumps the minor (and resets the patch)
+* Bug fixes bumps the patch
 
 For more information on SemVer, please visit http://semver.org.
 
