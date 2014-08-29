@@ -40,7 +40,7 @@ Then, add those following lines in your app/Controller/AppController.php file :
 
 ```php
 class AppController extends Controller {
-         public $helpers = array('BsHelpers.Bs', 'BsHelpers.BsForm'));
+         public $helpers = array('BsHelpers.Bs', 'BsHelpers.BsForm');
 }
 ```
 
