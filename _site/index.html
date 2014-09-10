@@ -3,11 +3,14 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Cakephp-BsHelpers : Extension of the CakePHP's FormHelper and HtmlHelper to use the framework Twitter Bootstrap v3.0.0 more easily" />
+    <meta name="description" content="Cakephp-BsHelpers : Extension of the CakePHP's FormHelper and HtmlHelper to use the framework Twitter Bootstrap v3 more easily" />
 
     <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <link rel="stylesheet" href="stylesheets/theme.css">
+    <!-- rainbow, solarized_dark, tomorrow-night-eighties -->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/rainbow.min.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 
     <title>Cakephp-BsHelpers</title>
   </head>
@@ -29,7 +32,7 @@
             <li><a href="installation.html">Installation</a></li>
             <li><a href="bshelper.html">Bs</a></li>
             <li><a href="bsformhelper.html">BsForm</a></li>
-            <li><a href="code.html">Le code en détail</a></li>
+            <!-- <li><a href="code.html">Le code en détail</a></li> -->
           </ul>
         </div>
       </div>
@@ -40,7 +43,7 @@
     <div class="col-xs-12">
       <div class="jumbotron">
         <h1>BsHelpers</h1>
-        <p>Plugin CakePHP pour utiliser le Framework Twitter Bootstrap plus facilement</p>
+        <p>CakePHP plugin to use the framework Twitter Bootstrap v3 more easily.</p>
         <p>
           <a href="https://travis-ci.org/WebAndCow/CakePHP-BsHelpers/builds"><img src="https://travis-ci.org/WebAndCow/CakePHP-BsHelpers.svg?branch=1.1.3" alt="Test travis"></a>
           <a href='https://coveralls.io/r/WebAndCow/CakePHP-BsHelpers?branch=master'><img src='https://coveralls.io/repos/WebAndCow/CakePHP-BsHelpers/badge.png?branch=master' alt='Coverage Status' /></a>
@@ -50,7 +53,7 @@
           <iframe src="http://ghbtns.com/github-btn.html?user=WebAndCow&repo=CakePHP-BsHelpers&type=watch&count=true" height="20" width="100" frameborder="0" scrolling="0" style="width:100px; height: 20px;" allowTransparency="true"></iframe>
           <iframe src="http://ghbtns.com/github-btn.html?user=WebAndCow&repo=CakePHP-BsHelpers&type=fork&count=true" height="20" width="100" frameborder="0" scrolling="0" style="width:100px; height: 20px;" allowTransparency="true"></iframe>
         </p>
-        <p><a href="https://github.com/WebAndCow/CakePHP-BsHelpers" class="btn btn-primary btn-lg" role="button">Voir sur Github</a> <a href="https://github.com/WebAndCow/CakePHP-BsHelpers/archive/master.zip" class="btn btn-primary btn-lg" role="button">Télécharger</a></p>
+        <p><a href="https://github.com/WebAndCow/CakePHP-BsHelpers" class="btn btn-primary btn-lg" role="button">Github Project</a> <a href="https://github.com/WebAndCow/CakePHP-BsHelpers/archive/master.zip" class="btn btn-primary btn-lg" role="button">Download</a></p>
       </div>
     </div>
   </div>
@@ -60,47 +63,59 @@
 <div class="container">
   <div class="row">
     <div class="col-md-4">
-      <h4>Ecrire sa grille rapidement</h4>
-      <p>Grâce à une fonction bien pensée, plus besoin d'écrire des classes à rallonge pour vos colonnes.</p>
+      <!-- <h4>Ecrire sa grille rapidement</h4> -->
+      <h4>Write grid faster</h4>
+      <!-- <p>Grâce à une fonction bien pensée, plus besoin d'écrire des classes à rallonge pour vos colonnes.</p> -->
+      <p>Through a thinking function well, no need to write long classes anymore.</p>
     </div>
     <div class="col-md-4">
-      <h4>Garde la synthaxe CakePHP</h4>
-      <p>Avec le BsFormHelper, vous pouvez garder vos formulaire d'origines. Les fonctions select(), radio() et checkbox() sont revisitées pour qu'elles correspondent mieux à vos besoins.</p>
+      <!-- <h4>Garde la synthaxe CakePHP</h4> -->
+      <h4>Keep CakePHP synthax</h4>
+      <!-- <p>Avec le BsFormHelper, vous pouvez garder vos formulaire d'origines. Les fonctions select(), radio() et checkbox() sont revisitées pour qu'elles correspondent mieux à vos besoins.</p> -->
+      <p>With BsFormHelper, you can keep your original forms. Select(), radio() and checkbox() functions are revisited to better suit your needs.</p>
     </div>
     <div class="col-md-4">
-      <h4>Une pensée UX</h4>
-      <p>En plus de faciliter l'usage du framework, le BsHelper propose des fonctions comme confirm() qui vous automatisera l'expérience utilisateur pour vos modals.</p>
+      <!-- <h4>Une pensée UX</h4> -->
+      <h4>Think UX</h4>
+      <!-- <p>En plus de faciliter l'usage du framework, le BsHelper propose des fonctions comme confirm() qui vous automatisera l'expérience utilisateur pour vos modals.</p> -->
+      <p>In addition to facilitating the use of the framework, the BsHelper offers features like confirm() that will automate the user experience for your modals.</p>
     </div>
   </div>
   <div class="row">
     <div class="col-md-4">
-      <h4>De nouvelles fonctionnalités pour les formulaires</h4>
-      <p>Construisez facilement des input-group ou des datepicker en passant seulement par une fonction !</p>
+      <!-- <h4>De nouvelles fonctionnalités pour les formulaires</h4> -->
+      <h4>New features for forms</h4>
+      <!-- <p>Construisez facilement des input-group ou des datepicker en passant seulement par une fonction !</p> -->
+      <p>Easily build input-group or datepicker passing by a function !</p>
     </div>
     <div class="col-md-4">
-      <h4>Automatisation du javascript et css</h4>
-      <p>Plus besoin de télécharger les helpers et en plus les ressources externes, le plugin fournit tout un paquet directement utilisable une fois installé.</p>
+      <!-- <h4>Automatisation du javascript et css</h4> -->
+      <h4>Automation of javascript and css</h4>
+      <!-- <p>Plus besoin de télécharger les helpers et en plus les ressources externes, le plugin fournit tout un paquet directement utilisable une fois installé.</p> -->
+      <p>No need to download helpers, and more external resources, the plugin provides a whole package directly usable once installed.</p>
     </div>
     <div class="col-md-4">
-      <h4>Juste un complément</h4>
-      <p>Ces helpers ne vous empêcheront absoluement pas d'utiliser le HtmlHelper et le FormHelper natif de CakePHP.</p>
+      <!-- <h4>Juste un complément</h4> -->
+      <h4>Just additional</h4>
+      <!-- <p>Ces helpers ne vous empêcheront absolument pas d'utiliser le HtmlHelper et le FormHelper natif de CakePHP.</p> -->
+      <p>These helpers won't prevent you from using the HtmlHelper and native CakePHP FormHelper.</p>
     </div>
   </div>
   <br />
   <br />
   <div class="row">
-    <div class="col-md-3 text-center">
-      <a href="" class="btn btn-info">Voir le BsHelper</a>
+    <div class="col-md-6 text-center">
+      <a href="" class="btn btn-info">BsHelper API</a>
     </div>
-    <div class="col-md-3 text-center">
-      <a href="" class="btn btn-info">Voir le BsFormHelper</a>
+    <div class="col-md-6 text-center">
+      <a href="" class="btn btn-info">BsFormHelper API</a>
     </div>
-    <div class="col-md-3 text-center">
+    <!-- <div class="col-md-3 text-center">
       <a href="" class="btn btn-info">Voir le code documenté</a>
     </div>
     <div class="col-md-3 text-center">
       <a href="" class="btn btn-info">Comment contribuer ?</a>
-    </div>
+    </div> -->
   </div>
 </div>
 
@@ -108,9 +123,10 @@
     <div class="footer">
       <div class="row">
         <div class="col-md-12 text-center">
-          <p>BsHelpers - créé par <a href="http://www.webandcow.com">Web and Cow</a></p>
-          <p>Ce plugin est conçu pour CakePHP. C'est un projet open source disponible sur Github et Packagist</p>
-          <p><a href="http://">Projet Github</a> - <a href="">Issues</a> - <a href="">Sur Packagist</a></p>
+          <p>BsHelpers - created by <a href="http://www.webandcow.com">Web and Cow</a></p>
+          <!-- <p>Ce plugin est conçu pour CakePHP. C'est un projet open source disponible sur Github et Packagist</p> -->
+          <p>This plugin is designed to CakePHP. It is an open source project available on Github and Packagist</p>
+          <p><a href="https://github.com/WebAndCow/CakePHP-BsHelpers">Github Project</a> - <a href="https://github.com/WebAndCow/CakePHP-BsHelpers/issues">Issues</a> - <a href="https://packagist.org/packages/webandcow/bs_helpers">Packagist</a></p>
         </div>
       </div>
     </div>

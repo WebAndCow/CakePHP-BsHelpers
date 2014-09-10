@@ -1,10 +1,39 @@
+pre{
+	 padding: 0;
+	 margin: 0; 
+	 background-color: transparent; 
+	 border: 0; 
+	 border-radius: 0;
+	 white-space: normal;
+}
+pre code{
+	position:relative;
+}
+pre .hljs{
+	 padding: 15px; 
+}
+pre.result{
+	border-top: 2px dashed #ccc;
+}
+pre.result code::before{
+	content:'output:';
+	position: absolute;
+	top: 5px;
+	left: 5px;
+}
+pre.result code{
+	padding-top: 35px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+
 .navbar-default{
-	background: #4E5F70;
+	background: #101010;
 	border: 0;
 	border-radius: 0;
 }
 .navbar-default .navbar-brand, .navbar-default .navbar-brand:hover{
-	background: #61C6EB;
+	background: #43aaf5;
 	color:#fff;
 }
 .navbar-default .navbar-nav>li>a{
@@ -12,11 +41,15 @@
 }
 .navbar-default .navbar-nav>li>a:hover{
 	color: #fff;
-	background: #61C6EB;
+	background: #43aaf5;
 }
 
 .jumbotron{
 	background: #fff;
+}
+
+.btn-info, .btn-primary{
+	background: #43aaf5;
 }
 
 hr{
@@ -26,11 +59,11 @@ hr{
 	margin-top: 50px;
 	padding-top: 50px;
 	padding-bottom: 50px;
-	background: #4E5F70;
+	background: #101010;
 	color:#fff;
 }
 .footer a{
-	color:#61C6EB;		
+	color:#43aaf5;		
 }
 
 .parameters{

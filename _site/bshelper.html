@@ -3,13 +3,16 @@
   <head>
     <meta charset='utf-8' />
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Cakephp-BsHelpers : Extension of the CakePHP's FormHelper and HtmlHelper to use the framework Twitter Bootstrap v3.0.0 more easily" />
+    <meta name="description" content="Cakephp-BsHelpers : Extension of the CakePHP's FormHelper and HtmlHelper to use the framework Twitter Bootstrap v3 more easily" />
 
     <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <link rel="stylesheet" href="stylesheets/theme.css">
+    <!-- rainbow, solarized_dark, tomorrow-night-eighties -->
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/rainbow.min.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 
-    <title>Cakephp-BsHelpers</title>
+    <title>Cakephp-BsHelpers BsHelper</title>
   </head>
   <body>
 <!-- HEADER -->
@@ -29,7 +32,7 @@
             <li><a href="installation.html">Installation</a></li>
             <li><a href="bshelper.html">Bs</a></li>
             <li><a href="bsformhelper.html">BsForm</a></li>
-            <li><a href="code.html">Le code en détail</a></li>
+            <!-- <li><a href="code.html">Le code en détail</a></li> -->
           </ul>
         </div>
       </div>
@@ -40,75 +43,435 @@
     <div class="col-xs-12">
     	<h1>BsHelper</h1>
     	<h2 class="page-header">Layout</h2>
-    	<h3>Doctype HTML&lt;5 ou HTML5</h3>
 
-    	<!-- Fonction HTML -->
-<div class="highlight"><pre><span class="cp">&lt;?</span><span class="o">=</span> 
-<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Bs</span><span class="o">-&gt;</span><span class="na">html</span><span class="p">(</span><span class="s1">&#39;Title&#39;</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">,</span> <span class="s1">&#39;fr&#39;</span><span class="p">);</span>
-<span class="cp">?&gt;</span><span class="x"></span>
-</pre></div>
-
-		<!-- Rendu Fonction HTML -->
-<div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;fr&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;head&gt;</span>
-<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
-<span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;width=device-width, initial-scale=1.0&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;description&quot;</span> <span class="na">content=</span><span class="s">&quot;Description&quot;</span><span class="nt">&gt;</span>
-</pre></div>
+<!-- Fonction HTML -->
+    	<h3>html() or html5()</h3>
+    	<p>Build the begin of a html's doctype or html5's doctype.</p>
+<pre>
+<code class="php">&lt;?php echo 
+$this->Bs->html('My Title', 'Here is my description', 'fr');
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title>Title&lt;/title&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;meta name="description" content="Description"&gt;
+</code>
+</pre>
+		<br>
+<pre>
+<code class="php">&lt;?php echo 
+$this->Bs->html5('Title', 'Description', 'fr');
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;!DOCTYPE html&gt;
+&lt;html lang="fr"&gt;
+&lt;head&gt;
+&lt;meta charset="utf-8"&gt;
+&lt;title>Title&lt;/title&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+&lt;meta name="description" content="Description"&gt;
+&lt;!--[if lt IE 9]&gt;
+	&lt;script src="http://html5shim.googlecode.com/svn/trunk/html5.js"&gt;&lt;/script&gt;
+&lt;![endif]--&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[string] titre</code> - Name of the page (default = '')</li>
+			<li><code>[string] description</code> - Description of the page (default = '')</li>
+			<li><code>[string] lang</code> - Change the language (default = 'fr')</li>
+		</ul>
 
 		<br>
 
-    	<!-- Fonction HTML5 -->
-<div class="highlight"><pre><span class="cp">&lt;?</span><span class="o">=</span> 
-<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Bs</span><span class="o">-&gt;</span><span class="na">html5</span><span class="p">(</span><span class="s1">&#39;Title&#39;</span><span class="p">,</span> <span class="s1">&#39;Description&#39;</span><span class="p">,</span> <span class="s1">&#39;fr&#39;</span><span class="p">);</span>
-<span class="cp">?&gt;</span><span class="x"></span>
-</pre></div>
+<!-- Fonction BODY -->
+		<h3>body()</h3>
+		<p>Close head tag and open body tag.</p>
+<pre>
+<code class="php">&lt;?php echo 
+$this->Bs->body();
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;/head&gt;
+&lt;body&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[string] classBody</code> - Add a class to body tag (default = '')</li>
+		</ul>
 
-		<!-- Rendu Fonction HTML5 -->
-<div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
-<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;fr&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;head&gt;</span>
-<span class="nt">&lt;meta</span> <span class="na">charset=</span><span class="s">&quot;utf-8&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;title&gt;</span>Title<span class="nt">&lt;/title&gt;</span>
-<span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content=</span><span class="s">&quot;width=device-width, initial-scale=1.0&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;meta</span> <span class="na">name=</span><span class="s">&quot;description&quot;</span> <span class="na">content=</span><span class="s">&quot;Description&quot;</span><span class="nt">&gt;</span>
-<span class="c">&lt;!--[if lt IE 9]&gt;</span>
-<span class="c">	&lt;script src=&quot;http://html5shim.googlecode.com/svn/trunk/html5.js&quot;&gt;&lt;/script&gt;</span>
-<span class="c">&lt;![endif]--&gt;</span>
-</pre></div>
+		<br>
+
+<!-- Fonction END -->
+		<h3>end()</h3>
+		<p>Close body and html tags</p>
+<pre>
+<code class="php">&lt;?php echo 
+$this->Bs->end();
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;/body&gt;
+&lt;/html&gt;
+</code>
+</pre>
+		<br>
+
+<!-- Fonction CSS -->
+		<h3>css()</h3>
+		<p>Like the CakePHP's css function but preload by default Font Awesome, Bootstrap3 and an addon for Bootstrap3. You can easily uncheck those preloads here.</p>
+<pre>
+<code class="php">&lt;?php echo 
+$this->Bs->css(array('mystyle.css'));
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"&gt;
+&lt;link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"&gt;
+&lt;link rel="stylesheet" type="text/css" href="/myproject/bs_helpers/css/bs_addon.css"&gt;
+&lt;link rel="stylesheet" type="text/css" href="/myproject/css/mystyle.css"&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[mixed] path</code> - Either a string of the CSS file to link, or an array with multiple files (default = array())</li>
+			<li><code>[array] options</code> - An array of options or html attributes (default = array())</li>
+		</ul>
+
+		<br>
+
+<!-- JS -->
+		<h3>js()</h3>
+		<p>Like the CakePHP's script function but preload by default JQuery and Bootstrap3. You can easily uncheck those preloads here.</p>
+<pre>
+<code class="php">&lt;?php echo 
+$this->Bs->js(array('myscript.js'));
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="/myproject/js/myscript.js"&gt;&lt;/script&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[array] arrayJs</code> - Either a string to a single JavaScript file, or an array of strings for multiple files (default = array())</li>
+		</ul>
+
+		<br>
+
+<!-- CLOSE -->
+		<h3>close()</h3>
+		<p>Close end div tags.</p>
+<pre>
+<code class="php">&lt;?php echo 
+$this->Bs->close(2);
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;/div&gt;
+&lt;/div&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[int] nb</code> - Number of div you want to close (default = 1)</li>
+		</ul>
+
+		<br>
+
+
+
+
+
+		<h2 class="page-header">Grid</h2>
+
+<!-- CONTAINER -->
+		<h3>container()</h3>
+		<p>Open a div with container class.</p>
+<pre>
+<code class="php">&lt;?php echo 
+$this->Bs->container();
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;div class="container"&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[array] options</code> - Options of the div element (default = array())</li>
+		</ul>
+
+		<br>
+
+<!-- ROW -->
+		<h3>row()</h3>
+		<p>Open a div with row class.</p>
+<pre>
+<code class="php">&lt;?php echo 
+$this->Bs->row();
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;div class="row"&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[array] options</code> - Options of the div element (default = array())</li>
+		</ul>
+
+		<br>	
+
+<!-- COL -->
+		<h3>col()</h3>
+		<p>Create a div element with grid system class of Bootstrap.</p>
+<pre>
+<code class="php">&lt;?php echo 
+$this->Bs->col('xs12', 'sm4 of3', 'md2 pl1', 'lg9 ph3', array('class' => 'myClass', 'id' => 'myId'));
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;div class="col-xs-12 col-sm-4 col-sm-offset-3 col-md-2 col-md-pull-1 col-lg-9 col-lg-push-3 myClass" id="myId"&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
 		
-		<!-- Paramètres Fonction HTML -->
-		<h4 class="parameters">Paramètres</h4>
+		<p>Params are differents layouts, but they are not all obligatory. For example, you can just defined classes for xs and md layouts.
+		<br/>
+		To define a layout class, write the bootstrap shortcut layout (xs, sm, md or lg) and the lenght of the column (1 to 12, in case of 12 columns).
+		<br/>
+		You can add offset, push or pull to the layout class by writing of, ph, pl and then the number of the length to generate respectively offset, push or pull.</p>
+
 		<ul>
-			<li><code>[string] titre</code> - Donne un titre à la page (defaut = '')</li>
-			<li><code>[string] description</code> - Donne une description à la page (defaut = '')</li>
-			<li><code>[string] lang</code> - Attribut une langue pour la balise (defaut = 'fr')</li>
+			<li>
+				<code>[string] layouts</code> - You can define as many layout you want by separating them with a comma. (ex : 'xs12', 'md3')
+				<ul>
+					<li>Layouts : 
+						<ul>
+							<li>xs --> Extra small</li>
+							<li>sm --> Small</li>
+							<li>md --> Medium</li>
+							<li>lg --> Large</li>
+						</ul>
+					</li>
+					<li>Ordering : 
+						<ul>
+							<li>of --> offset</li>
+							<li>ph --> push</li>
+							<li>pl --> pull</li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<code>[array] options</code> - Options of the div element (default = array()) 
+			</li>
 		</ul>
 
 		<br>
 
-		<h3>Body</h3>
 
-    	<!-- Fonction BODY -->
-<div class="highlight"><pre><span class="cp">&lt;?</span><span class="o">=</span>
-<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">Bs</span><span class="o">-&gt;</span><span class="na">body</span><span class="p">();</span>
-<span class="cp">?&gt;</span><span class="x"></span>
-</pre></div>
 
-		<!-- Rendu Fonction BODY -->
-<div class="highlight"><pre><span class="nt">&lt;/head&gt;</span>
-<span class="nt">&lt;body&gt;</span>
-</pre></div>
 
-		<!-- Paramètres Fonction HTML -->
-		<h4 class="parameters">Paramètres</h4>
+
+
+		<h2 class="page-header">Table</h2>
+		
+<!-- ROW -->
+		<h3>table()</h3>
+		<p>Initialize the table.</p>
+<pre>
+<code class="php">&lt;?php 
+$columns = array(
+   array(
+      'title' => 'First column',
+      'width' => '10',
+      'hidden' => array('xs')
+   ),
+   array(
+      'title' => 'Second column',
+      'width' => '90'
+   )
+);
+echo 
+$this->Bs->table($columns);
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;div class="table-responsive"&gt;
+   &lt;table class="table"&gt;
+      &lt;thead&gt;
+         &lt;tr&gt;
+            &lt;th class="l_10 hidden-xs"&gt;First column&lt;/th&gt;
+            &lt;th class="l_90"&gt;Second column&lt;/th&gt;
+         &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
 		<ul>
-			<li><code>[string] classBody</code> - Donne une classe au body (defaut = '')</li>
+			<li><code>[array] titles</code> - Create the thead of the table</li>
+			<ul>
+				<li><code>[string] title</code> --> name of the column</li>
+				<li><code>[string] width</code> --> width of the column (5 to 100 and 5 by 5. The total of columns' width should be 100)</li>
+				<li><code>[array] hidden</code> --> different layouts where the column is invisible (default = array())</li>
+			</ul>
+			<li><code>[array] class</code> - Classes of the table (hover, striped, etc)</li>
 		</ul>
 
 		<br>
+
+<!-- CELL -->
+		<h3>cell()</h3>
+		<p>Create a cell.<code>&lt;tr&gt;</code> and <code>&lt;/tr&gt;</code> elements are auto-generated by default.</p>
+<pre>
+<code class="php">&lt;?php echo
+$this->Bs->cell('Content of my cell', 'cellClass');
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;td class="cellClass"&gt;Content of my cell&lt;/td&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[string] content</code> - Informations in the cell</li>
+			<li><code>[string] class</code> - Class(es) of the cell (default = '')</li>
+			<li><code>[boolean] autoformat</code> - Autogenerate &lt;/tr&gt; in the end of the line (default = true)</li>
+		</ul>
+
+		<br>
+
+<!-- LINECOLOR -->
+		<h3>lineColor()</h3>
+		<p>Color a line. (the &lt;tr&gt; element)</p>
+<pre>
+<code class="php">&lt;?php echo
+$this->Bs->lineColor('success');
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;tr class="success"&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[string] color</code> - Color of the line (active, success, warning, danger)</li>
+		</ul>
+
+		<br>
+
+<!-- ENDTABLE -->
+		<h3>endTable()</h3>
+		<p>Close the table.</p>
+<pre>
+<code class="php">&lt;?php echo
+$this->Bs->endTable();
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">      &lt;/tbody&gt;
+   &lt;/table&gt;
+&lt;/div&gt;
+</code>
+</pre>
+		<br>
+
+		<h2 class="page-header">Components</h2>
+
+<!-- ALERT -->
+		<h3>alert()</h3>
+		<p>Show a bootstrap alert.</p>
+<pre>
+<code class="php">&lt;?php echo
+$this->Bs->alert('Oops, something is wrong here !', 'warning');
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;div class="alert alert-warning"&gt;
+   &lt;button type="button" class="close" data-dismiss="alert" aria-hidden="true"&gt;×&lt;/button&gt;
+   Oops, something is wrong here !
+&lt;/div&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[string] text</code> - Text displayed.</li>
+			<li><code>[string] state</code> - Color of the alert (info, success, warning, danger)</li>
+			<li><code>[array] options</code> - Some options like "class", "data-*", "id", or "dismiss" (boolean true by default, to display or not the cross). (default = array())</li>
+		</ul>
+
+		<br>
+
+<!-- IMAGE -->
+		<h3>image()</h3>
+		<p>Show an image. Like $this->Html->image(), but add the class "img-responsive" by default.</p>
+<pre>
+<code class="php">&lt;?php echo
+$this->Bs->image('/mypicture');
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;img src="/myproject/mypicture" class="img-responsive" alt=""&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[string] path</code> - Path to the image.</li>
+			<li><code>[array] options</code> - An array of html attributes. (default = array())</li>
+		</ul>
+
+		<br>
+
+<!-- ICON -->
+		<h3>icon()</h3>
+		<p>Show a Font Awesome Icon.</p>
+<pre>
+<code class="php">&lt;?php echo
+$this->Bs->icon('user', array('2x'), array('id' => 'myIcon'));
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;i class="fa fa-user fa-2x" id="myIcon"&gt;&lt;/i&gt;
+</code>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[string] iconLabel</code> - Label of the icon.</li>
+			<li><code>[array] classes</code> - Font Awesome classes. (default = array())</li>
+			<li><code>[array] attributes</code> - An array of html attributes. (default = array())</li>
+		</ul>
+
+		<br>	
 
   	</div>
   </div>
@@ -117,9 +480,10 @@
     <div class="footer">
       <div class="row">
         <div class="col-md-12 text-center">
-          <p>BsHelpers - créé par <a href="http://www.webandcow.com">Web and Cow</a></p>
-          <p>Ce plugin est conçu pour CakePHP. C'est un projet open source disponible sur Github et Packagist</p>
-          <p><a href="http://">Projet Github</a> - <a href="">Issues</a> - <a href="">Sur Packagist</a></p>
+          <p>BsHelpers - created by <a href="http://www.webandcow.com">Web and Cow</a></p>
+          <!-- <p>Ce plugin est conçu pour CakePHP. C'est un projet open source disponible sur Github et Packagist</p> -->
+          <p>This plugin is designed to CakePHP. It is an open source project available on Github and Packagist</p>
+          <p><a href="https://github.com/WebAndCow/CakePHP-BsHelpers">Github Project</a> - <a href="https://github.com/WebAndCow/CakePHP-BsHelpers/issues">Issues</a> - <a href="https://packagist.org/packages/webandcow/bs_helpers">Packagist</a></p>
         </div>
       </div>
     </div>
