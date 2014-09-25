@@ -438,6 +438,163 @@ $this->Bs->icon('user', array('2x'), array('id' => 'myIcon'));
 
 		<br>	
 
+<!-- BTN -->
+		<h3>btn()</h3>
+		<p>Create a Bootstrap button.</p>
+<pre>
+<code class="php">&lt;?php echo
+$this->Bs->btn('Try it !', array('controller' => 'myController', 'action' => 'myAction'), array('size' => 'md', 'tag' => 'button', 'type' => 'success'));
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;i class="fa fa-user fa-2x" id="myIcon"&gt;&lt;/i&gt;
+</code>
+<br>
+<button class="btn btn-success btn-md">Try it !</button>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[string] text</code> - Text in the button.</li>
+			<li><code>[mixed] url</code> - URL of the link, in case of &lt;a&gt; tag. It can be a url like CakePHP (with array). (default = array())</li>
+			<li><code>[array] options</code> - Options button. (default = array())</li>
+			<ul>
+				<li><code>[string] type</code> --> Success, info, danger, warning, default, link, primary</li>
+				<li><code>[string] size</code> --> xs, sm, md, lg</li>
+				<li><code>[array] tag</code> --> a (for a link), button (for a button), etc.</li>
+			</ul>
+			<li><code>[boolean] confirmMessage</code> - In case of &lt;a&gt; tag, you can define a native confirmation message. (default = false)</li>
+		</ul>
+
+		<br>
+
+<!-- MODAL -->
+		<h3>modal()</h3>
+		<p>Create a Bootstrap modal.</p>
+<pre>
+<code class="php">&lt;?php echo
+$this->Bs->modal(
+   'My awesome modal', 
+   'This is not a lorem ipsum. There are so many informations in that modal !', 
+   array('class' => 'awesomeModal'), 
+   array('open' => 'See it', 'close' => 'Back', 'confirm' => array('name' => 'Send !', 'class' => 'btn-warning', 'link' => array('controller' => 'myController', 'action' => 'myAction')))
+);
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#e447e7pjeroaldf"&gt;See it&lt;/button&gt;
+&lt;div class="modal fade awesomeModal" id="e447e7pjeroaldf" tabindex="-1" role="dialog" aria-labelledby="e447e7pjeroaldfLabel" aria-hidden="true"&gt;
+   &lt;div class="modal-dialog"&gt;
+      &lt;div class="modal-content"&gt;
+         &lt;div class="modal-header"&gt;
+            &lt;button type="button" class="close" data-dismiss="modal" aria-hidden="true"&gt;×&lt;/button&gt;
+            &lt;h4 class="modal-title" id="e447e7pjeroaldfLabel"&gt;My awesome modal&lt;/h4&gt;
+         &lt;/div&gt;
+         &lt;div class="modal-body"&gt;
+            &lt;p&gt;This is not a lorem ipsum. There are so many informations in that modal !&lt;/p&gt;
+         &lt;/div&gt;
+         &lt;div class="modal-footer"&gt;
+            &lt;button class="btn btn-link" data-dismiss="modal"&gt;Back&lt;/button&gt;
+            &lt;a href="/myProject/myController/myAction" class="btn btn-warning"&gt;Send !&lt;/a&gt;
+         &lt;/div&gt;
+      &lt;/div&gt;
+   &lt;/div&gt;
+&lt;/div&gt;
+</code>
+<br>
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#e447e7pjeroaldf">See it</button>
+<div class="modal fade awesomeModal" id="e447e7pjeroaldf" tabindex="-1" role="dialog" aria-labelledby="e447e7pjeroaldfLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title" id="e447e7pjeroaldfLabel">My awesome modal</h4></div><div class="modal-body"><p>This is not a lorem ipsum. There are so many informations in that modal !</p></div><div class="modal-footer"><button class="btn btn-link" data-dismiss="modal">Back</button><a href="/myProject/myController/myAction" class="btn btn-warning">Send !</a></div></div></div></div>
+</pre>
+
+<br>
+
+<p>An other example, with a form inside.</p>
+
+<pre>
+<code class="php">&lt;?php
+$form =
+'&lt;p&g;This is my form : &lt;/p&gt;'.
+$form =
+$this->BsForm->create('Model', array('action' => 'myAction')).
+$this->BsForm->input('field', array('value' => 'Whatever you want')).
+$this->BsForm->end();
+
+echo
+$this->Bs->modal('My awesome modal 2', $form, array(), array('open' => array('name' => 'Form modal', 'class' => 'btn-danger'), 'confirm' => array('name' => 'Send', 'link' => array('controller' => 'myController', 'action' => 'myAction'))));
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;button class="btn btn-danger" data-toggle="modal" data-target="#zl4j7r65416848j"&gt;Form modal&lt;/button&gt;
+&lt;div class="modal fade" id="zl4j7r65416848j" tabindex="-1" role="dialog" aria-labelledby="zl4j7r65416848jLabel" aria-hidden="true" style="display: none;"&gt;
+   &lt;div class="modal-dialog"&gt;
+      &lt;div class="modal-content"&gt;
+         &lt;div class="modal-header"&gt;
+            &lt;button type="button" class="close" data-dismiss="modal" aria-hidden="true"&gt;×&lt;/button&gt;
+            &lt;h4 class="modal-title" id="zl4j7r65416848jLabel"&gt;My awesome modal 2&lt;/h4&gt;
+         &lt;/div&gt;
+         &lt;div class="modal-body"&gt;
+            &lt;p&gt;This is my form : &lt;/p&gt;
+            &lt;form action="/myProject/models/myAction" role="form" class="form-horizontal" id="ModelMyActionForm" method="post" accept-charset="utf-8"&gt;
+               &lt;div style="display:none;"&gt;
+                  &lt;input type="hidden" name="_method" value="POST"&gt;
+               &lt;/div&gt;
+               &lt;div class="form-group"&gt;
+                  &lt;label for="ModelField" class="control-label col-md-3"&gt;Field&lt;/label&gt;
+                  &lt;div class="col-md-9"&gt;
+                     &lt;input name="data[Model][field]" value="Whatever you want" class="form-control" type="text" id="ModelField"&gt;
+                  &lt;/div&gt;
+               &lt;/div&gt;
+            &lt;/form&gt;
+         &lt;/div&gt;
+         &lt;div class="modal-footer"&gt;
+            &lt;a href="/myProject/myController/myAction" class="btn btn-success"&gt;Send&lt;/a&gt;
+         &lt;/div&gt;
+      &lt;/div&gt;
+   &lt;/div&gt;
+&lt;/div&gt;
+</code>
+<br>
+<button class="btn btn-danger" data-toggle="modal" data-target="#zl4j7r65416848j">Form modal</button>
+<div class="modal fade" id="zl4j7r65416848j" tabindex="-1" role="dialog" aria-labelledby="zl4j7r65416848jLabel" aria-hidden="true" style="display: none;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title" id="zl4j7r65416848jLabel">My awesome modal 2</h4></div><div class="modal-body"><p>This is my form : </p><form action="/myProject/models/myAction" role="form" class="form-horizontal" id="ModelMyActionForm" method="post" accept-charset="utf-8"><div style="display:none;"><input type="hidden" name="_method" value="POST"></div><div class="form-group"><label for="ModelField" class="control-label col-md-3">Field</label><div class="col-md-9"><input name="data[Model][field]" value="Whatever you want" class="form-control" type="text" id="ModelField"></div></div></form></div><div class="modal-footer"><a href="/myProject/myController/myAction" class="btn btn-success">Send</a></div></div></div></div>
+</pre>
+<br>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[string] header</code> - Text of the header.</li>
+			<li><code>[string] body</code> - Content of the body.</li>
+			<li><code>[array] options</code> - Used to add custom ID, class or a form into the modal. (default = array())</li>
+			<ul>
+				<li><code>[boolean] form</code> --> Useful to place the submit button in modal footer.</li>
+				<li><code>[string] id</code> --> An id is auto-generated by default, but you can replace it if you want.</li>
+				<li><code>[string] classes</code> --> Different classes for the modal.</li>
+			</ul>
+			<li><code>[array] buttons</code> - To customize the buttons. By default, no button is displayed except the open button. (default = array())</li>
+			<ul>
+				<br>
+				<p>For open and close button, you can just edit their name without associatives array if it's like that : <code>array('open' => 'My text')</code></p>
+				<li><code>[mixed] open</code> --> The button to open the modal.</li>
+				<ul>
+					<li><code>[string] name</code> --> The text of the button (or the name of icon if the index "button" is false.</li>
+					<li><code>[boolean] button</code> --> Select if you want a button or an icon to open the modal. (default = true)</li>
+					<li><code>[string] class</code> --> Different classes.</li>
+				</ul>
+				<li><code>[mixed] close</code> --> The button to close the modal (default none).</li>
+				<ul>
+					<li><code>[string] name</code> --> The text of the button.</li>
+					<li><code>[string] class</code> --> Different classes.</li>
+				</ul>
+				<li><code>[array] confirm</code> --> The button to confirm the modal.</li>
+				<ul>
+					<li><code>[string] name</code> --> The text of the button. (obligatory if you define a confirm button)</li>
+					<li><code>[mixed] link</code> --> URL to go (can be a CakePHP URL array). (obligatory if you define a confirm button)</li>
+					<li><code>[string] class</code> --> Different classes.</li>
+				</ul>
+			</ul>
+		</ul>
+
+		<br>
   	</div>
   </div>
 </div>
