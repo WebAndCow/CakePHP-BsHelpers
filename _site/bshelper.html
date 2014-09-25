@@ -546,34 +546,31 @@ $this->Bs->modal(
 
 <br>
 
-<p>An other example, with a form inside.</p>
+<p>An other example, with a form inside. It's recommended to not define your submit button in the modal body. It will be generated with a button in the modal footer if in options <code>'form' => true</code>.</p>
 
 <pre>
 <code class="php">&lt;?php
-$form =
-'&lt;p&g;This is my form : &lt;/p&gt;'.
 $form =
 $this->BsForm->create('Model', array('action' => 'myAction')).
 $this->BsForm->input('field', array('value' => 'Whatever you want')).
 $this->BsForm->end();
 
 echo
-$this->Bs->modal('My awesome modal 2', $form, array(), array('open' => array('name' => 'Form modal', 'class' => 'btn-danger'), 'confirm' => array('name' => 'Send', 'link' => array('controller' => 'myController', 'action' => 'myAction'))));
+$this->Bs->modal('My awesome modal 2', $form, array('form' => true), array('open' => array('name' => 'Form modal', 'class' => 'btn-danger'), 'confirm' => array('name' => 'Send', 'link' => array('controller' => 'myController', 'action' => 'myAction'))));
 ?&gt;
 </code>
 </pre>
 <pre class="result">
-<code class="html">&lt;button class="btn btn-danger" data-toggle="modal" data-target="#zl4j7r65416848j"&gt;Form modal&lt;/button&gt;
-&lt;div class="modal fade" id="zl4j7r65416848j" tabindex="-1" role="dialog" aria-labelledby="zl4j7r65416848jLabel" aria-hidden="true" style="display: none;"&gt;
+<code class="html">&lt;button class="btn btn-danger" data-toggle="modal" data-target="#ffvr4jn9z6r1p2p"&gt;Form modal&lt;/button&gt;
+&lt;div class="modal fade" id="ffvr4jn9z6r1p2p" tabindex="-1" role="dialog" aria-labelledby="ffvr4jn9z6r1p2pLabel" aria-hidden="true" style="display: none;"&gt;
    &lt;div class="modal-dialog"&gt;
       &lt;div class="modal-content"&gt;
-         &lt;div class="modal-header"&gt;
-            &lt;button type="button" class="close" data-dismiss="modal" aria-hidden="true"&gt;×&lt;/button&gt;
-            &lt;h4 class="modal-title" id="zl4j7r65416848jLabel"&gt;My awesome modal 2&lt;/h4&gt;
-         &lt;/div&gt;
-         &lt;div class="modal-body"&gt;
-            &lt;p&gt;This is my form : &lt;/p&gt;
-            &lt;form action="/myProject/models/myAction" role="form" class="form-horizontal" id="ModelMyActionForm" method="post" accept-charset="utf-8"&gt;
+         &lt;form action="/myProject/models/myAction" role="form" class="form-horizontal" id="ModelMyActionForm" method="post" accept-charset="utf-8"&gt;
+            &lt;div class="modal-header"&gt;
+               &lt;button type="button" class="close" data-dismiss="modal" aria-hidden="true"&gt;×&lt;/button&gt;
+               &lt;h4 class="modal-title" id="ffvr4jn9z6r1p2pLabel"&gt;My awesome modal 2&lt;/h4&gt;
+            &lt;/div&gt;
+            &lt;div class="modal-body"&gt;
                &lt;div style="display:none;"&gt;
                   &lt;input type="hidden" name="_method" value="POST"&gt;
                &lt;/div&gt;
@@ -583,18 +580,18 @@ $this->Bs->modal('My awesome modal 2', $form, array(), array('open' => array('na
                      &lt;input name="data[Model][field]" value="Whatever you want" class="form-control" type="text" id="ModelField"&gt;
                   &lt;/div&gt;
                &lt;/div&gt;
-            &lt;/form&gt;
-         &lt;/div&gt;
-         &lt;div class="modal-footer"&gt;
-            &lt;a href="/myProject/myController/myAction" class="btn btn-success"&gt;Send&lt;/a&gt;
-         &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class="modal-footer"&gt;
+               &lt;button class="btn btn-submit btn-success"&gt;Send&lt;/button&gt;
+            &lt;/div&gt;
+         &lt;/form&gt;
       &lt;/div&gt;
    &lt;/div&gt;
 &lt;/div&gt;
 </code>
 <br>
-<button class="btn btn-danger" data-toggle="modal" data-target="#zl4j7r65416848j">Form modal</button>
-<div class="modal fade" id="zl4j7r65416848j" tabindex="-1" role="dialog" aria-labelledby="zl4j7r65416848jLabel" aria-hidden="true" style="display: none;"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title" id="zl4j7r65416848jLabel">My awesome modal 2</h4></div><div class="modal-body"><p>This is my form : </p><form action="/myProject/models/myAction" role="form" class="form-horizontal" id="ModelMyActionForm" method="post" accept-charset="utf-8"><div style="display:none;"><input type="hidden" name="_method" value="POST"></div><div class="form-group"><label for="ModelField" class="control-label col-md-3">Field</label><div class="col-md-9"><input name="data[Model][field]" value="Whatever you want" class="form-control" type="text" id="ModelField"></div></div></form></div><div class="modal-footer"><a href="/myProject/myController/myAction" class="btn btn-success">Send</a></div></div></div></div>
+<button class="btn btn-danger" data-toggle="modal" data-target="#ffvr4jn9z6r1p2p">Form modal</button>
+<div class="modal fade" id="ffvr4jn9z6r1p2p" tabindex="-1" role="dialog" aria-labelledby="ffvr4jn9z6r1p2pLabel" aria-hidden="true" style="display: none;"><div class="modal-dialog"><div class="modal-content"><form action="/myProject/models/myAction" role="form" class="form-horizontal" id="ModelMyActionForm" method="post" accept-charset="utf-8"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title" id="ffvr4jn9z6r1p2pLabel">My awesome modal 2</h4></div><div class="modal-body"><div style="display:none;"><input type="hidden" name="_method" value="POST"></div><div class="form-group"><label for="ModelField" class="control-label col-md-3">Field</label><div class="col-md-9"><input name="data[Model][field]" value="Whatever you want" class="form-control" type="text" id="ModelField"></div></div></div><div class="modal-footer"><button class="btn btn-submit btn-success">Send</button></div></form></div></div></div>
 </pre>
 <br>
 		<h4 class="parameters">Parameters</h4>
