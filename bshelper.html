@@ -5,9 +5,9 @@ description: "Cakephp-BsHelpers : Extension of the CakePHP's FormHelper and Html
 ---
 <div class="container">
   <div class="row">
-    <div class="col-xs-12">
+    <div class="col-md-9">
     	<h1>BsHelper</h1>
-    	<h2 class="page-header">Layout</h2>
+    	<h2 class="page-header" id="layout">Layout</h2>
 
 <!-- Fonction HTML -->
     	<h3>html() or html5()</h3>
@@ -165,7 +165,7 @@ $this->Bs->close(2);
 
 
 
-		<h2 class="page-header">Grid</h2>
+		<h2 class="page-header" id="grid">Grid</h2>
 
 <!-- CONTAINER -->
 		<h3>container()</h3>
@@ -261,7 +261,7 @@ $this->Bs->col('xs12', 'sm4 of3', 'md2 pl1', 'lg9 ph3', array('class' => 'myClas
 
 
 
-		<h2 class="page-header">Table</h2>
+		<h2 class="page-header" id="table">Table</h2>
 		
 <!-- ROW -->
 		<h3>table()</h3>
@@ -368,7 +368,7 @@ $this->Bs->endTable();
 </pre>
 		<br>
 
-		<h2 class="page-header">Components</h2>
+		<h2 class="page-header" id="components">Components</h2>
 
 <!-- ALERT -->
 		<h3>alert()</h3>
@@ -592,6 +592,55 @@ $this->Bs->modal('My awesome modal 2', $form, array('form' => true), array('open
 		</ul>
 
 		<br>
+
+<!-- CONFIRM -->
+		<h3>confirm()</h3>
+		<p>Create a Bootstrap button with a confirm like a Bootstrap Modal.</p>
+<pre>
+<code class="php">&lt;?php echo
+$this->Bs->confirm('Send', array('controller' => 'myController', 'action' => 'myAction'), array('texte' => 'Do you want to confirm ?'));
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;button class="btn btn-success" data-toggle="modal" data-target="#r884jrjd1f4azja"&gt;Send&lt;/button&gt;
+&lt;div class="modal fade " id="r884jrjd1f4azja" tabindex="-1" role="dialog" aria-labelledby="r884jrjd1f4azjaLabel" aria-hidden="true"&gt;
+   &lt;div class="modal-dialog"&gt;
+      &lt;div class="modal-content"&gt;
+         &lt;div class="modal-header"&gt;
+            &lt;button type="button" class="close" data-dismiss="modal" aria-hidden="true"&gt;×&lt;/button&gt;
+            &lt;h4 class="modal-title" id="r884jrjd1f4azjaLabel"&gt;Send&lt;/h4&gt;
+         &lt;/div&gt;
+         &lt;div class="modal-body"&gt;
+            &lt;p&gt;Do you want to confirm ?&lt;/p&gt;
+         &lt;/div&gt;
+         &lt;div class="modal-footer"&gt;
+            &lt;button class="btn btn-link" data-dismiss="modal"&gt;Fermer&lt;/button&gt;
+            &lt;a href="/myProject/myController/myAction" class="btn btn-success"&gt;Send&lt;/a&gt;
+         &lt;/div&gt;
+      &lt;/div&gt;
+   &lt;/div&gt;
+&lt;/div&gt;
+</code>
+<br>
+<button class="btn btn-success" data-toggle="modal" data-target="#r884jrjd1f4azja">Send</button>
+<div class="modal fade " id="r884jrjd1f4azja" tabindex="-1" role="dialog" aria-labelledby="r884jrjd1f4azjaLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title" id="r884jrjd1f4azjaLabel">Send</h4></div><div class="modal-body"><p>Do you want to confirm ?</p></div><div class="modal-footer"><button class="btn btn-link" data-dismiss="modal">Fermer</button><a href="/myProject/myController/myAction" class="btn btn-success">Send</a></div></div></div></div>
+</pre>
+		<h4 class="parameters">Parameters</h4>
+		<ul>
+			<li><code>[string] button</code> - Text in the button.</li>
+			<li><code>[mixed] link</code> - URL of the link. It can be a url like CakePHP (with array).</li>
+			<li><code>[array] options</code> - Options button. (default = array())</li>
+			<ul>
+				<li><code>[string] texte</code> --> The text inside the modal</li>
+				<li><code>[string] button</code> --> The name of the confirm button</li>
+				<li><code>[string] color</code> --> The color of the open button and the confirm button ("success", "danger", etc)</li>
+				<li><code>[string] header</code> --> The text of the modal header</li>
+			</ul>
+		</ul>
+
+		<br>
   	</div>
+  	{% include sidebar_bs.html %}
   </div>
 </div>
