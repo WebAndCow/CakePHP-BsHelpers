@@ -6,12 +6,9 @@ BsFormHelper and BsHelper
 
 Extension of the CakePHP's FormHelper to use the framework Twitter Bootstrap v3.0.0 more easily.
 
-The website is coming soon ! Meanwhile, The documentation in french is available here :
+The full documentation is available here : http://webandcow.github.io/CakePHP-BsHelpers
 
-- [BsFormHelper](http://www.webandcow.com/Page/Tutoriels/35/Bootstrap-et-CakePHP-9 "BsFormHelper")
-- [La nouvelle grille](http://www.webandcow.com/Page/Tutoriels/32/CakePHP-et-Twitter-Bootstrap-7 "La nouvelle grille")
-- [Push et pull](http://www.webandcow.com/Page/Tutoriels/33/CakePHP-et-Twitter-Bootstrap-8 "Push et pull")
-- [Nouveautés du BsHelper](http://www.webandcow.com/Page/Tutoriels/37/Bootstrap-et-CakePHP-10 "Nouveautés du BsHelper")
+But, the BsForm documentation isn't ready yet. So, in the meantime, you can read this article (in french) to learn how to use it : [BsFormHelper](http://www.webandcow.com/Page/Tutoriels/35/Bootstrap-et-CakePHP-9 "BsFormHelper")
 
 
 ## Installation
