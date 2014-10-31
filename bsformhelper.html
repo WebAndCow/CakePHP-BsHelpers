@@ -5,23 +5,72 @@ description: "Cakephp-BsHelpers : Extension of the CakePHP's FormHelper and Html
 ---
 <div class="container">
   <div class="row">
-    <div class="col-xs-12">
-    	<br />
-    	<br />
-    	<br />
-    	<h2 class="text-center">Sorry, this page is not ready yet.</h2>
-    	<br />
-    	<br />
-    	<p class="text-center">It is currently under construction.</p>
-    	<p class="text-center">Please, check back later :)</p>
-    	<br />
-    	<br />
-    	<br />
-    	<br />
-    	<br />
-    	<br />
-    	<br />
-    	<br />
+    <div class="col-md-9">
+        <h1>BsFormHelper</h1>
+        <h2 class="page-header" id="layout">Building</h2>
+
+<!-- Fonction LEFT -->
+        <h3>create()</h3>
+        <p>Create a bootstrap form (horizontal form by default).</p>
+<pre>
+<code class="php">&lt;?php echo 
+$this->BsForm->create('Post', array('action' => 'add'));
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;form action="/bbcorg/posts/add" role="form" class="form-horizontal" id="PostAddForm" method="post" accept-charset="utf-8"&gt;
+   &lt;div style="display:none;"&gt;
+      &lt;input type="hidden" name="_method" value="POST"/&gt;
+   &lt;/div&gt;
+</code>
+</pre>
+        <h4 class="parameters">Parameters</h4>
+        <ul>
+            <li><code>[mixed] model</code> -The model name for which the form is being defined. (default = null)</li>
+            <li><code>[array] options</code> - An array of html attributes and options. (default = array())</li>
+        </ul>
+
+        <br>
+
+<!-- Fonction LEFT -->
+        <h3>input()</h3>
+        <p>Create a bootstrap input.</p>
+<pre>
+<code class="php">&lt;?php echo 
+$this->BsForm->input('name', array('label' => 'Full Name', 'state' => 'success', 'help' => 'Type your full name here'));
+?&gt;
+</code>
+</pre>
+<pre class="result">
+<code class="html">&lt;div class="form-group has-success"&gt;
+   &lt;label for="name" class="control-label col-md-3"&gt;Full Name&lt;/label&gt;
+   &lt;div class="col-md-9"&gt;
+      &lt;input name="data[name]" class="form-control" type="text" id="name"/&gt;
+      &lt;span class="help-block"&gt;Type your full name here&lt;/span&gt;
+   &lt;/div&gt;
+&lt;/div&gt;
+</code>
+</pre>
+        <h4 class="parameters">Parameters</h4>
+        <ul>
+            <li><code>[string] fieldName</code> - This should be "Modelname.fieldname</li>
+            <li>
+                <code>[array] options</code> - Each type of input takes different options. (default = array())
+                <p>There are options by default and new options added : </p>
+                <ul>
+                    <li>[Default] before - Add a 'form-group' div</li>
+                    <li>[Default] between - Open the right column of the form</li>
+                    <li>[Default] after - Close div tags</li>
+                    <li>[Default] div - Set to 'false'</li>
+                    <li>[Default] class - Add 'form-control'</li>
+                    <li>[Default] label - Add a 'control-label' class and if the form is horizontal, put the label into the left column of it</li>
+                    <br>
+                    <li>[Added] state - Change the state of the input to 'error', 'warning' or 'success'</li>
+                    <li>[Added] help - Add a message under the input to give more informations</li>
+                </ul>
+            </li>
+        </ul>
     </div>
   </div>
 </div>
