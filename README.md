@@ -8,8 +8,6 @@ Extension of the CakePHP's FormHelper to use the framework Twitter Bootstrap v3.
 
 The full documentation is available here : http://webandcow.github.io/CakePHP-BsHelpers
 
-But, the BsForm documentation isn't ready yet. So, in the meantime, you can read this article (in french) to learn how to use it : [BsFormHelper](http://www.webandcow.com/Page/Tutoriels/35/Bootstrap-et-CakePHP-9 "BsFormHelper")
-
 
 ## Installation
 
