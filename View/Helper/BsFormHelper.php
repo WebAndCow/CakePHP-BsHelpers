@@ -35,18 +35,25 @@ class BsFormHelper extends FormHelper {
 	private $__right = 9;
 
 /**
- * Defines the type of form being created, horizontal form or inline form. Set by Bs3FormHelper::create()
+ * Defines the type of form being created, horizontal form or inline form. Set by BsFormHelper::create()
  *
  * @var string
  */
 	protected $_typeForm = 'horizontal';
 
 /**
- * Defines the model of form being created. Set by Bs3FormHelper::create()
+ * Defines the model of form being created. Set by BsFormHelper::create()
  *
  * @var string
  */
 	protected $_modelForm = null;
+
+/**
+ * Defines the action of form being created. Set by BsFormHelper::create()
+ *
+ * @var string
+ */
+	protected $_actionForm = null;
 
 /**
  * Return the current value of $_left
@@ -125,6 +132,25 @@ class BsFormHelper extends FormHelper {
 	}
 
 /**
+ * Return the current value of $_actionForm
+ * 
+ * @return string
+ */
+	protected function _getActionForm() {
+		return $this->_actionForm;
+	}
+
+/**
+ * Set the value of $_actionForm
+ *
+ * @param string $val Action of the form
+ * @return void
+ */
+	protected function _setActionForm($val) {
+		$this->_actionForm = $val;
+	}
+
+/**
  * Returns an HTML FORM element.
  *
  * Extends of FormHelper::create() so get same options and params
@@ -155,6 +181,10 @@ class BsFormHelper extends FormHelper {
 		}
 
 		$this->_setModelForm($model);
+
+		if(isset($options['action'])) {
+			$this->_setActionForm($options['action']);
+		}
 
 		return parent::create($model, $options);
 	}
