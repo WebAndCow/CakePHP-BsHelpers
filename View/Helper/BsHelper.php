@@ -53,6 +53,19 @@ class BsHelper extends HtmlHelper {
 	public $dpCssPath = 'BsHelpers.datepicker';
 
 /**
+ * Path for JS CkEditor
+ *
+ * @var string
+ */
+	public $ckEditorJsPath = 'ckeditor/ckeditor';
+
+/**
+ * If CkEditor is loaded
+ * @var bool
+ */
+	public $ckEditorLoad = false;
+
+/**
  * If Font Awesome is loaded
  * @var bool
  */
@@ -206,6 +219,11 @@ class BsHelper extends HtmlHelper {
 			$out .= parent::script($this->dpJsPath);
 		}
 
+		// CkEditor JS
+		if($this->ckEditorLoad) {
+			$out .= parent::script($this->ckEditorJsPath);
+		}
+
 		// Others JS
 		foreach ($arrayJs as $js) {
 			$out .= parent::script($js);
@@ -247,6 +265,21 @@ class BsHelper extends HtmlHelper {
 	public function closeHeader() {
 		return '</header>';
 	}
+
+
+/**
+ * Change the value of ckEditorLoad
+ *
+ * In a layout, this function must be called before the js function
+ *
+ * @param bool $load
+ * @return void
+ */
+	public function setCkEditorLoad($load = true) {
+		$this->ckEditorLoad = $load;
+	}
+
+	
 
 				/*--------------------------*
 				*						    *
