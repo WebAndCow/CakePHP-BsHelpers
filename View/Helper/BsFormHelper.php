@@ -421,6 +421,35 @@ class BsFormHelper extends FormHelper {
 	}
 
 /**
+* Replace a classic input with a CkEditor
+*
+* $ckEditorLoad must be set to true in the BsHelper so this feature can work
+*
+* @param string $fieldName Name of a field, like this "Modelname.fieldname"
+* 
+* @return string An HTML text with a line of Javascript to launch CKEDITOR Script
+*/
+public function ckEditor($fieldName) {
+
+		// If there is a point in the fieldName
+		if(strpos($fieldname, '.') !== false) {
+			$nameForReplace = Inflector::camelize($fieldName);
+		} else {
+			$nameForReplace = $this->_modelForm.Inflector::camelize($fieldName);
+		}
+
+		// Create the line of JS
+		$out  = '<script>';
+		$out .= 'CKEDITOR.replace("'.$nameForReplace.'");';
+		$out .= '</script>';
+		return $out;
+	}
+
+
+
+
+
+/**
  * Creates a checkbox input widget.
  *
  * Extends of FormHelper::checkbox() so get same options and params
@@ -698,6 +727,12 @@ class BsFormHelper extends FormHelper {
  * - 'label' - Set to 'false'
  * - 'class' - Set into a green button instead of a default button
  *
+ *
+ * The UX option is set to true by default
+ * set 'ux' => false if you don't want to use it for one form
+ * In order to correctly work, you need $faLoad and $bsAddonLoad set to true in the BsHelper
+ *
+ *
  * @param string $caption The label appearing on the button OR if string contains :// or the
  *  extension .jpg, .jpe, .jpeg, .gif, .png use an image if the extension
  *  exists, AND the first character is /, image is relative to webroot,
@@ -735,6 +770,26 @@ class BsFormHelper extends FormHelper {
 		}
 
 		$out .= parent::submit($caption, $options);
+
+		//----- [ux] option
+		$scriptUX = true;
+		if(isset($options['ux']) and $options['ux'] == false)
+			$scriptUX = false;
+
+		if($scriptUX) {
+			$out .= '<i class="fa fa-spinner fa-spin form-submit-wait"></i>';
+
+			$idForm = '#'.Inflector::camelize($this->_modelForm.' '.$this->_actionForm.' Form');
+
+			$out .= '<script>';
+			$out .= '$("'.$idForm.'").submit(function(){';
+			$out .= '$("'.$idForm.' input[type=\'submit\']").prop("disabled" , true);';
+			$out .= '$("'.$idForm.' .form-submit-wait").show();';
+			$out .= '});';
+			$out .= '</script>';
+		}
+
+
 
 		if ($this->_getFormType() == 'horizontal') {
 			$out .= '</div></div>';
