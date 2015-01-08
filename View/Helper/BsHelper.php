@@ -57,13 +57,13 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $ckEditorJsPath = 'ckeditor/ckeditor';
+	public $ckEditorJsPath = 'BsHelpers./vendor/ckeditor/ckeditor/ckeditor';
 
 /**
  * If CkEditor is loaded
  * @var bool
  */
-	public $ckEditorLoad = false;
+	public $ckEditorLoad = true;
 
 /**
  * If Font Awesome is loaded

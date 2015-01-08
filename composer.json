@@ -26,5 +26,8 @@
     },
     "suggest": {
         "twbs/bootstrap": "Bootstrap framework"
+    },
+    "config": {
+        "vendor-dir": "webroot/vendor"
     }
 }

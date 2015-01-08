@@ -23,5 +23,5 @@
 /* Style for the spinner */
 /* You can of course update the color if you need to */
 .form-submit-wait {
-	font-size: 20px; margin-top: 15px; color: #43B7E7; display: none;
+	font-size: 20px; margin-top: 15px; margin-left: 15px; color: #5cb85c; display: none;
 }

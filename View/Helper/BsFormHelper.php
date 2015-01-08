@@ -9,7 +9,12 @@ App::uses('Set', 'Utility');
  * @author Web&Cow - France
  *
  */
-class BsFormHelper extends FormHelper {
+class BsFormHelper extends AppHelper {
+
+/**
+ * We call the BsHelper so we can use some feature of it
+ */
+	public $helpers = array('Bs' , 'Form');
 
 /**
  * The name of the helper
@@ -150,6 +155,35 @@ class BsFormHelper extends FormHelper {
 		$this->_actionForm = $val;
 	}
 
+
+/**
+ * Returns an HTML element
+ */
+public function title($title , $h = 4) {
+
+	return $this->_content($title , 'h'.$h , 'h-form');
+
+}
+
+public function indications($indications , $class = '') {
+
+	return $this->_content($indications , 'p' , $class);
+} 
+
+private function _content($content , $tag , $class = '') {
+
+	$out  = $this->Bs->row();
+	$out .= $this->Bs->col('xs'.$this->getRight().' of'.$this->getLeft());
+
+	$out .= $this->Bs->tag($tag , $content , array('class' => $class));
+
+	$out .= $this->Bs->close(2);
+
+	return $out;
+}
+
+
+
 /**
  * Returns an HTML FORM element.
  *
@@ -186,7 +220,7 @@ class BsFormHelper extends FormHelper {
 			$this->_setActionForm($options['action']);
 		}
 
-		return parent::create($model, $options);
+		return $this->Form->create($model, $options);
 	}
 
 /**
@@ -309,7 +343,7 @@ class BsFormHelper extends FormHelper {
 			}
 		}
 
-		return parent::input($fieldName, $options) . $this->setFormType($formType);
+		return $this->Form->input($fieldName, $options) . $this->setFormType($formType);
 	}
 
 /**
@@ -396,9 +430,9 @@ class BsFormHelper extends FormHelper {
 					$buttonOptions['src'] = $options['src'];
 					$buttonOptions['type'] = 'image';
 					$buttonOptions['label'] = false;
-					$out .= parent::input($options['content'], $buttonOptions);
+					$out .= $this->Form->input($options['content'], $buttonOptions);
 				} else {
-					$out .= parent::button($options['content'], $buttonOptions);
+					$out .= $this->Form->button($options['content'], $buttonOptions);
 				}
 
 				$out .= '</span>';
@@ -432,7 +466,7 @@ class BsFormHelper extends FormHelper {
 public function ckEditor($fieldName) {
 
 		// If there is a point in the fieldName
-		if(strpos($fieldname, '.') !== false) {
+		if(strpos($fieldName, '.') !== false) {
 			$nameForReplace = Inflector::camelize($fieldName);
 		} else {
 			$nameForReplace = $this->_modelForm.Inflector::camelize($fieldName);
@@ -538,14 +572,14 @@ public function ckEditor($fieldName) {
 		//----- [inline] option
 		if (!(isset($options['inline']) && ($options['inline'] == 'inline' || $options['inline'] == true))) {
 			$out .= '<div class="checkbox">';
-			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options) . ' ' . $label, $labelClass);
+			$out .= $this->Form->label($fieldName, $this->Form->checkbox($fieldName, $options) . ' ' . $label, $labelClass);
 		} else {
 			unset($options['inline']);
 			if (isset($labelClass['class'])) {
 				$label = $labelClass['class'] . ' checkbox-inline';
 			}
 
-			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options) . ' ' . $label, $labelClass);
+			$out .= $this->Form->label($fieldName, $this->Form->checkbox($fieldName, $options) . ' ' . $label, $labelClass);
 		}
 
 		//----- [help] option for single checkbox
@@ -613,7 +647,7 @@ public function ckEditor($fieldName) {
 			}
 		}
 
-		$out .= parent::select($fieldName, $options, $attributes);
+		$out .= $this->Form->select($fieldName, $options, $attributes);
 
 		if ($this->_getFormType() == 'horizontal') {
 			//----- [help] attribute
@@ -708,7 +742,7 @@ public function ckEditor($fieldName) {
 
 		$attributes = Hash::merge($defaultAttributes, $attributes);
 
-		$out .= parent::radio($fieldName, $options, $attributes);
+		$out .= $this->Form->radio($fieldName, $options, $attributes);
 
 		$out .= '</label>';
 		$out .= (!$inline) ? '</div></div></div>' : '';
@@ -769,7 +803,7 @@ public function ckEditor($fieldName) {
 			}
 		}
 
-		$out .= parent::submit($caption, $options);
+		$out .= $this->Form->submit($caption, $options);
 
 		//----- [ux] option
 		$scriptUX = true;
@@ -876,7 +910,7 @@ public function ckEditor($fieldName) {
 					$out .= $this->input($field, $options);
 				}
 
-				$script .= 'var date_' . $key . ' = $(\'#' . parent::domId($field) . '\').datepicker(\'getDate\');
+				$script .= 'var date_' . $key . ' = $(\'#' . $this->Form->domId($field) . '\').datepicker(\'getDate\');
 				date_' . $key . '.setHours(0, -date_' . $key . '.getTimezoneOffset(), 0, 0);
 				date_' . $key . ' = date_' . $key . '.toISOString().slice(0,19).replace(\'T\', " ");
 				$(\'#alt_dp_' . $key . '\').attr(\'value\', date_' . $key . ');';
@@ -902,7 +936,7 @@ public function ckEditor($fieldName) {
 			$script .= $this->__scriptDP($optionsDP) . '})';
 
 			$script .= '.on(\'changeDate\', function() {
-				var date = $(\'#' . parent::domId($fieldName) . '\').datepicker(\'getDate\');
+				var date = $(\'#' . $this->Form->domId($fieldName) . '\').datepicker(\'getDate\');
 				date.setHours(0, -date.getTimezoneOffset(), 0, 0);
 				date = date.toISOString().slice(0,19).replace(\'T\', " ");
 				$(\'#alt_dp\').attr(\'value\', date);';
@@ -950,6 +984,6 @@ public function ckEditor($fieldName) {
  */
 
 	public function end($options = null, $secureAttributes = array()) {
-		return parent::end($options, $secureAttributes);
+		return $this->Form->end($options, $secureAttributes);
 	}
 }
