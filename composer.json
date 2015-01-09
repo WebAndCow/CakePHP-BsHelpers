@@ -22,7 +22,7 @@
     "require": {
         "php": ">=5.3.0",
         "composer/installers": "*",
-        "ckeditor/ckeditor": "*"
+        "ckeditor/ckeditor": "*",
     },
     "suggest": {
         "twbs/bootstrap": "Bootstrap framework"

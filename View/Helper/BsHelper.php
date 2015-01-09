@@ -9,7 +9,15 @@ App::uses('Inflector', 'Utility');
  * @author AWL
  *
  */
-class BsHelper extends HtmlHelper {
+class BsHelper extends AppHelper {
+
+/**
+ * Bs uses the HtmlHelper
+ *
+ * @var array
+ */
+	public $helpers = array('Html');
+
 
 /**
  * The name of the helper
@@ -61,6 +69,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * If CkEditor is loaded
+ *
  * @var bool
  */
 	public $ckEditorLoad = true;
@@ -187,24 +196,26 @@ class BsHelper extends HtmlHelper {
  * @return string A link tag for the head element
  */
 	public function css($path = array(), $options = array()) {
-		$out = parent::css($this->pathCSS);
+		$out = $this->Html->css($this->pathCSS);
 		if ($this->faLoad) {
-			$out .= parent::css($this->faPath);
+			$out .= $this->Html->css($this->faPath);
 		}
 		if ($this->bsAddonLoad) {
-			$out .= parent::css($this->bsAddonPath);
+			$out .= $this->Html->css($this->bsAddonPath);
 		}
 		if ($this->dpLoad) {
-			$out .= parent::css($this->dpCssPath);
+			$out .= $this->Html->css($this->dpCssPath);
 		}
 
 		// Others CSS
 		foreach ($path as $css) {
-			$out .= parent::css($css, $options);
+			$out .= $this->Html->css($css, $options);
 		}
 
 		return $out;
 	}
+
+
 
 /**
  * Load JS for the current page
@@ -213,20 +224,20 @@ class BsHelper extends HtmlHelper {
  * @return string A script tag for the head element
  */
 	public function js($arrayJs = array()) {
-		$out = parent::script($this->pathJquery);
-		$out .= parent::script($this->pathJS);
+		$out = $this->Html->script($this->pathJquery);
+		$out .= $this->Html->script($this->pathJS);
 		if ($this->dpLoad) {
-			$out .= parent::script($this->dpJsPath);
+			$out .= $this->Html->script($this->dpJsPath);
 		}
 
 		// CkEditor JS
 		if($this->ckEditorLoad) {
-			$out .= parent::script($this->ckEditorJsPath);
+			$out .= $this->Html->script($this->ckEditorJsPath);
 		}
 
 		// Others JS
 		foreach ($arrayJs as $js) {
-			$out .= parent::script($js);
+			$out .= $this->Html->script($js);
 		}
 
 		return $out;
@@ -253,7 +264,7 @@ class BsHelper extends HtmlHelper {
  * @return string Tag header
  */
 	public function header($options = array()) {
-		$out = parent::tag('header', null, $options);
+		$out = $this->Html->tag('header', null, $options);
 		return $out;
 	}
 
@@ -279,7 +290,6 @@ class BsHelper extends HtmlHelper {
 		$this->ckEditorLoad = $load;
 	}
 
-	
 
 				/*--------------------------*
 				*						    *
@@ -299,7 +309,7 @@ class BsHelper extends HtmlHelper {
 		if (isset($options['class'])) {
 			$class .= ' ' . $options['class'];
 		}
-		$out .= parent::div($class, null, $options);
+		$out .= $this->Html->div($class, null, $options);
 		return $out;
 	}
 
@@ -315,7 +325,7 @@ class BsHelper extends HtmlHelper {
 		if (isset($options['class'])) {
 			$class .= ' ' . $options['class'];
 		}
-		$out .= parent::div($class, null, $options);
+		$out .= $this->Html->div($class, null, $options);
 		return $out;
 	}
 
@@ -400,7 +410,7 @@ class BsHelper extends HtmlHelper {
 		if (isset($attributes['class'])) {
 			$class .= ' ' . $attributes['class'];
 		}
-		$out = parent::div($class, null, $attributes);
+		$out = $this->Html->div($class, null, $attributes);
 		return $out;
 	}
 
@@ -667,7 +677,7 @@ class BsHelper extends HtmlHelper {
 		} else {
 			$options['class'] = 'img-responsive';
 		}
-		return parent::image($path, $options);
+		return $this->Html->image($path, $options);
 	}
 
 /**
@@ -727,9 +737,9 @@ class BsHelper extends HtmlHelper {
 		}
 
 		if ($tag != 'a') {
-			return parent::tag($tag, $text, $options);
+			return $this->Html->tag($tag, $text, $options);
 		} else {
-			return parent::link($text, $url, $options, $confirmMessage);
+			return $this->Html->link($text, $url, $options, $confirmMessage);
 		}
 	}
 
@@ -891,4 +901,17 @@ class BsHelper extends HtmlHelper {
 
 		return $this->modal($header, $body, null, $buttons);
 	}
+
+/**
+ * Just call the Tag function of the HtmlHelper
+ *
+ * @param string $name Tag name.
+ * @param string $text String content that will appear inside the div element.
+ *   If null, only a start tag will be printed
+ * @param array $options Additional HTML attributes of the DIV tag, see above.
+ * @return string The formatted tag element
+ */
+ 	public function tag($tag , $text = null, $options = array()) {
+		return $this->Html->tag($tag , $text , $options);
+	}		
 }

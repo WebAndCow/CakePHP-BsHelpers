@@ -205,6 +205,7 @@ class BsHelperTest extends CakeTestCase {
 		// MORE JS //
 		/////////////
 
+		$this->Bs->ckEditorLoad = false;
 		$result = $this->Bs->js(array('myJs', 'myOther'));
 
 		$expected = array(
@@ -714,7 +715,8 @@ class BsHelperTest extends CakeTestCase {
 
 		$body = $this->BsForm->create('myModel' , array('action' => 'myAction'));
 		$body .= $this->BsForm->input('myField');
-		$body .= $this->BsForm->end('Send');
+		$body .= $this->BsForm->submit('Send');
+		$body .= $this->BsForm->end();
 
 		$result = $this->Bs->modal('Modal title', $body, $options);
 
@@ -741,6 +743,11 @@ class BsHelperTest extends CakeTestCase {
 								array('div' => array('class' => 'form-group')),
 									array('div' => array('class' => 'col-md-offset-3 col-md-9')),
 										array('input' => array('value' => 'Send', 'class' => 'btn btn-success', 'type')),
+										array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait')),
+										'/i',
+										'<script',
+											'$("#MyModelMyActionForm").submit(function(){$("#MyModelMyActionForm input[type=\'submit\']").prop("disabled" , true);$("#MyModelMyActionForm .form-submit-wait").show();});',
+										'/script',
 									'/div',
 								'/div',
 							'/div',
@@ -750,6 +757,7 @@ class BsHelperTest extends CakeTestCase {
 			'/div'
 		);
 
+	
 		$this->assertTags($result, $expected);
 
 		///////////////////////////////

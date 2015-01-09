@@ -2,6 +2,7 @@
 
 App::uses('View', 'View');
 App::uses('BsFormHelper', 'BsHelpers.View/Helper');
+App::uses('BsHelper', 'BsHelpers.View/Helper');
 
 class BsFormHelperTest extends CakeTestCase {
 
@@ -10,6 +11,7 @@ class BsFormHelperTest extends CakeTestCase {
     	parent::setUp();
 	    $View = new View();
 	    $this->BsForm = new BsFormHelper($View);
+	    $this->Bs = new BsHelper($View);
     }
 
     public function testSetLeft()
@@ -271,21 +273,21 @@ class BsFormHelperTest extends CakeTestCase {
 			array('div' => array('class' => 'form-group')),
 				array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'Date', '/label',
 				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
-					array('select' => array('name', 'class' => 'input_date form-control', 'id')),
+					array('select' => array('name', 'class' => 'input_date', 'id')),
 						$monthsRegex,
 						array('option' => array('value' => date('m', $now), 'selected' => 'selected')),
 							date('F', $now),
 						'/option',
 					'*/select',
 					'-',
-					array('select' => array('name', 'class' => 'input_date form-control', 'id')),
+					array('select' => array('name', 'class' => 'input_date', 'id')),
 						$daysRegex,
 						array('option' => array('value' => date('d', $now), 'selected' => 'selected')),
 							date('j', $now),
 						'/option',
 					'*/select',
 					'-',
-					array('select' => array('name', 'class' => 'input_date form-control', 'id')),
+					array('select' => array('name', 'class' => 'input_date', 'id')),
 						$yearsRegex,
 						array('option' => array('value' => date('Y', $now), 'selected' => 'selected')),
 							date('Y', $now),
@@ -295,6 +297,8 @@ class BsFormHelperTest extends CakeTestCase {
 			'/div'
 		);
 		$this->assertTags($result, $expected);
+
+
 
 		///////////////////////////
 		// INPUT DATE WITH CLASS //
@@ -308,21 +312,21 @@ class BsFormHelperTest extends CakeTestCase {
 			array('div' => array('class' => 'form-group')),
 				array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'Date', '/label',
 				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
-					array('select' => array('name', 'class' => 'classTest input_date form-control', 'id')),
+					array('select' => array('name', 'class' => 'classTest input_date', 'id')),
 						$monthsRegex,
 						array('option' => array('value' => date('m', $now), 'selected' => 'selected')),
 							date('F', $now),
 						'/option',
 					'*/select',
 					'-',
-					array('select' => array('name', 'class' => 'classTest input_date form-control', 'id')),
+					array('select' => array('name', 'class' => 'classTest input_date', 'id')),
 						$daysRegex,
 						array('option' => array('value' => date('d', $now), 'selected' => 'selected')),
 							date('j', $now),
 						'/option',
 					'*/select',
 					'-',
-					array('select' => array('name', 'class' => 'classTest input_date form-control', 'id')),
+					array('select' => array('name', 'class' => 'classTest input_date', 'id')),
 						$yearsRegex,
 						array('option' => array('value' => date('Y', $now), 'selected' => 'selected')),
 							date('Y', $now),
@@ -799,104 +803,6 @@ class BsFormHelperTest extends CakeTestCase {
 		$this->assertTags($result, $expected);
     }
 
-    public function testDatepicker()
-    {
-	    ///////////////////////
-    	// SIMPLE DATEPICKER //
-	    ///////////////////////
-
-    	$result = $this->BsForm->datepicker('Test');
-
-    	$expected = array(
-			array('div' => array('class' => 'dp-container')),
-				array('div' => array('class' => 'form-group')),
-					array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())),
-						'Test',
-					'/label',
-					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
-						array('input' => array('type', 'name', 'class' => 'form-control', 'id')),
-					'/div',
-				'/div',	
-				array('input' => array('type' => 'hidden', 'name', 'class' => 'form-control', 'id')),
-			'/div',
-			'<script',
-				'$(\'.dp-container input\').datepicker({format : "dd/mm/yyyy",language : "fr",}).on(\'changeDate\', function() {
-				var date = $(\'#Test\').datepicker(\'getDate\');
-				date.setHours(0, -date.getTimezoneOffset(), 0, 0);
-				date = date.toISOString().slice(0,19).replace(\'T\', " ");
-				$(\'#alt_dp\').attr(\'value\', date);});',
-			'/script'
-    	);
-
-		$this->assertTags($result, $expected);
-
-		//////////////////////
-    	// DATEPICKER RANGE //
-	    //////////////////////
-
-    	$result = $this->BsForm->datepicker(array('Test1', 'Test2'), array('label' => 'Label', 'autoclose' => true, 'todayHighlight' => false, 'daysOfWeekDisabled' => 3));
-
-    	$expected = array(
-    		array('div' => array('class' => 'form-group')),
-    			array('label' => array('class' => 'control-label col-md-' . $this->BsForm->getLeft())), 'Label', '/label',
-				array('div' => array('class' => 'dp-container')),
-					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
-						array('div' => array('class' => 'input-daterange input-group', 'id' => 'datepicker')),
-							array('input' => array('type', 'name', 'class' => 'form-control', 'id')),
-							array('input' => array('type' => 'hidden', 'name', 'class' => 'form-control', 'id')),
-							array('span' => array('class' => 'input-group-addon')),
-								'à',
-							'/span',
-							array('input' => array('type', 'name', 'class' => 'form-control', 'id')),
-							array('input' => array('type' => 'hidden', 'name', 'class' => 'form-control', 'id')),
-						'/div',
-					'/div',	
-				'/div',
-			'/div',
-			'<script',
-				'$(\'.dp-container .input-daterange\').datepicker({label : "Label",autoclose : true,todayHighlight : false,daysOfWeekDisabled : 3,format : "dd/mm/yyyy",language : "fr",}).on(\'changeDate\', function() {var date_0 = $(\'#Test1\').datepicker(\'getDate\');
-				date_0.setHours(0, -date_0.getTimezoneOffset(), 0, 0);
-				date_0 = date_0.toISOString().slice(0,19).replace(\'T\', " ");
-				$(\'#alt_dp_0\').attr(\'value\', date_0);var date_1 = $(\'#Test2\').datepicker(\'getDate\');
-				date_1.setHours(0, -date_1.getTimezoneOffset(), 0, 0);
-				date_1 = date_1.toISOString().slice(0,19).replace(\'T\', " ");
-				$(\'#alt_dp_1\').attr(\'value\', date_1);});',
-			'/script'
-    	);
-
-		$this->assertTags($result, $expected);
-
-		$result = $this->BsForm->datepicker(array('Test1', 'Test2'), array('autoclose' => true, 'todayHighlight' => false, 'daysOfWeekDisabled' => 3));
-
-    	$expected = array(
-    		array('div' => array('class' => 'form-group')),
-				array('div' => array('class' => 'dp-container')),
-					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-' . $this->BsForm->getLeft())),
-						array('div' => array('class' => 'input-daterange input-group', 'id' => 'datepicker')),
-							array('input' => array('type', 'name', 'class' => 'form-control', 'id')),
-							array('input' => array('type' => 'hidden', 'name', 'class' => 'form-control', 'id')),
-							array('span' => array('class' => 'input-group-addon')),
-								'à',
-							'/span',
-							array('input' => array('type', 'name', 'class' => 'form-control', 'id')),
-							array('input' => array('type' => 'hidden', 'name', 'class' => 'form-control', 'id')),
-						'/div',
-					'/div',	
-				'/div',
-			'/div',
-			'<script',
-				'$(\'.dp-container .input-daterange\').datepicker({autoclose : true,todayHighlight : false,daysOfWeekDisabled : 3,format : "dd/mm/yyyy",language : "fr",}).on(\'changeDate\', function() {var date_0 = $(\'#Test1\').datepicker(\'getDate\');
-				date_0.setHours(0, -date_0.getTimezoneOffset(), 0, 0);
-				date_0 = date_0.toISOString().slice(0,19).replace(\'T\', " ");
-				$(\'#alt_dp_0\').attr(\'value\', date_0);var date_1 = $(\'#Test2\').datepicker(\'getDate\');
-				date_1.setHours(0, -date_1.getTimezoneOffset(), 0, 0);
-				date_1 = date_1.toISOString().slice(0,19).replace(\'T\', " ");
-				$(\'#alt_dp_1\').attr(\'value\', date_1);});',
-			'/script'
-    	);
-
-		$this->assertTags($result, $expected);
-    }
 
     public function testSubmit()
     {
@@ -919,7 +825,7 @@ class BsFormHelperTest extends CakeTestCase {
 		// SUBMIT HORIZONTAL //
 		///////////////////////
 
-		$this->BsForm->create('Model', array('class' => 'form-horizontal'));
+		$this->BsForm->create('Model', array('action' => 'Action' , 'class' => 'form-horizontal'));
 		$result = $this->BsForm->submit();
 	    $this->BsForm->end();
 
@@ -927,7 +833,12 @@ class BsFormHelperTest extends CakeTestCase {
 	    	array('div' => array('class' => 'form-group')),
 	    		array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
 	    			array('input' => array('class' => 'btn btn-success', 'type' => 'submit', 'value')),
-	    		'/div',
+		    			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait')),
+						'/i',
+						'<script',
+							'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',
+						'/script',
+		    		'/div',
 	    	'/div'
 	    );
 
@@ -937,9 +848,11 @@ class BsFormHelperTest extends CakeTestCase {
 		// FULL OPTIONS //
 		//////////////////
 
-		$this->BsForm->create('Model', array('class' => 'form-horizontal'));
+		$this->BsForm->create('Model', array('action' => 'Action' , 'class' => 'form-horizontal'));
 		$result = $this->BsForm->submit('Send', array('class' => 'btn-warning classTest', 'id' => 'myId', 'div' => 'otherDiv', 'label' => 'Label'));
 	    $this->BsForm->end();
+
+	    // debug($result);
 
 	    $expected = array(
 	    	array('div' => array('class' => 'form-group')),
@@ -947,6 +860,11 @@ class BsFormHelperTest extends CakeTestCase {
 	    			array('div' => array('class' => 'otherDiv')),
 	    				array('input' => array('class' => 'btn btn-warning classTest', 'id' => 'myId', 'type' => 'submit', 'value', 'label' => 'Label')),
 	    			'/div',
+	    			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait')),
+						'/i',
+						'<script',
+							'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',
+						'/script',
 	    		'/div',
 	    	'/div'
 	    );
@@ -958,7 +876,7 @@ class BsFormHelperTest extends CakeTestCase {
 		///////////////////
 
 		$this->BsForm->create('Model', array('class' => 'form-horizontal'));
-		$result = $this->BsForm->submit('Send', array('class' => 'classTest'));
+		$result = $this->BsForm->submit('Send', array('class' => 'classTest' , 'ux' => false));
 	    $this->BsForm->end();
 
 	    $expected = array(
@@ -991,12 +909,19 @@ class BsFormHelperTest extends CakeTestCase {
     	// WITHOUT STRING //
 	    ////////////////////
 
+		$this->BsForm->create('Model', array('action' => 'Action' , 'class' => 'form-horizontal'));
     	$result = $this->BsForm->end('Update');
+
 
 		$expected = array(
 				array('div' => array('class' => 'form-group')),
 					array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
 						array('input' => array('class' => 'btn btn-success', 'type' => 'submit', 'value' => 'Update')),
+						array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait')),
+						'/i',
+						'<script',
+							'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',
+						'/script',
 					'/div',
 				'/div',
 			'/form'
@@ -1015,6 +940,7 @@ class BsFormHelperTest extends CakeTestCase {
 		    )
 		);
 
+		$this->BsForm->create('Model', array('action' => 'Action' , 'class' => 'form-horizontal'));
 		$result = $this->BsForm->end($options);
 
 		$expected = array(
@@ -1023,12 +949,108 @@ class BsFormHelperTest extends CakeTestCase {
 						array('div' => array('class' => 'glass-pill')),
 							array('input' => array('class' => 'btn btn-success', 'type' => 'submit', 'value' => 'Update')),
 						'/div',
+						array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait')),
+							'/i',
+							'<script',
+								'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',
+							'/script',
 					'/div',
 				'/div',
 			'/form'
 		);
 		$this->assertTags($result, $expected);
     }
+
+/**
+ * Title function
+ * @return void
+ */
+	public function testTitle() {
+
+		/////////////////////
+    	// WITHOUT OPTIONS //
+	    /////////////////////
+
+		$result = $this->BsForm->title('Title');
+
+		$expected = array(
+				array('div' => array('class' => 'row')),
+					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-'.$this->BsForm->getLeft())),
+							'<h4',
+								'Title',
+							'/h4',
+					'/div',
+				'/div'
+		);
+
+		$this->assertTags($result, $expected);
+
+
+		/////////////////////////////////
+    	// WITH A SPECIFIC TITLE LEVEL //
+	    /////////////////////////////////
+
+	    $result = $this->BsForm->title('Title' , 2);
+
+		$expected = array(
+				array('div' => array('class' => 'row')),
+					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-'.$this->BsForm->getLeft())),
+							'<h2',
+								'Title',
+							'/h2',
+					'/div',
+				'/div'
+		);
+
+		$this->assertTags($result, $expected);
+	}
+
+
+/**
+ * Indications function
+ * @return void
+ */
+	public function testIndications() {
+
+		/////////////////////
+    	// WITHOUT OPTIONS //
+	    /////////////////////
+
+		$result = $this->BsForm->indications('indications');
+
+		
+		$expected = array(
+				array('div' => array('class' => 'row')),
+					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-'.$this->BsForm->getLeft())),
+							'<p',
+								'indications',
+							'/p',
+					'/div',
+				'/div'
+		);
+
+		$this->assertTags($result, $expected);
+
+
+		//////////////////////////
+    	// WITH A DEFINED CLASS //
+	    //////////////////////////
+
+	    $result = $this->BsForm->indications('indications' , 'class-indications');
+
+		$expected = array(
+				array('div' => array('class' => 'row')),
+					array('div' => array('class' => 'col-md-'.$this->BsForm->getRight().' col-md-offset-'.$this->BsForm->getLeft())),
+							array('p' => array('class' => 'class-indications')),
+								'indications',
+							'/p',
+					'/div',
+				'/div'
+		);
+
+		$this->assertTags($result, $expected);
+	}
+
 
 /**
  * tearDown method
