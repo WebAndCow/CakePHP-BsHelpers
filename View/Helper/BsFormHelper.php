@@ -17,7 +17,7 @@ class BsFormHelper extends AppHelper {
  *
  * @var array
  */
-	public $helpers = array('Bs' , 'Form');
+	public $helpers = array('Bs', 'Form');
 
 /**
  * The name of the helper
@@ -158,8 +158,6 @@ class BsFormHelper extends AppHelper {
 		$this->_actionForm = $val;
 	}
 
-
-
 /**
  * Returns an HTML FORM element.
  *
@@ -192,7 +190,7 @@ class BsFormHelper extends AppHelper {
 
 		$this->_setModelForm($model);
 
-		if(isset($options['action'])) {
+		if (isset($options['action'])) {
 			$this->_setActionForm($options['action']);
 		}
 
@@ -433,33 +431,27 @@ class BsFormHelper extends AppHelper {
 	}
 
 /**
-* Replace a classic input with a CkEditor
-*
-* $ckEditorLoad must be set to true in the BsHelper so this feature can work
-*
-* @param string $fieldName Name of a field, like this "Modelname.fieldname"
-* 
-* @return string An HTML text with a line of Javascript to launch CKEDITOR Script
-*/
-public function ckEditor($fieldName) {
-
+ * Replace a classic input with a CkEditor
+ *
+ * $ckEditorLoad must be set to true in the BsHelper so this feature can work
+ *
+ * @param string $fieldName Name of a field, like this "Modelname.fieldname"
+ * @return string An HTML text with a line of Javascript to launch CKEDITOR Script
+ */
+	public function ckEditor($fieldName) {
 		// If there is a point in the fieldName
-		if(strpos($fieldName, '.') !== false) {
+		if (strpos($fieldName, '.') !== false) {
 			$nameForReplace = Inflector::camelize($fieldName);
 		} else {
-			$nameForReplace = $this->_modelForm.Inflector::camelize($fieldName);
+			$nameForReplace = $this->_modelForm . Inflector::camelize($fieldName);
 		}
 
 		// Create the line of JS
-		$out  = '<script>';
-		$out .= 'CKEDITOR.replace("'.$nameForReplace.'");';
+		$out = '<script>';
+		$out .= 'CKEDITOR.replace("' . $nameForReplace . '");';
 		$out .= '</script>';
 		return $out;
 	}
-
-
-
-
 
 /**
  * Creates a checkbox input widget.
@@ -744,7 +736,6 @@ public function ckEditor($fieldName) {
  * set 'ux' => false if you don't want to use it for one form
  * In order to correctly work, you need $faLoad and $bsAddonLoad set to true in the BsHelper
  *
- *
  * @param string $caption The label appearing on the button OR if string contains :// or the
  *  extension .jpg, .jpe, .jpeg, .gif, .png use an image if the extension
  *  exists, AND the first character is /, image is relative to webroot,
@@ -785,22 +776,22 @@ public function ckEditor($fieldName) {
 
 		//----- [ux] option
 		$scriptUX = true;
-		if(isset($options['ux']) and $options['ux'] == false)
+		if (isset($options['ux']) && $options['ux'] == false) {
 			$scriptUX = false;
+		}
 
-		if($scriptUX) {
+		if ($scriptUX) {
 			$out .= '<i class="fa fa-spinner fa-spin form-submit-wait"></i>';
 
-			$idForm = '#'.Inflector::camelize($this->_modelForm.' '.$this->_actionForm.' Form');
+			$idForm = '#' . Inflector::camelize($this->_modelForm . ' ' . $this->_actionForm . ' Form');
 
 			$out .= '<script>';
-			$out .= '$("'.$idForm.'").submit(function(){';
-			$out .= '$("'.$idForm.' input[type=\'submit\']").prop("disabled" , true);';
-			$out .= '$("'.$idForm.' .form-submit-wait").show();';
+			$out .= '$("' . $idForm . '").submit(function(){';
+			$out .= '$("' . $idForm . ' input[type=\'submit\']").prop("disabled" , true);';
+			$out .= '$("' . $idForm . ' .form-submit-wait").show();';
 			$out .= '});';
 			$out .= '</script>';
 		}
-
 
 		if ($this->_getFormType() == 'horizontal') {
 			$out .= '</div></div>';
@@ -808,7 +799,6 @@ public function ckEditor($fieldName) {
 
 		return $out;
 	}
-
 
 /**
  * Closes an HTML form, cleans up values set by Bs3FormHelper::create(), and writes hidden
@@ -851,7 +841,6 @@ public function ckEditor($fieldName) {
 		return $out;
 	}
 
-
 				/*--------------------------*
 				*						    *
 				*			TAG FORM        *
@@ -861,48 +850,44 @@ public function ckEditor($fieldName) {
 /**
  * Returns an HTML element
  *
- * @param string $title Title
+ * @param string $text Title
  * @param int $h The level of the title 1-6
  * @return string the formatted HTML with a row, columns and the title
  */
-	public function title($text , $h = 4) {
-
-		return $this->_tagForm('h'.$h , $text);
+	public function title($text, $h = 4) {
+		return $this->__tagForm('h' . $h, $text);
 	}
 
 /**
  * Returns an HTML element
  *
- * @param string $indications Indications
+ * @param string $text Indications
  * @param string $class a class for the p element
  * @return string the formatted HTML with a row, columns and the indications in a p
  */
-	public function indications($text , $class = '') {
-
-		if($class != '') {
-			return $this->_tagForm('p' ,$text , array('class' => $class));
+	public function indications($text, $class = '') {
+		if ($class != '') {
+			return $this->__tagForm('p', $text, array('class' => $class));
 		} else {
-			return $this->_tagForm('p' ,$text);
+			return $this->__tagForm('p', $text);
 		}
-		
 	}
 
 /**
  * Call the Tag function of the BsHelper in a row and a column like the Form
  *
- * @param string $name Tag name.
+ * @param string $tag Tag name.
  * @param string $text String content that will appear inside the element.
  * @param array $options Additional HTML attributes of the element
  * @return string The formatted tag element
  */
-	private function _tagForm($tag , $text, $options = array()) {
+	private function __tagForm($tag, $text, $options = array()) {
+		$out = $this->Bs->row();
 
-		$out  = $this->Bs->row();
-		
 		// Use of the _right and _left attributes to define with and offset of the column
-		$out .= $this->Bs->col('md'.$this->getRight().' of'.$this->getLeft());
+		$out .= $this->Bs->col('md' . $this->getRight() . ' of' . $this->getLeft());
 
-		$out .= $this->Bs->tag($tag , $text , $options);
+		$out .= $this->Bs->tag($tag, $text, $options);
 
 		$out .= $this->Bs->close(2);
 

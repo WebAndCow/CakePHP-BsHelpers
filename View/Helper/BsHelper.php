@@ -18,7 +18,6 @@ class BsHelper extends AppHelper {
  */
 	public $helpers = array('Html');
 
-
 /**
  * The name of the helper
  *
@@ -215,8 +214,6 @@ class BsHelper extends AppHelper {
 		return $out;
 	}
 
-
-
 /**
  * Load JS for the current page
  *
@@ -231,7 +228,7 @@ class BsHelper extends AppHelper {
 		}
 
 		// CkEditor JS
-		if($this->ckEditorLoad) {
+		if ($this->ckEditorLoad) {
 			$out .= $this->Html->script($this->ckEditorJsPath);
 		}
 
@@ -277,19 +274,16 @@ class BsHelper extends AppHelper {
 		return '</header>';
 	}
 
-
 /**
- * Change the value of ckEditorLoad
- *
+ * Change the value of ckEditorLoad 
  * In a layout, this function must be called before the js function
  *
- * @param bool $load
+ * @param bool $load to know if the js must be loaded or not
  * @return void
  */
 	public function setCkEditorLoad($load = true) {
 		$this->ckEditorLoad = $load;
 	}
-
 
 				/*--------------------------*
 				*						    *
@@ -905,13 +899,13 @@ class BsHelper extends AppHelper {
 /**
  * Just call the Tag function of the HtmlHelper
  *
- * @param string $name Tag name.
+ * @param string $tag Tag name.
  * @param string $text String content that will appear inside the div element.
  *   If null, only a start tag will be printed
  * @param array $options Additional HTML attributes of the DIV tag, see above.
  * @return string The formatted tag element
  */
- 	public function tag($tag , $text = null, $options = array()) {
-		return $this->Html->tag($tag , $text , $options);
-	}		
+	public function tag($tag, $text = null, $options = array()) {
+		return $this->Html->tag($tag, $text, $options);
+	}
 }
