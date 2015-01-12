@@ -743,7 +743,7 @@ class BsHelperTest extends CakeTestCase {
 								array('div' => array('class' => 'form-group')),
 									array('div' => array('class' => 'col-md-offset-3 col-md-9')),
 										array('input' => array('value' => 'Send', 'class' => 'btn btn-success', 'type')),
-										array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait')),
+										array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait text-success')),
 										'/i',
 										'<script',
 											'$("#MyModelMyActionForm").submit(function(){$("#MyModelMyActionForm input[type=\'submit\']").prop("disabled" , true);$("#MyModelMyActionForm .form-submit-wait").show();});',

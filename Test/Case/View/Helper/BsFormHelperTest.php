@@ -833,7 +833,7 @@ class BsFormHelperTest extends CakeTestCase {
 	    	array('div' => array('class' => 'form-group')),
 	    		array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
 	    			array('input' => array('class' => 'btn btn-success', 'type' => 'submit', 'value')),
-		    			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait')),
+		    			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait text-success')),
 						'/i',
 						'<script',
 							'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',
@@ -849,18 +849,16 @@ class BsFormHelperTest extends CakeTestCase {
 		//////////////////
 
 		$this->BsForm->create('Model', array('action' => 'Action' , 'class' => 'form-horizontal'));
-		$result = $this->BsForm->submit('Send', array('class' => 'btn-warning classTest', 'id' => 'myId', 'div' => 'otherDiv', 'label' => 'Label'));
+		$result = $this->BsForm->submit('Send', array('class' => 'btn-warning', 'id' => 'myId', 'div' => 'otherDiv'));
 	    $this->BsForm->end();
-
-	    // debug($result);
 
 	    $expected = array(
 	    	array('div' => array('class' => 'form-group')),
 	    		array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
 	    			array('div' => array('class' => 'otherDiv')),
-	    				array('input' => array('class' => 'btn btn-warning classTest', 'id' => 'myId', 'type' => 'submit', 'value', 'label' => 'Label')),
+	    				array('input' => array('class' => 'btn btn-warning', 'id' => 'myId', 'type' => 'submit', 'value' => 'Send')),
 	    			'/div',
-	    			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait')),
+	    			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait text-warning')),
 						'/i',
 						'<script',
 							'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',
@@ -917,7 +915,7 @@ class BsFormHelperTest extends CakeTestCase {
 				array('div' => array('class' => 'form-group')),
 					array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
 						array('input' => array('class' => 'btn btn-success', 'type' => 'submit', 'value' => 'Update')),
-						array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait')),
+						array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait text-success')),
 						'/i',
 						'<script',
 							'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',
@@ -949,7 +947,7 @@ class BsFormHelperTest extends CakeTestCase {
 						array('div' => array('class' => 'glass-pill')),
 							array('input' => array('class' => 'btn btn-success', 'type' => 'submit', 'value' => 'Update')),
 						'/div',
-						array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait')),
+						array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait text-success')),
 							'/i',
 							'<script',
 								'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',

@@ -64,7 +64,7 @@ class BsHelper extends AppHelper {
  *
  * @var string
  */
-	public $ckEditorJsPath = 'BsHelpers./assets/ckeditor/ckeditor';
+	public $ckEditorJsPath = '//cdn.ckeditor.com/4.4.6/standard/ckeditor.js';
 
 /**
  * If CkEditor is loaded

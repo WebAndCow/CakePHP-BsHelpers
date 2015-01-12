@@ -442,7 +442,7 @@ class BsFormHelper extends AppHelper {
 	public function ckEditor($fieldName, $options = array()) {
 		$options['type'] = 'textarea';
 
-		$out = $this->input($fieldName , $options);
+		$out = $this->input($fieldName, $options);
 
 		// If there is a point in the fieldName
 		if (strpos($fieldName, '.') !== false) {
@@ -772,7 +772,7 @@ class BsFormHelper extends AppHelper {
 			$options['class'] = 'btn btn-success';
 		} else {
 			if (is_integer(strpos($options['class'], 'btn-danger')) || is_integer(strpos($options['class'], 'btn-warning')) || is_integer(strpos($options['class'], 'btn-info')) || is_integer(strpos($options['class'], 'btn-primary'))) {
-				$type = substr($options['class'] , 4);
+				$type = substr($options['class'], 4);
 				$options['class'] = 'btn ' . $options['class'];
 			} else {
 				$type = 'success';
