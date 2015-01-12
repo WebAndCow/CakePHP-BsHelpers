@@ -436,9 +436,14 @@ class BsFormHelper extends AppHelper {
  * $ckEditorLoad must be set to true in the BsHelper so this feature can work
  *
  * @param string $fieldName Name of a field, like this "Modelname.fieldname"
+ * @param array $options Each type of input takes different options.
  * @return string An HTML text with a line of Javascript to launch CKEDITOR Script
  */
-	public function ckEditor($fieldName) {
+	public function ckEditor($fieldName, $options = array()) {
+		$options['type'] = 'textarea';
+
+		$out = $this->input($fieldName , $options);
+
 		// If there is a point in the fieldName
 		if (strpos($fieldName, '.') !== false) {
 			$nameForReplace = Inflector::camelize($fieldName);
@@ -447,7 +452,7 @@ class BsFormHelper extends AppHelper {
 		}
 
 		// Create the line of JS
-		$out = '<script>';
+		$out .= '<script>';
 		$out .= 'CKEDITOR.replace("' . $nameForReplace . '");';
 		$out .= '</script>';
 		return $out;
