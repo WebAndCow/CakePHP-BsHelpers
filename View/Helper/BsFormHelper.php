@@ -763,11 +763,14 @@ class BsFormHelper extends AppHelper {
 
 		//----- [class] option
 		if (!isset($options['class'])) {
+			$type = 'success';
 			$options['class'] = 'btn btn-success';
 		} else {
 			if (is_integer(strpos($options['class'], 'btn-danger')) || is_integer(strpos($options['class'], 'btn-warning')) || is_integer(strpos($options['class'], 'btn-info')) || is_integer(strpos($options['class'], 'btn-primary'))) {
+				$type = substr($options['class'] , 4);
 				$options['class'] = 'btn ' . $options['class'];
 			} else {
+				$type = 'success';
 				$options['class'] = 'btn ' . $options['class'] . ' btn-success';
 			}
 		}
@@ -781,7 +784,7 @@ class BsFormHelper extends AppHelper {
 		}
 
 		if ($scriptUX) {
-			$out .= '<i class="fa fa-spinner fa-spin form-submit-wait"></i>';
+			$out .= '<i class="fa fa-spinner fa-spin form-submit-wait text-' . $type . '"></i>';
 
 			$idForm = '#' . Inflector::camelize($this->_modelForm . ' ' . $this->_actionForm . ' Form');
 

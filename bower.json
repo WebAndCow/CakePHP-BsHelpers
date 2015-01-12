@@ -1,0 +1,6 @@
+{
+  "name" : "BsHelpers",
+  "dependencies": {
+    "ckeditor": "*"
+  }
+}
