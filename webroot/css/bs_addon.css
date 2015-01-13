@@ -1,5 +1,4 @@
 /* Width for tables */
-
 .l_5 {width: 5%}
 .l_10 {width: 10%}
 .l_15 {width: 15%}
@@ -21,7 +20,12 @@
 .l_95 {width: 95%}
 
 /* Style for the spinner */
-/* You can of course update the color if you need to */
 .form-submit-wait {
 	font-size: 20px; margin-top: 15px; margin-left: 15px; display: none;
+}
+
+/* Style for the input type date */
+.form-control.input-date {
+	display: inline;
+	width: 20%;
 }

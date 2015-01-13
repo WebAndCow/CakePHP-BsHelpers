@@ -150,11 +150,9 @@ class BsHelperTest extends CakeTestCase {
 		// WITH DATEPICKER CSS //
 		/////////////////////////
 
-		$this->Bs->dpLoad = true;
 		$result = $this->Bs->css(array('myCss.css', 'myOther'));
 		
 		$expected = array(
-			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),

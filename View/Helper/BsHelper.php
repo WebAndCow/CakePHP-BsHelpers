@@ -9,14 +9,7 @@ App::uses('Inflector', 'Utility');
  * @author AWL
  *
  */
-class BsHelper extends AppHelper {
-
-/**
- * Bs uses the HtmlHelper
- *
- * @var array
- */
-	public $helpers = array('Html');
+class BsHelper extends HtmlHelper {
 
 /**
  * The name of the helper
@@ -53,13 +46,6 @@ class BsHelper extends AppHelper {
 	public $bsAddonPath = 'BsHelpers.bs_addon';
 
 /**
- * Path for CSS datapicker bootstrap
- *
- * @var string
- */
-	public $dpCssPath = 'BsHelpers.datepicker';
-
-/**
  * Path for JS CkEditor
  *
  * @var string
@@ -86,12 +72,6 @@ class BsHelper extends AppHelper {
 	public $bsAddonLoad = true;
 
 /**
- * If Datepicker Bootrstrap is loaded
- * @var bool
- */
-	public $dpLoad = false;
-
-/**
  * Prefix version for Font Awesome
  * @var bool
  */
@@ -110,13 +90,6 @@ class BsHelper extends AppHelper {
  * @var string
  */
 	public $pathJquery = 'http://code.jquery.com/jquery-1.11.1.min.js';
-
-/**
- * Path for JS datapicker bootstrap
- *
- * @var string
- */
-	public $dpJsPath = 'BsHelpers.datepicker';
 
 				/*--------------------------*
 				*						    *
@@ -195,20 +168,17 @@ class BsHelper extends AppHelper {
  * @return string A link tag for the head element
  */
 	public function css($path = array(), $options = array()) {
-		$out = $this->Html->css($this->pathCSS);
+		$out = parent::css($this->pathCSS);
 		if ($this->faLoad) {
-			$out .= $this->Html->css($this->faPath);
+			$out .= parent::css($this->faPath);
 		}
 		if ($this->bsAddonLoad) {
-			$out .= $this->Html->css($this->bsAddonPath);
-		}
-		if ($this->dpLoad) {
-			$out .= $this->Html->css($this->dpCssPath);
+			$out .= parent::css($this->bsAddonPath);
 		}
 
 		// Others CSS
 		foreach ($path as $css) {
-			$out .= $this->Html->css($css, $options);
+			$out .= parent::css($css, $options);
 		}
 
 		return $out;
@@ -221,20 +191,17 @@ class BsHelper extends AppHelper {
  * @return string A script tag for the head element
  */
 	public function js($arrayJs = array()) {
-		$out = $this->Html->script($this->pathJquery);
-		$out .= $this->Html->script($this->pathJS);
-		if ($this->dpLoad) {
-			$out .= $this->Html->script($this->dpJsPath);
-		}
+		$out = parent::script($this->pathJquery);
+		$out .= parent::script($this->pathJS);
 
 		// CkEditor JS
 		if ($this->ckEditorLoad) {
-			$out .= $this->Html->script($this->ckEditorJsPath);
+			$out .= parent::script($this->ckEditorJsPath);
 		}
 
 		// Others JS
 		foreach ($arrayJs as $js) {
-			$out .= $this->Html->script($js);
+			$out .= parent::script($js);
 		}
 
 		return $out;
@@ -261,7 +228,7 @@ class BsHelper extends AppHelper {
  * @return string Tag header
  */
 	public function header($options = array()) {
-		$out = $this->Html->tag('header', null, $options);
+		$out = parent::tag('header', null, $options);
 		return $out;
 	}
 
@@ -303,7 +270,7 @@ class BsHelper extends AppHelper {
 		if (isset($options['class'])) {
 			$class .= ' ' . $options['class'];
 		}
-		$out .= $this->Html->div($class, null, $options);
+		$out .= parent::div($class, null, $options);
 		return $out;
 	}
 
@@ -319,7 +286,7 @@ class BsHelper extends AppHelper {
 		if (isset($options['class'])) {
 			$class .= ' ' . $options['class'];
 		}
-		$out .= $this->Html->div($class, null, $options);
+		$out .= parent::div($class, null, $options);
 		return $out;
 	}
 
@@ -404,7 +371,7 @@ class BsHelper extends AppHelper {
 		if (isset($attributes['class'])) {
 			$class .= ' ' . $attributes['class'];
 		}
-		$out = $this->Html->div($class, null, $attributes);
+		$out = parent::div($class, null, $attributes);
 		return $out;
 	}
 
@@ -671,7 +638,7 @@ class BsHelper extends AppHelper {
 		} else {
 			$options['class'] = 'img-responsive';
 		}
-		return $this->Html->image($path, $options);
+		return parent::image($path, $options);
 	}
 
 /**
@@ -731,9 +698,9 @@ class BsHelper extends AppHelper {
 		}
 
 		if ($tag != 'a') {
-			return $this->Html->tag($tag, $text, $options);
+			return parent::tag($tag, $text, $options);
 		} else {
-			return $this->Html->link($text, $url, $options, $confirmMessage);
+			return parent::link($text, $url, $options, $confirmMessage);
 		}
 	}
 
@@ -894,18 +861,5 @@ class BsHelper extends AppHelper {
 		$header = (isset($options['header']) && $options['header'] != '') ? $options['header'] : $button;
 
 		return $this->modal($header, $body, null, $buttons);
-	}
-
-/**
- * Just call the Tag function of the HtmlHelper
- *
- * @param string $tag Tag name.
- * @param string $text String content that will appear inside the div element.
- *   If null, only a start tag will be printed
- * @param array $options Additional HTML attributes of the DIV tag, see above.
- * @return string The formatted tag element
- */
-	public function tag($tag, $text = null, $options = array()) {
-		return $this->Html->tag($tag, $text, $options);
 	}
 }

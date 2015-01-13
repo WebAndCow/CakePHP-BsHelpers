@@ -9,7 +9,7 @@ App::uses('Set', 'Utility');
  * @author Web&Cow - France
  *
  */
-class BsFormHelper extends AppHelper {
+class BsFormHelper extends FormHelper {
 
 /**
  * BsForm uses the BsHelper so it can use some feature of it
@@ -17,7 +17,7 @@ class BsFormHelper extends AppHelper {
  *
  * @var array
  */
-	public $helpers = array('Bs', 'Form');
+	public $helpers = array('Bs', 'Html');
 
 /**
  * The name of the helper
@@ -194,7 +194,7 @@ class BsFormHelper extends AppHelper {
 			$this->_setActionForm($options['action']);
 		}
 
-		return $this->Form->create($model, $options);
+		return parent::create($model, $options);
 	}
 
 /**
@@ -248,9 +248,9 @@ class BsFormHelper extends AppHelper {
 		if ($date) {
 			$this->setFormType('inline');
 			if (isset($options['class'])) {
-				$options['class'] .= ' input_date';
+				$options['class'] .= ' input-date';
 			} else {
-				$options['class'] = 'input_date';
+				$options['class'] = 'input-date';
 			}
 		}
 
@@ -317,9 +317,7 @@ class BsFormHelper extends AppHelper {
 			}
 		}
 
-		// debug($options);
-
-		return $this->Form->input($fieldName, $options) . $this->setFormType($formType);
+		return parent::input($fieldName, $options) . $this->setFormType($formType);
 	}
 
 /**
@@ -406,9 +404,9 @@ class BsFormHelper extends AppHelper {
 					$buttonOptions['src'] = $options['src'];
 					$buttonOptions['type'] = 'image';
 					$buttonOptions['label'] = false;
-					$out .= $this->Form->input($options['content'], $buttonOptions);
+					$out .= parent::input($options['content'], $buttonOptions);
 				} else {
-					$out .= $this->Form->button($options['content'], $buttonOptions);
+					$out .= parent::button($options['content'], $buttonOptions);
 				}
 
 				$out .= '</span>';
@@ -547,14 +545,14 @@ class BsFormHelper extends AppHelper {
 		//----- [inline] option
 		if (!(isset($options['inline']) && ($options['inline'] == 'inline' || $options['inline'] == true))) {
 			$out .= '<div class="checkbox">';
-			$out .= $this->Form->label($fieldName, $this->Form->checkbox($fieldName, $options) . ' ' . $label, $labelClass);
+			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options) . ' ' . $label, $labelClass);
 		} else {
 			unset($options['inline']);
 			if (isset($labelClass['class'])) {
 				$label = $labelClass['class'] . ' checkbox-inline';
 			}
 
-			$out .= $this->Form->label($fieldName, $this->Form->checkbox($fieldName, $options) . ' ' . $label, $labelClass);
+			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options) . ' ' . $label, $labelClass);
 		}
 
 		//----- [help] option for single checkbox
@@ -622,7 +620,7 @@ class BsFormHelper extends AppHelper {
 			}
 		}
 
-		$out .= $this->Form->select($fieldName, $options, $attributes);
+		$out .= parent::select($fieldName, $options, $attributes);
 
 		if ($this->_getFormType() == 'horizontal') {
 			//----- [help] attribute
@@ -717,7 +715,7 @@ class BsFormHelper extends AppHelper {
 
 		$attributes = Hash::merge($defaultAttributes, $attributes);
 
-		$out .= $this->Form->radio($fieldName, $options, $attributes);
+		$out .= parent::radio($fieldName, $options, $attributes);
 
 		$out .= '</label>';
 		$out .= (!$inline) ? '</div></div></div>' : '';
@@ -780,7 +778,7 @@ class BsFormHelper extends AppHelper {
 			}
 		}
 
-		$out .= $this->Form->submit($caption, $options);
+		$out .= parent::submit($caption, $options);
 
 		//----- [ux] option
 		$scriptUX = true;
@@ -818,35 +816,7 @@ class BsFormHelper extends AppHelper {
  * @return string a closing FORM tag optional submit button.
  */
 	public function end($options = null, $secureAttributes = array()) {
-		$out = null;
-		$submit = null;
-
-		if ($options !== null) {
-			$submitOptions = array();
-			if (is_string($options)) {
-				$submit = $options;
-			} else {
-				if (isset($options['label'])) {
-					$submit = $options['label'];
-					unset($options['label']);
-				}
-				$submitOptions = $options;
-			}
-			$out .= $this->submit($submit, $submitOptions);
-		}
-		if ($this->requestType !== 'get' &&
-			isset($this->Form->request['_Token']) &&
-			!empty($this->Form->request['_Token'])
-		) {
-			$out .= $this->Form->secure($this->Form->fields, $secureAttributes);
-			$this->Form->fields = array();
-		}
-		$this->Form->setEntity(null);
-		$out .= $this->Form->Html->useTag('formend');
-
-		$this->Form->_View->modelScope = false;
-		$this->Form->requestType = null;
-		return $out;
+		return parent::end($options, $secureAttributes);
 	}
 
 				/*--------------------------*
