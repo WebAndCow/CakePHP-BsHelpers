@@ -46,11 +46,18 @@ class BsHelper extends HtmlHelper {
 	public $bsAddonPath = 'BsHelpers.bs_addon';
 
 /**
- * Path for CSS datapicker bootstrap
+ * Path for JS CkEditor
  *
  * @var string
  */
-	public $dpCssPath = 'BsHelpers.datepicker';
+	public $ckEditorJsPath = '//cdn.ckeditor.com/4.4.6/standard/ckeditor.js';
+
+/**
+ * If CkEditor is loaded
+ *
+ * @var bool
+ */
+	public $ckEditorLoad = true;
 
 /**
  * If Font Awesome is loaded
@@ -63,12 +70,6 @@ class BsHelper extends HtmlHelper {
  * @var bool
  */
 	public $bsAddonLoad = true;
-
-/**
- * If Datepicker Bootrstrap is loaded
- * @var bool
- */
-	public $dpLoad = false;
 
 /**
  * Prefix version for Font Awesome
@@ -89,13 +90,6 @@ class BsHelper extends HtmlHelper {
  * @var string
  */
 	public $pathJquery = 'http://code.jquery.com/jquery-1.11.1.min.js';
-
-/**
- * Path for JS datapicker bootstrap
- *
- * @var string
- */
-	public $dpJsPath = 'BsHelpers.datepicker';
 
 				/*--------------------------*
 				*						    *
@@ -181,9 +175,6 @@ class BsHelper extends HtmlHelper {
 		if ($this->bsAddonLoad) {
 			$out .= parent::css($this->bsAddonPath);
 		}
-		if ($this->dpLoad) {
-			$out .= parent::css($this->dpCssPath);
-		}
 
 		// Others CSS
 		foreach ($path as $css) {
@@ -202,8 +193,10 @@ class BsHelper extends HtmlHelper {
 	public function js($arrayJs = array()) {
 		$out = parent::script($this->pathJquery);
 		$out .= parent::script($this->pathJS);
-		if ($this->dpLoad) {
-			$out .= parent::script($this->dpJsPath);
+
+		// CkEditor JS
+		if ($this->ckEditorLoad) {
+			$out .= parent::script($this->ckEditorJsPath);
 		}
 
 		// Others JS
@@ -246,6 +239,17 @@ class BsHelper extends HtmlHelper {
  */
 	public function closeHeader() {
 		return '</header>';
+	}
+
+/**
+ * Change the value of ckEditorLoad 
+ * In a layout, this function must be called before the js function
+ *
+ * @param bool $load to know if the js must be loaded or not
+ * @return void
+ */
+	public function setCkEditorLoad($load = true) {
+		$this->ckEditorLoad = $load;
 	}
 
 				/*--------------------------*

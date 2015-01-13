@@ -12,6 +12,14 @@ App::uses('Set', 'Utility');
 class BsFormHelper extends FormHelper {
 
 /**
+ * BsForm uses the BsHelper so it can use some feature of it
+ * BsForm uses the FormHelper
+ *
+ * @var array
+ */
+	public $helpers = array('Bs', 'Html');
+
+/**
  * The name of the helper
  *
  * @var string
@@ -35,18 +43,25 @@ class BsFormHelper extends FormHelper {
 	private $__right = 9;
 
 /**
- * Defines the type of form being created, horizontal form or inline form. Set by Bs3FormHelper::create()
+ * Defines the type of form being created, horizontal form or inline form. Set by BsFormHelper::create()
  *
  * @var string
  */
 	protected $_typeForm = 'horizontal';
 
 /**
- * Defines the model of form being created. Set by Bs3FormHelper::create()
+ * Defines the model of form being created. Set by BsFormHelper::create()
  *
  * @var string
  */
 	protected $_modelForm = null;
+
+/**
+ * Defines the action of form being created. Set by BsFormHelper::create()
+ *
+ * @var string
+ */
+	protected $_actionForm = null;
 
 /**
  * Return the current value of $_left
@@ -125,6 +140,25 @@ class BsFormHelper extends FormHelper {
 	}
 
 /**
+ * Return the current value of $_actionForm
+ * 
+ * @return string
+ */
+	protected function _getActionForm() {
+		return $this->_actionForm;
+	}
+
+/**
+ * Set the value of $_actionForm
+ *
+ * @param string $val Action of the form
+ * @return void
+ */
+	protected function _setActionForm($val) {
+		$this->_actionForm = $val;
+	}
+
+/**
  * Returns an HTML FORM element.
  *
  * Extends of FormHelper::create() so get same options and params
@@ -155,6 +189,10 @@ class BsFormHelper extends FormHelper {
 		}
 
 		$this->_setModelForm($model);
+
+		if (isset($options['action'])) {
+			$this->_setActionForm($options['action']);
+		}
 
 		return parent::create($model, $options);
 	}
@@ -210,9 +248,9 @@ class BsFormHelper extends FormHelper {
 		if ($date) {
 			$this->setFormType('inline');
 			if (isset($options['class'])) {
-				$options['class'] .= ' input_date';
+				$options['class'] .= ' input-date';
 			} else {
-				$options['class'] = 'input_date';
+				$options['class'] = 'input-date';
 			}
 		}
 
@@ -387,6 +425,34 @@ class BsFormHelper extends FormHelper {
 			$out = '<span class="input-group-addon">' . $options . '</span>';
 		}
 
+		return $out;
+	}
+
+/**
+ * Replace a classic input with a CkEditor
+ *
+ * $ckEditorLoad must be set to true in the BsHelper so this feature can work
+ *
+ * @param string $fieldName Name of a field, like this "Modelname.fieldname"
+ * @param array $options Each type of input takes different options.
+ * @return string An HTML text with a line of Javascript to launch CKEDITOR Script
+ */
+	public function ckEditor($fieldName, $options = array()) {
+		$options['type'] = 'textarea';
+
+		$out = $this->input($fieldName, $options);
+
+		// If there is a point in the fieldName
+		if (strpos($fieldName, '.') !== false) {
+			$nameForReplace = Inflector::camelize($fieldName);
+		} else {
+			$nameForReplace = $this->_modelForm . Inflector::camelize($fieldName);
+		}
+
+		// Create the line of JS
+		$out .= '<script>';
+		$out .= 'CKEDITOR.replace("' . $nameForReplace . '");';
+		$out .= '</script>';
 		return $out;
 	}
 
@@ -668,6 +734,11 @@ class BsFormHelper extends FormHelper {
  * - 'label' - Set to 'false'
  * - 'class' - Set into a green button instead of a default button
  *
+ *
+ * The UX option is set to true by default
+ * set 'ux' => false if you don't want to use it for one form
+ * In order to correctly work, you need $faLoad and $bsAddonLoad set to true in the BsHelper
+ *
  * @param string $caption The label appearing on the button OR if string contains :// or the
  *  extension .jpg, .jpe, .jpeg, .gif, .png use an image if the extension
  *  exists, AND the first character is /, image is relative to webroot,
@@ -695,16 +766,38 @@ class BsFormHelper extends FormHelper {
 
 		//----- [class] option
 		if (!isset($options['class'])) {
+			$type = 'success';
 			$options['class'] = 'btn btn-success';
 		} else {
 			if (is_integer(strpos($options['class'], 'btn-danger')) || is_integer(strpos($options['class'], 'btn-warning')) || is_integer(strpos($options['class'], 'btn-info')) || is_integer(strpos($options['class'], 'btn-primary'))) {
+				$type = substr($options['class'], 4);
 				$options['class'] = 'btn ' . $options['class'];
 			} else {
+				$type = 'success';
 				$options['class'] = 'btn ' . $options['class'] . ' btn-success';
 			}
 		}
 
 		$out .= parent::submit($caption, $options);
+
+		//----- [ux] option
+		$scriptUX = true;
+		if (isset($options['ux']) && $options['ux'] == false) {
+			$scriptUX = false;
+		}
+
+		if ($scriptUX) {
+			$out .= '<i class="fa fa-spinner fa-spin form-submit-wait text-' . $type . '"></i>';
+
+			$idForm = '#' . Inflector::camelize($this->_modelForm . ' ' . $this->_actionForm . ' Form');
+
+			$out .= '<script>';
+			$out .= '$("' . $idForm . '").submit(function(){';
+			$out .= '$("' . $idForm . ' input[type=\'submit\']").prop("disabled" , true);';
+			$out .= '$("' . $idForm . ' .form-submit-wait").show();';
+			$out .= '});';
+			$out .= '</script>';
+		}
 
 		if ($this->_getFormType() == 'horizontal') {
 			$out .= '</div></div>';
@@ -714,157 +807,68 @@ class BsFormHelper extends FormHelper {
 	}
 
 /**
- * Create an input-datepicker element
- *
- * ### options datepicker
- * - format 		Input Date format.
- * - startview      Datepicker startview (days, months, years).
- * - orientation    Orientation of the datepicker window (top left, bottom right, ...).
- * - language       Datepicker langage (en, fr, ...).
- * - autoclose      True to close automaticly the window when you clic.
- * - ... and more at http://eternicode.github.io/bootstrap-datepicker/
- *
- * @param string $fieldName This should be "Modelname.fieldname"
- * @param array  $optionsDP Datepicker options.
- * @param array  $options   Each type of input takes different options
- *
- * @return string Input datepicker element
- */
-	public function datepicker($fieldName, $optionsDP = array(), $options = array()) {
-		// Set some default parameters
-		if (!isset($optionsDP['format'])) {
-			$optionsDP['format'] = 'dd/mm/yyyy';
-		}
-		if (!isset($optionsDP['language'])) {
-			$optionsDP['language'] = 'fr';
-		}
-
-		// If it's a datepicker range
-		if (is_array($fieldName)) {
-
-			$script = "$('.dp-container .input-daterange').datepicker({";
-			$script .= $this->__scriptDP($optionsDP) . '})';
-			$script .= '.on(\'changeDate\', function() {';
-
-			$tempLeft = $this->__left;
-
-			$out = '<div class="form-group">';
-
-			if (!isset($optionsDP['addon'])) {
-				$optionsDP['addon'] = 'à';
-			}
-			if (!isset($optionsDP['label'])) {
-				$out .= '<div class="dp-container">';
-				$out .= '<div class="col-md-' . $this->__right . ' col-md-offset-' . $this->__left . '">';
-			} else {
-				$out .= '<label class="control-label col-md-' . $this->__left . '">' . $optionsDP['label'] . '</label>';
-				unset($optionsDP['label']);
-				$out .= '<div class="dp-container">';
-				$out .= '<div class="col-md-' . $this->__right . '">';
-			}
-			$out .= '<div class="input-daterange input-group" id="datepicker">';
-
-			$this->__left = 0;
-
-			foreach ($fieldName as $key => $field) {
-				if ($key == 1) {
-					$out .= '<span class="input-group-addon">' . $optionsDP['addon'] . '</span>';
-					unset($optionsDP['addon']);
-				}
-
-				$options[$field]['label'] = false;
-				$options[$field]['before'] = '';
-				$options[$field]['between'] = '';
-				$options[$field]['after'] = '';
-
-				if (isset($options[$field])) {
-					$out .= $this->input($field, $options[$field]);
-				} else {
-					$out .= $this->input($field, $options);
-				}
-				$options[$field]['type'] = 'hidden';
-				$options[$field]['id'] = 'alt_dp_' . $key;
-
-				if (isset($options[$field])) {
-					$out .= $this->input($field, $options[$field]);
-				} else {
-					$out .= $this->input($field, $options);
-				}
-
-				$script .= 'var date_' . $key . ' = $(\'#' . parent::domId($field) . '\').datepicker(\'getDate\');
-				date_' . $key . '.setHours(0, -date_' . $key . '.getTimezoneOffset(), 0, 0);
-				date_' . $key . ' = date_' . $key . '.toISOString().slice(0,19).replace(\'T\', " ");
-				$(\'#alt_dp_' . $key . '\').attr(\'value\', date_' . $key . ');';
-
-			}
-
-			$this->__left = $tempLeft;
-			$out .= '</div></div>';
-			$out .= '</div></div>';
-
-			$script .= '});';
-			$out .= '<script>' . $script . '</script>';
-
-		} else {
-			$out = '<div class="dp-container">';
-			$out .= $this->input($fieldName, $options);
-			$options['id'] = 'alt_dp';
-			$options['type'] = 'hidden';
-			$out .= $this->input($fieldName, $options);
-			$out .= '</div>';
-
-			$script = "$('.dp-container input').datepicker({";
-			$script .= $this->__scriptDP($optionsDP) . '})';
-
-			$script .= '.on(\'changeDate\', function() {
-				var date = $(\'#' . parent::domId($fieldName) . '\').datepicker(\'getDate\');
-				date.setHours(0, -date.getTimezoneOffset(), 0, 0);
-				date = date.toISOString().slice(0,19).replace(\'T\', " ");
-				$(\'#alt_dp\').attr(\'value\', date);';
-			$script .= '});';
-			$out .= '<script>' . $script . '</script>';
-
-		}
-		return $out;
-	}
-
-/**
- * Create a datepicker script body.
- *
- * @param array $options $optionsDP from $this->datepicker()
- *
- * @return string Formated script body
- */
-	private function __scriptDP($options) {
-		$script = '';
-		foreach ($options as $key => $value) {
-			if (is_bool($value)) {
-				if ($value === true) {
-					$script .= $key . ' : true,';
-				} else {
-					$script .= $key . ' : false,';
-				}
-			} else {
-				if (is_int($value) || is_bool($value)) {
-					$script .= $key . ' : ' . $value . ',';
-				} else {
-					$script .= $key . ' : "' . $value . '",';
-				}
-			}
-		}
-		return $script;
-	}
-
-/**
  * Closes an HTML form, cleans up values set by Bs3FormHelper::create(), and writes hidden
  * input fields where appropriate.
+ * Almost the same function as the classic FormHelper, neeeded to user correctly the submit function of BsFormHelper
  *
  * @param string|array $options as a string will use $options as the value of button,
  * @param array $secureAttributes like the secureAttributes in the parent function
  * @return string a closing FORM tag optional submit button.
  */
-
 	public function end($options = null, $secureAttributes = array()) {
 		return parent::end($options, $secureAttributes);
+	}
+
+				/*--------------------------*
+				*						    *
+				*			TAG FORM        *
+				*					        *
+				*--------------------------*/
+
+/**
+ * Returns an HTML element
+ *
+ * @param string $text Title
+ * @param int $h The level of the title 1-6
+ * @return string the formatted HTML with a row, columns and the title
+ */
+	public function title($text, $h = 4) {
+		return $this->__tagForm('h' . $h, $text);
+	}
+
+/**
+ * Returns an HTML element
+ *
+ * @param string $text Indications
+ * @param string $class a class for the p element
+ * @return string the formatted HTML with a row, columns and the indications in a p
+ */
+	public function indications($text, $class = '') {
+		if ($class != '') {
+			return $this->__tagForm('p', $text, array('class' => $class));
+		} else {
+			return $this->__tagForm('p', $text);
+		}
+	}
+
+/**
+ * Call the Tag function of the BsHelper in a row and a column like the Form
+ *
+ * @param string $tag Tag name.
+ * @param string $text String content that will appear inside the element.
+ * @param array $options Additional HTML attributes of the element
+ * @return string The formatted tag element
+ */
+	private function __tagForm($tag, $text, $options = array()) {
+		$out = $this->Bs->row();
+
+		// Use of the _right and _left attributes to define with and offset of the column
+		$out .= $this->Bs->col('md' . $this->getRight() . ' of' . $this->getLeft());
+
+		$out .= $this->Bs->tag($tag, $text, $options);
+
+		$out .= $this->Bs->close(2);
+
+		return $out;
 	}
 }
