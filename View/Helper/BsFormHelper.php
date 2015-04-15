@@ -1,6 +1,7 @@
 <?php
 
 App::uses('FormHelper', 'View/Helper');
+App::uses('HtmlHelper', 'View/Helper');
 App::uses('Set', 'Utility');
 
 /**
@@ -41,6 +42,9 @@ class BsFormHelper extends FormHelper {
  * @var int
  */
 	private $__right = 9;
+
+
+	private $__device = 'md';
 
 /**
  * Defines the type of form being created, horizontal form or inline form. Set by BsFormHelper::create()
@@ -158,6 +162,29 @@ class BsFormHelper extends FormHelper {
 		$this->_actionForm = $val;
 	}
 
+
+	public function setDevice($val) {
+		$this->__device = $val;
+	}
+
+
+	private function __leftClass() {
+		if ($this->_getFormType() == 'horizontal') {
+			return 'control-label col-' . $this->__device . '-' . $this->__left;
+		}
+		if ($this->_getFormType() == 'inline') {
+			return 'sr-only'; 
+		}
+		return 'control-label';
+	}
+
+	private function __rightClass($label = false) {
+		if ($this->_getFormType() == 'horizontal') {
+			return (!empty($label)) ? 'col-' . $this->__device . '-' . $this->__right : 'col-' . $this->__device . '-' . $this->__right . ' col-' . $this->__device . '-offset-' . $this->__left;
+		}
+		return '';
+	}
+
 /**
  * Returns an HTML FORM element.
  *
@@ -182,6 +209,8 @@ class BsFormHelper extends FormHelper {
 				$this->setFormType('horizontal');
 			} elseif (is_integer(strpos($options['class'], 'form-inline'))) {
 				$this->setFormType('inline');
+			} else {
+				$this->setFormType('basic');
 			}
 		} else {
 			$options['class'] = 'form-horizontal';
@@ -226,98 +255,132 @@ class BsFormHelper extends FormHelper {
  * @return string Completed form widget.
  */
 	public function input($fieldName, $options = array()) {
-		$formType = $this->_getFormType();
-		// If we have a 'state', record then delete from the array
-		if (isset($options['state'])) {
-			$state = $options['state'];
-			unset($options['state']);
-		} else {
-			$state = false;
-		}
-		// The same thing with 'help'
-		if (isset($options['help'])) {
-			$help = $options['help'];
-			unset($options['help']);
-		} else {
-			$help = false;
-		}
-		// To know if it's data case
-		$date = (isset($options['type']) && ($options['type'] == 'date' || $options['type'] == 'datetime')) ? true : false;
+		$labelExist = (isset($options['label']) && $options['label'] === false) ? false : true;
 
-		// Dans le cas d'un input de type date ou datetime
-		if ($date) {
-			$this->setFormType('inline');
-			if (isset($options['class'])) {
-				$options['class'] .= ' input-date';
-			} else {
-				$options['class'] = 'input-date';
+		$basicOptions = array(
+			'before' => '<div class="form-group',
+			'between' => $this->__buildInputBetween($labelExist),
+			'after' => $this->__buildInputAfter($labelExist),
+			'div' => false
+		);
+		$bootstrapOptions = array('state', 'help', 'feedback');
+
+		$options = $this->__errorBootstrap($fieldName, $options);
+
+		foreach ($bootstrapOptions as $opt) {
+			if (isset($options[$opt])) {
+				$name = '__addInput' . $opt;
+				$basicOptions = $this->$name($basicOptions, $options[$opt]);
+				unset($options[$opt]);
 			}
 		}
 
-		//----- [before], [state] and [after] options
-		if (!isset($options['before'])) {
-			$states = array('error', 'warning', 'success');
-			if ($state) {
-				$state = (in_array($state, $states)) ? ' has-' . $state : '';
-				$options['before'] = '<div class="form-group' . $state . '">';
-			} else {
-				$options['before'] = '<div class="form-group">';
+		$basicOptions['before'] .= '">';
+
+		if ($labelExist) {
+			if (isset($options['label']) && !is_array($options['label'])) {
+				$basicOptions['label']['text'] = $options['label'];
+				unset($options['label']);
 			}
-			if (!isset($options['after'])) {
-				$options['after'] = '</div>';
+			$basicOptions['label']['class'] = $this->__leftClass();
+		}
+
+		if (isset($options['_isInputGroup'])) {
+			$basicOptions = $this->__addInputGroup($basicOptions, $options);
+			unset($options['_isInputGroup']);
+		}
+
+		$options = Set::merge($basicOptions, $options);
+
+		if (!isset($options['type']) || strtolower($options['type']) != 'file') {
+			$options['class'] = (isset($options['class'])) ? 'form-control ' . $options['class'] : 'form-control';
+		}
+
+		return parent::input($fieldName, $options);
+	}
+
+	private function __buildInputBetween($labelExist) {
+		return ($this->_getFormType() == 'horizontal') ? '<div class="' . $this->__rightClass($labelExist) . '">' : '';
+	}
+
+	private function __buildInputAfter($labelExist) {
+		return ($this->_getFormType() == 'horizontal') ? '</div></div>' : '</div>';
+	}
+
+	private function __errorBootstrap($fieldName, $options) {
+		if (!$this->isFieldError($fieldName)) {
+			return $options;
+		}
+
+		if (isset($options['errorBootstrap']) && $options['errorBootstrap'] == false) {
+			return $options;
+		}
+
+		$options['state'] = 'error';
+		$options['help'] = '';
+		$errors = $this->tagIsInvalid();
+
+		foreach ($errors as $error) {
+			$options['help'] .= $error . '<br />';
+		}
+
+		$options['feedback'] = true;
+		$options['errorMessage'] = false;
+
+		return $options;
+	}
+
+	private function __addInputstate($basicOptions, $value) {
+		$basicOptions['before'] .= ' has-' . $value;
+
+		return $basicOptions;
+	}
+
+	private function __addInputhelp($basicOptions, $value) {
+		$basicOptions['after'] = '<span class="help-block">' . $value . '</span>' . $basicOptions['after'];
+
+		return $basicOptions;
+	}
+
+	private function __addInputfeedback($basicOptions, $value) {
+		if (!$value) {
+			return $basicOptions;
+		}
+
+		$basicOptions['before'] .= ' has-feedback';
+
+		$states = array(
+			'success' => array(
+				'text' => '(success)',
+				'icon' => 'ok'
+			), 
+			'warning' => array(
+				'text' => '(warning)',
+				'icon' => 'warning-sign'
+			), 
+			'error' => array(
+				'text' => '(error)',
+				'icon' => 'remove'
+			)
+		);
+
+		foreach ($states as $state => $stateOptions) {
+			if (strpos($basicOptions['before'], 'has-' . $state)) {
+				$basicOptions['after'] = '<span class="glyphicon glyphicon-' . $stateOptions['icon'] . ' form-control-feedback" aria-hidden="true"></span>
+  										  <span class="sr-only">' . $stateOptions['text'] .'</span>' .
+  										  $basicOptions['after'];
+  				break;
 			}
 		}
 
-		//----- [div] option
-		if (!isset($options['div'])) {
-			$options['div'] = false;
-		}
+		return $basicOptions;
+	}
 
-		if (!$date) {
-			//----- [class] option
-			if (isset($options['class'])) {
-				$options['class'] .= ' form-control';
-			} else {
-				$options['class'] = 'form-control';
-			}
-		}
+	private function __addInputGroup($basicOptions, $options) {
+		$basicOptions['between'] .= '<div class="input-group">' . $options['_isInputGroup']['between'];
+	 	$basicOptions['after'] = $options['_isInputGroup']['after'] . '</div>' . $basicOptions['after'];
 
-		//----- [label] option
-		if (!isset($options['label'])) {
-			if ($this->_getFormType() == 'horizontal' || ($date && $formType == 'horizontal')) {
-				$options['label'] = array('class' => 'control-label col-md-' . $this->__left);
-			} else {
-				$options['label'] = array('class' => 'control-label sr-only');
-			}
-		} elseif ($options['label'] != false) {
-			if (!is_array($options['label'])) {
-				$options['label'] = array('class' => 'control-label col-md-' . $this->__left, 'text' => $options['label']);
-			} else {
-				if (isset($options['label']['class'])) {
-					$options['label']['class'] .= ' control-label col-md-' . $this->__left;
-				} else {
-					$options['label']['class'] = 'control-label col-md-' . $this->__left;
-				}
-			}
-		}
-
-		//----- [between], [after] and [help] options
-		if ($this->_getFormType() == 'horizontal' || ($date && $formType == 'horizontal')) {
-			if (!isset($options['between'])) {
-				$options['between'] = '<div class="col-md-' . $this->__right;
-				$options['between'] .= ($options['label'] == false) ? ' col-md-offset-' . $this->__left : '';
-				$options['between'] .= '">';
-			}
-			if ($options['after'] == '</div>') {
-				if ($help && !empty($help)) {
-					$options['after'] = '<span class="help-block">' . $help . '</span></div></div>';
-				} else {
-					$options['after'] = '</div></div>';
-				}
-			}
-		}
-
-		return parent::input($fieldName, $options) . $this->setFormType($formType);
+		return $basicOptions;
 	}
 
 /**
@@ -339,32 +402,21 @@ class BsFormHelper extends FormHelper {
  * @return string Input-group de Bootstrap
  */
 	public function inputGroup($fieldName, $addonOptions, $options = array()) {
-		$between = '<div class="col-md-' . $this->__right . ' col-md-offset-' . $this->__left . '">';
-		$between .= '<div class="input-group">';
+		$options['_isInputGroup'] = array(
+			'between' => '',
+			'after' => ''
+		);
 
 		// Check if the addon is on the right
 		if (isset($addonOptions['side']) && $addonOptions['side'] == 'right') {
-			$after = $this->__createAddon($addonOptions) . '</div>' . '</div>';
-			unset($addonOptions['side']);
+			// Avant
+			$options['_isInputGroup']['after'] = $this->__createAddon($addonOptions);
 		} else {
-			$between .= $this->__createAddon($addonOptions);
-			$after = '</div>' . '</div>';
+			// Après
+			$options['_isInputGroup']['between'] = $this->__createAddon($addonOptions);
 		}
 
-		$after .= '</div>';
-		$options['between'] = $between;
-		$options['after'] = $after;
-		if (!isset($options['before'])) {
-			$options['before'] = null;
-		}
-		if (!isset($options['div'])) {
-			$options['div'] = false;
-		}
-		if (!isset($options['label'])) {
-			$options['label'] = false;
-		}
-		$out = $this->input($fieldName, $options);
-		return $out;
+		return $this->input($fieldName, $options);
 	}
 
 /**
