@@ -1,7 +1,6 @@
 <?php
 
 App::uses('FormHelper', 'View/Helper');
-App::uses('HtmlHelper', 'View/Helper');
 App::uses('Set', 'Utility');
 
 /**
@@ -266,6 +265,9 @@ class BsFormHelper extends FormHelper {
 		$bootstrapOptions = array('state', 'help', 'feedback');
 
 		$options = $this->__errorBootstrap($fieldName, $options);
+		$optionsDate = $this->__inputDate($basicOptions, $options);
+		$basicOptions = $optionsDate['basic'];
+		$options = $optionsDate['options'];
 
 		foreach ($bootstrapOptions as $opt) {
 			if (isset($options[$opt])) {
@@ -278,11 +280,9 @@ class BsFormHelper extends FormHelper {
 		$basicOptions['before'] .= '">';
 
 		if ($labelExist) {
-			if (isset($options['label']) && !is_array($options['label'])) {
-				$basicOptions['label']['text'] = $options['label'];
-				unset($options['label']);
-			}
-			$basicOptions['label']['class'] = $this->__leftClass();
+			$label = $this->__addInputLabel($basicOptions, $options);
+			$basicOptions = $label['basic'];
+			$options = $label['options'];
 		}
 
 		if (isset($options['_isInputGroup'])) {
@@ -328,6 +328,24 @@ class BsFormHelper extends FormHelper {
 		$options['errorMessage'] = false;
 
 		return $options;
+	}
+
+	private function __inputDate($basicOptions, $options) {
+		$inputsDate = array('date', 'datetime');
+
+		if (isset($options['type']) && in_array($options['type'], $inputsDate)) {
+			$options['class'] = (isset($options['class'])) ? 'input-date ' . $options['class'] : 'input-date';
+		}
+
+		if ($this->_getFormType() == 'basic') {
+			$basicOptions['between'] = '<div>';
+			$basicOptions['after'] = '</div></div>';
+		}
+
+		return array(
+			'basic' => $basicOptions,
+			'options' => $options
+		);
 	}
 
 	private function __addInputstate($basicOptions, $value) {
@@ -376,6 +394,37 @@ class BsFormHelper extends FormHelper {
 		return $basicOptions;
 	}
 
+	private function __addInputLabel($basicOptions, $options) {
+		if (isset($options['label'])) {
+			if (!is_array($options['label'])) {
+				$basicOptions['label']['text'] = $options['label'];
+				$basicOptions['label']['class'] = $this->__leftClass();
+			} else {
+				if (isset($options['label']['text'])) {
+					$basicOptions['label']['text'] = $options['label']['text'];
+				}
+				if (isset($options['label']['class'])) {
+					$basicOptions['label']['class'] = $this->__leftClass() . ' ' . $options['label']['class'];
+				} else {
+					$basicOptions['label']['class'] = $this->__leftClass();
+				}
+			}
+			unset($options['label']);
+
+			return array(
+				'basic' => $basicOptions,
+				'options' => $options
+			);
+		}
+
+		$basicOptions['label']['class'] = $this->__leftClass();
+
+		return array(
+			'basic' => $basicOptions,
+			'options' => $options
+		); 
+	}
+
 	private function __addInputGroup($basicOptions, $options) {
 		$basicOptions['between'] .= '<div class="input-group">' . $options['_isInputGroup']['between'];
 	 	$basicOptions['after'] = $options['_isInputGroup']['after'] . '</div>' . $basicOptions['after'];
@@ -409,10 +458,8 @@ class BsFormHelper extends FormHelper {
 
 		// Check if the addon is on the right
 		if (isset($addonOptions['side']) && $addonOptions['side'] == 'right') {
-			// Avant
 			$options['_isInputGroup']['after'] = $this->__createAddon($addonOptions);
 		} else {
-			// Après
 			$options['_isInputGroup']['between'] = $this->__createAddon($addonOptions);
 		}
 
@@ -638,6 +685,8 @@ class BsFormHelper extends FormHelper {
  */
 	public function select($fieldName, $options = array(), $attributes = array()) {
 		$out = '';
+		$isDate = false;
+
 		$inline = (isset($attributes['inline']) && ($attributes['inline'] == 'inline' || $attributes['inline'] == true)) ? true : false;
 
 		// MULTIPLE CHECKBOX
@@ -645,7 +694,11 @@ class BsFormHelper extends FormHelper {
 			if (!isset($attributes['class'])) {
 				$attributes['class'] = 'form-control';
 			} else {
-				$attributes['class'] .= ' form-control';
+				$isDate = (strpos($attributes['class'], 'input-date') !== false) ? true : false;
+
+				if (!$isDate) {
+					$attributes['class'] = 'form-control ' . $attributes['class'];
+				}
 			}
 		} else {
 			//----- [checkobx simple] attribute for checkbox
@@ -655,32 +708,17 @@ class BsFormHelper extends FormHelper {
 				$attributes['class'] = 'checkbox ' . $attributes['class'];
 			}
 		}
+
 		//----- [empty] attribute
 		if (!isset($attributes['empty'])) {
 			$attributes['empty'] = false;
 		}
 
-		if ($this->_getFormType() == 'horizontal') {
+		$select = parent::select($fieldName, $options, $attributes);
 
-			$out .= '<div class="form-group">';
-			//----- [label] attribute
-			if (isset($attributes['label']) && !empty($attributes['label'])) {
-				$out .= '<label class="control-label col-md-' . $this->__left . '">' . $attributes['label'] . '</label>';
-				$out .= '<div class="col-md-' . $this->__right . '">';
-			} else {
-				$out .= '<div class="col-md-offset-' . $this->__left . ' col-md-' . $this->__right . '">';
-			}
-		}
-
-		$out .= parent::select($fieldName, $options, $attributes);
-
-		if ($this->_getFormType() == 'horizontal') {
-			//----- [help] attribute
-			if (isset($attributes['help']) && !empty($attributes['help'])) {
-				$out .= '<span class="help-block">' . $attributes['help'] . '</span>';
-			}
-			$out .= '</div></div>';
-		}
+		$out .= $this->__buildSelectBefore($fieldName, $attributes, $isDate);
+		$out .= $select;
+		$out .= $this->__buildSelectAfter($attributes, $isDate);
 
 		if ((isset($attributes['multiple']) && $attributes['multiple'] == 'checkbox')) {
 
@@ -718,6 +756,36 @@ class BsFormHelper extends FormHelper {
 		}
 
 		return $out;
+	}
+
+	private function __buildSelectBefore($fieldName, $attributes, $isDate) {
+		if ($isDate) {
+			return '';
+		}
+
+		$out = '<div class="form-group">';
+		$labelExist = false;
+
+		//----- [label] attribute
+		if (isset($attributes['label'])) {
+			$labelExist = true;
+			$out .= $this->_inputLabel($fieldName, array('text' => $attributes['label'], 'class' => $this->__leftClass()), $attributes);
+		}
+
+		return $out .= '<div class="' . $this->__rightClass($labelExist) . '">';
+	}
+
+	private function __buildSelectAfter($attributes, $isDate) {
+		if ($isDate) {
+			return '';
+		}
+
+		$out = '';
+		//----- [help] attribute
+		if (isset($attributes['help'])) {
+			$out .= '<span class="help-block">' . $attributes['help'] . '</span>';
+		}
+		return $out .= '</div></div>';
 	}
 
 /**
