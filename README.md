@@ -2,7 +2,7 @@ BsFormHelper and BsHelper
 ==========================
 
 [![Build Status](https://travis-ci.org/WebAndCow/CakePHP-BsHelpers.svg?branch=master)](https://travis-ci.org/WebAndCow/CakePHP-BsHelpers) [![Coverage Status](https://coveralls.io/repos/WebAndCow/CakePHP-BsHelpers/badge.svg?branch=master)](https://coveralls.io/r/WebAndCow/CakePHP-BsHelpers?branch=master)
- [![Packagist](https://img.shields.io/packagist/v/webandcow/bs_helpers.svg)](https://packagist.org/packages/webandcow/bs_helpers)
+ [![Packagist](https://img.shields.io/packagist/v/webandcow/bs_helpers.svg)](https://packagist.org/packages/webandcow/bs_helpers) [![Dependency Status](https://www.versioneye.com/user/projects/552fcd0010e714f9e5000d22/badge.svg?style=flat)](https://www.versioneye.com/user/projects/552fcd0010e714f9e5000d22) [![Dependency Status](https://www.versioneye.com/user/projects/552fccbf10e714f9e5000d1e/badge.svg?style=flat)](https://www.versioneye.com/user/projects/552fccbf10e714f9e5000d1e)
 
 Extension of the CakePHP's FormHelper to use the framework Bootstrap v3 more easily.
 
