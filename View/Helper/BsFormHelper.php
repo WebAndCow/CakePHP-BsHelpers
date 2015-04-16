@@ -42,7 +42,12 @@ class BsFormHelper extends FormHelper {
  */
 	private $__right = 9;
 
-
+/**
+ * Device settings (xs, sm, md, lg)
+ * Default value is :  md
+ *
+ * @var string
+ */
 	private $__device = 'md';
 
 /**
@@ -161,22 +166,37 @@ class BsFormHelper extends FormHelper {
 		$this->_actionForm = $val;
 	}
 
-
+/**
+ * Set the value of $__device
+ * 
+ * @param string $val New device
+ * @return void
+ */
 	public function setDevice($val) {
 		$this->__device = $val;
 	}
 
-
+/**
+ * Return the correct class for the left column of the field
+ * 
+ * @return string
+ */
 	private function __leftClass() {
 		if ($this->_getFormType() == 'horizontal') {
 			return 'control-label col-' . $this->__device . '-' . $this->__left;
 		}
 		if ($this->_getFormType() == 'inline') {
-			return 'sr-only'; 
+			return 'sr-only';
 		}
 		return 'control-label';
 	}
 
+/**
+ * Return the correct class for the right column of the field
+ *
+ * @param bool $label If the field have a label
+ * @return string
+ */
 	private function __rightClass($label = false) {
 		if ($this->_getFormType() == 'horizontal') {
 			return (!empty($label)) ? 'col-' . $this->__device . '-' . $this->__right : 'col-' . $this->__device . '-' . $this->__right . ' col-' . $this->__device . '-offset-' . $this->__left;
@@ -197,7 +217,6 @@ class BsFormHelper extends FormHelper {
  * @param array $options An array of html attributes and options.
  * @return string An formatted opening FORM tag.
  */
-
 	public function create($model = null, $options = array()) {
 		if (!isset($options['role'])) {
 			$options['role'] = 'form';
@@ -299,14 +318,33 @@ class BsFormHelper extends FormHelper {
 		return parent::input($fieldName, $options);
 	}
 
+/**
+ * Build the 'between' option for the input
+ * 
+ * @param bool $labelExist If the label exist
+ * @return string
+ */
 	private function __buildInputBetween($labelExist) {
 		return ($this->_getFormType() == 'horizontal') ? '<div class="' . $this->__rightClass($labelExist) . '">' : '';
 	}
 
+/**
+ * Build the 'after' option for the input
+ * 
+ * @param bool $labelExist If the label exist
+ * @return string
+ */
 	private function __buildInputAfter($labelExist) {
 		return ($this->_getFormType() == 'horizontal') ? '</div></div>' : '</div>';
 	}
 
+/**
+ * Change input options if there are errors for the field
+ * 
+ * @param string $fieldName Name of the field
+ * @param array  $options   Options for the input
+ * @return array
+ */
 	private function __errorBootstrap($fieldName, $options) {
 		if (!$this->isFieldError($fieldName)) {
 			return $options;
@@ -330,6 +368,13 @@ class BsFormHelper extends FormHelper {
 		return $options;
 	}
 
+/**
+ * Change input options if the type of the input is date or datetime
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param array  $options   Options for the input
+ * @return array
+ */
 	private function __inputDate($basicOptions, $options) {
 		$inputsDate = array('date', 'datetime');
 
@@ -348,18 +393,39 @@ class BsFormHelper extends FormHelper {
 		);
 	}
 
+/**
+ * Change the state of the input (success, error, warning)
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param string $value        State
+ * @return array
+ */
 	private function __addInputstate($basicOptions, $value) {
 		$basicOptions['before'] .= ' has-' . $value;
 
 		return $basicOptions;
 	}
 
+/**
+ * Create a bootstrap help text for the input
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param string $value       Text
+ * @return array
+ */
 	private function __addInputhelp($basicOptions, $value) {
 		$basicOptions['after'] = '<span class="help-block">' . $value . '</span>' . $basicOptions['after'];
 
 		return $basicOptions;
 	}
 
+/**
+ * Add a 'feedback' bootstrap for the input (color + icon)
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param string $value     Type of the feedback
+ * @return array
+ */
 	private function __addInputfeedback($basicOptions, $value) {
 		if (!$value) {
 			return $basicOptions;
@@ -371,11 +437,11 @@ class BsFormHelper extends FormHelper {
 			'success' => array(
 				'text' => '(success)',
 				'icon' => 'ok'
-			), 
+			),
 			'warning' => array(
 				'text' => '(warning)',
 				'icon' => 'warning-sign'
-			), 
+			),
 			'error' => array(
 				'text' => '(error)',
 				'icon' => 'remove'
@@ -385,15 +451,22 @@ class BsFormHelper extends FormHelper {
 		foreach ($states as $state => $stateOptions) {
 			if (strpos($basicOptions['before'], 'has-' . $state)) {
 				$basicOptions['after'] = '<span class="glyphicon glyphicon-' . $stateOptions['icon'] . ' form-control-feedback" aria-hidden="true"></span>
-  										  <span class="sr-only">' . $stateOptions['text'] .'</span>' .
-  										  $basicOptions['after'];
-  				break;
+										  <span class="sr-only">' . $stateOptions['text'] . '</span>' .
+											$basicOptions['after'];
+				break;
 			}
 		}
 
 		return $basicOptions;
 	}
 
+/**
+ * Define a label for the input
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param array  $options     Options for the input
+ * @return array
+ */
 	private function __addInputLabel($basicOptions, $options) {
 		if (isset($options['label'])) {
 			if (!is_array($options['label'])) {
@@ -422,12 +495,19 @@ class BsFormHelper extends FormHelper {
 		return array(
 			'basic' => $basicOptions,
 			'options' => $options
-		); 
+		);
 	}
 
+/**
+ * Special options for the input-group
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param array $options      Options for the input
+ * @return array
+ */
 	private function __addInputGroup($basicOptions, $options) {
 		$basicOptions['between'] .= '<div class="input-group">' . $options['_isInputGroup']['between'];
-	 	$basicOptions['after'] = $options['_isInputGroup']['after'] . '</div>' . $basicOptions['after'];
+		$basicOptions['after'] = $options['_isInputGroup']['after'] . '</div>' . $basicOptions['after'];
 
 		return $basicOptions;
 	}
@@ -758,6 +838,14 @@ class BsFormHelper extends FormHelper {
 		return $out;
 	}
 
+/**
+ * Build the html before the select
+ * 
+ * @param string $fieldName Name of the field
+ * @param array $attributes Attributes of the select
+ * @param bool $isDate      If it's a select build for a date input
+ * @return string
+ */
 	private function __buildSelectBefore($fieldName, $attributes, $isDate) {
 		if ($isDate) {
 			return '';
@@ -775,6 +863,13 @@ class BsFormHelper extends FormHelper {
 		return $out .= '<div class="' . $this->__rightClass($labelExist) . '">';
 	}
 
+/**
+ * Build the html after the select
+ * 
+ * @param array $attributes Attributes of the select
+ * @param bool $isDate      If it's a select build for a date input
+ * @return string
+ */
 	private function __buildSelectAfter($attributes, $isDate) {
 		if ($isDate) {
 			return '';
