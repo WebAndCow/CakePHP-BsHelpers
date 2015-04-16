@@ -427,10 +427,6 @@ class BsFormHelper extends FormHelper {
  * @return array
  */
 	private function __addInputfeedback($basicOptions, $value) {
-		if (!$value) {
-			return $basicOptions;
-		}
-
 		$basicOptions['before'] .= ' has-feedback';
 
 		$states = array(
@@ -451,8 +447,8 @@ class BsFormHelper extends FormHelper {
 		foreach ($states as $state => $stateOptions) {
 			if (strpos($basicOptions['before'], 'has-' . $state)) {
 				$basicOptions['after'] = '<span class="glyphicon glyphicon-' . $stateOptions['icon'] . ' form-control-feedback" aria-hidden="true"></span>
-										  <span class="sr-only">' . $stateOptions['text'] . '</span>' .
-											$basicOptions['after'];
+										<span class="sr-only">' . $stateOptions['text'] . '</span>' .
+										$basicOptions['after'];
 				break;
 			}
 		}
@@ -794,7 +790,12 @@ class BsFormHelper extends FormHelper {
 			$attributes['empty'] = false;
 		}
 
-		$select = parent::select($fieldName, $options, $attributes);
+		$attributesForSelect = $attributes;
+		// Clean
+		unset($attributesForSelect['help']);
+		unset($attributesForSelect['label']);
+
+		$select = parent::select($fieldName, $options, $attributesForSelect);
 
 		$out .= $this->__buildSelectBefore($fieldName, $attributes, $isDate);
 		$out .= $select;
@@ -857,6 +858,7 @@ class BsFormHelper extends FormHelper {
 		//----- [label] attribute
 		if (isset($attributes['label'])) {
 			$labelExist = true;
+			$attributes['type'] = 'text';
 			$out .= $this->_inputLabel($fieldName, array('text' => $attributes['label'], 'class' => $this->__leftClass()), $attributes);
 		}
 

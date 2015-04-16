@@ -244,6 +244,27 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 
+		/////////////////////
+    	// FEEDBACK SUCESS //
+	    /////////////////////
+
+    	$result = $this->BsForm->input('Name', array('state' => 'success', 'feedback' => true));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group has-success has-feedback')),
+				array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'Name', '/label',
+				array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+					array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
+					array('span' => array('class' => 'glyphicon glyphicon-ok form-control-feedback', 'aria-hidden')),
+					'/span',
+					array('span' => array('class' => 'sr-only')),
+						'(success)',
+					'/span',
+				'/div',
+			'/div'
+		);
+		$this->assertTags($result, $expected);
+
 		////////////////
 		// INPUT DATE //
 		////////////////
@@ -320,9 +341,45 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 
+		///////////////////////////
+		// INPUT DATE BASIC FORM //
+		///////////////////////////
 
+		$this->BsForm->create('Model', array('class' => ''));
+	    $result = $this->BsForm->input('Date', array('type' => 'date'));
+	    $this->BsForm->end();
+		
+		$now = strtotime('now');
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+				array('label' => array('for', 'class' => 'control-label')), 'Date', '/label',
+				'<div',
+					array('select' => array('name', 'class' => 'form-control input-date', 'id')),
+						$monthsRegex,
+						array('option' => array('value' => date('m', $now), 'selected' => 'selected')),
+							date('F', $now),
+						'/option',
+					'*/select',
+					'-',
+					array('select' => array('name', 'class' => 'form-control input-date', 'id')),
+						$daysRegex,
+						array('option' => array('value' => date('d', $now), 'selected' => 'selected')),
+							date('j', $now),
+						'/option',
+					'*/select',
+					'-',
+					array('select' => array('name', 'class' => 'form-control input-date', 'id')),
+						$yearsRegex,
+						array('option' => array('value' => date('Y', $now), 'selected' => 'selected')),
+							date('Y', $now),
+						'/option',
+					'*/select',
+				'/div',
+			'/div'
+		);
+		$this->assertTags($result, $expected);
     }
-
 
     public function testInputGroup()
     {
@@ -609,6 +666,31 @@ class BsFormHelperTest extends CakeTestCase {
 			    			'Test2',
 			    		'/option',
 	    			'/select',
+	    		'/div',
+	    	'/div'
+	    );
+
+	    ////////////////////////////////////////////
+    	// SIMPLE SELECT WITH HELP TEXT AND LABEL //
+	    ////////////////////////////////////////////
+
+		$result = $this->BsForm->select('Test', $selectOptions, array('help' => 'Test', 'label' => 'Label'));
+
+		$expected = array(
+	    	array('div' => array('class' => 'form-group')),
+	    		array('label' => array('for', 'class' => 'control-label col-md-'.$this->BsForm->getLeft())), 'Label', '/label',
+	    		array('div' => array('class' => 'col-md-'.$this->BsForm->getRight())),
+	    			array('select' => array('class' => 'form-control', 'name', 'id')),
+			    		array('option' => array('value' => 'first')),
+			    			'Test1',
+			    		'/option',
+			    		array('option' => array('value' => 'second')),
+			    			'Test2',
+			    		'/option',
+	    			'/select',
+	    			array('span' => array('class' => 'help-block')),
+		    			'Test',
+		    		'/span',
 	    		'/div',
 	    	'/div'
 	    );
