@@ -600,7 +600,7 @@ class BsFormHelperTest extends CakeTestCase {
 
 		$expected = array(
 	    	array('div' => array('class' => 'form-group')),
-	    		array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
+	    		array('div' => array('class' => 'col-md-'.$this->BsForm->getRight() . ' col-md-offset-'.$this->BsForm->getLeft())),
 	    			array('select' => array('class' => 'form-control', 'name', 'id')),
 			    		array('option' => array('value' => 'first')),
 			    			'Test1',
@@ -623,7 +623,7 @@ class BsFormHelperTest extends CakeTestCase {
 
 		$expected = array(
 	    	array('div' => array('class' => 'form-group')),
-	    		array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
+	    		array('div' => array('class' => 'col-md-'.$this->BsForm->getRight() . ' col-md-offset-'.$this->BsForm->getLeft())),
 	    			array('select' => array('class' => 'form-control', 'name', 'id', 'multiple')),
 			    		array('option' => array('value' => 'first')),
 			    			'Test1',
@@ -646,7 +646,7 @@ class BsFormHelperTest extends CakeTestCase {
 
 		$expected = array(
 	    	array('div' => array('class' => 'form-group')),
-	    		array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
+	    		array('div' => array('class' => 'col-md-'.$this->BsForm->getRight() . ' col-md-offset-'.$this->BsForm->getLeft())),
 	    			array('input' => array('type' => 'hidden', 'name', 'value' => '', 'id')),
 	    			array('div' => array('class' => 'checkbox')),
 			    		array('label' => array('for')),
@@ -674,7 +674,7 @@ class BsFormHelperTest extends CakeTestCase {
 
 		$expected = array(
 	    	array('div' => array('class' => 'form-group')),
-	    		array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
+	    		array('div' => array('class' => 'col-md-'.$this->BsForm->getRight() . ' col-md-offset-'.$this->BsForm->getLeft())),
 	    			array('input' => array('type' => 'hidden', 'name', 'value' => '', 'id')),
 		    		array('label' => array('for', 'class' => 'checkbox-inline')),
 		    			array('input' => array('type' => 'checkbox', 'name', 'value' => 'first', 'id')),
