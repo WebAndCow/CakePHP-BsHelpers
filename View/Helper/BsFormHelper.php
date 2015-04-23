@@ -672,73 +672,78 @@ class BsFormHelper extends FormHelper {
  * @return string An HTML text input element.
  */
 	public function checkbox($fieldName, $options = array()) {
-		if (isset($options['help']) && !empty($options['help'])) {
-			$help = $options['help'];
-			unset($options['help']);
-		} else {
-			$help = false;
-		}
+		$basicOptions = array(
+			'help' => false,
+			'state' => false,
+			'label' => Inflector::camelize($fieldName),
+			'label-class' => ''
+		);
 
-		//----- [div] option
-		if (!isset($options['div'])) {
-			$options['div'] = false;
-		}
+		// $options = $this->__errorBootstrap($fieldName, $options);
 
-		//----- [label]
-		if (isset($options['label'])) {
-			if (is_array($options['label']) && isset($options['label']['help']) && !empty($options['label']['help'])) {
-				$labelHelp = $options['label']['help'];
-			} else {
-				$labelHelp = null;
+		foreach ($basicOptions as $opt => $valueOpt) {
+			if (isset($options[$opt])) {
+				$basicOptions[$opt] = $options[$opt];
+				unset($options[$opt]);
 			}
-			$label = $options['label'];
-			unset($options['label']);
-		} else {
-			$label = Inflector::camelize($fieldName);
 		}
 
-		//----- [label] class
-		if (isset($options['label-class'])) {
-			$labelClass = array('class' => $options['label-class']);
-			unset($options['label-class']);
-		} else {
-			$labelClass = array();
+		$checkbox = parent::checkbox($fieldName, $options);
+		$checkbox .= ($basicOptions['label'] !== false) ? ' ' . $basicOptions['label'] : '';
+		$checkbox .= ($basicOptions['help']) ? '<span class="help-block">' . $basicOptions['help'] . '</span>' : '';
+
+		$options['type'] = 'checkbox';
+		$label = array(
+			'text' => $checkbox
+		);
+		if (!empty($basicOptions['label-class'])) {
+			$label['class'] = $basicOptions['label-class'];
 		}
 
+		return 
+		$this->__buildCheckboxBefore($basicOptions['state']) . 
+		$this->_inputLabel($fieldName, $label, $options) . 
+		$this->__buildCheckboxAfter($basicOptions['state']);
+	}
+
+/**
+ * Build the html before the checkbox
+ * 
+ * @param string $validationState State of the checkbox
+ * @return string
+ */
+	private function __buildCheckboxBefore($validationState) {
 		$out = '';
 
-		if ($this->_getFormType() == 'horizontal' && !isset($options['inline'])) {
-			$out .= '<div class="form-group">';
-			$out .= '<div class="col-md-offset-' . $this->__left . ' col-md-' . $this->__right . '">';
+		if ($this->_getFormType() == 'horizontal') {
+			$out .= '<div class="form-group">' .
+					'<div class="' . $this->__rightClass(false) . '">';
 		}
 
-		//----- [help] option for multiple checkboxes ([label] is an array)
-		if (isset($options['label']) && isset($labelHelp)) {
-			$out .= '<span class="help-block">' . $options['label']['help'] . '</span>';
+		if ($validationState) {
+			$out .= '<div class="has-' . $validationState . '">';
 		}
 
-		//----- [inline] option
-		if (!(isset($options['inline']) && ($options['inline'] == 'inline' || $options['inline'] == true))) {
-			$out .= '<div class="checkbox">';
-			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options) . ' ' . $label, $labelClass);
-		} else {
-			unset($options['inline']);
-			if (isset($labelClass['class'])) {
-				$label = $labelClass['class'] . ' checkbox-inline';
-			}
+		return $out .= '<div class="checkbox">';
+	}
 
-			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options) . ' ' . $label, $labelClass);
-		}
+/**
+ * Build the html after the checkbox
+ * 
+ * @param string $validationState State of the checkbox
+ * @return string
+ */
+	private function __buildCheckboxAfter($validationState) {
+		$out = '</div>';
 
-		//----- [help] option for single checkbox
-		if ($this->_getFormType() == 'horizontal' && !isset($options['inline'])) {
-			if ($help) {
-				$out .= '<span class="help-block">' . $help . '</span>';
-			}
-			$out .= '</div></div></div>';
-		} else {
+		if ($validationState) {
 			$out .= '</div>';
 		}
+
+		if ($this->_getFormType() == 'horizontal') {
+			$out .= '</div>' . '</div>';
+		}
+
 		return $out;
 	}
 
@@ -796,6 +801,10 @@ class BsFormHelper extends FormHelper {
 		unset($attributesForSelect['label']);
 
 		$select = parent::select($fieldName, $options, $attributesForSelect);
+
+		if ($isDate) {
+			return $select;
+		}
 
 		$out .= $this->__buildSelectBefore($fieldName, $attributes, $isDate);
 		$out .= $select;

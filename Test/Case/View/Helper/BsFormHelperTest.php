@@ -552,9 +552,29 @@ class BsFormHelperTest extends CakeTestCase {
 
     public function testCheckbox()
     {
-	    /////////////////////
-    	// CHECKBOX INLINE //
-	    /////////////////////
+	    //////////////////////////
+    	// CHECKBOX FORM BASIC  //
+	    //////////////////////////
+
+	    $this->BsForm->create('Model', array('class' => ''));
+	    $result = $this->BsForm->checkbox('Test');
+	    $this->BsForm->end();
+
+	    $expected = array(
+	    	array('div' => array('class' => 'checkbox')),
+	    		array('label' => array('for')),
+	    			array('input' => array('type' => 'hidden', 'name', 'id', 'value')),
+	    			array('input' => array('type' => 'checkbox', 'name', 'value', 'id')),
+	    			' Test',
+	    		'/label',
+	    	'/div'
+	    );
+
+	    $this->assertTags($result, $expected);
+
+	    //////////////////////////
+    	// CHECKBOX FORM INLINE //
+	    //////////////////////////
 
 	    $this->BsForm->create('Model', array('class' => 'form-inline'));
 	    $result = $this->BsForm->checkbox('Test');
@@ -570,6 +590,8 @@ class BsFormHelperTest extends CakeTestCase {
 	    	'/div'
 	    );
 
+	    $this->assertTags($result, $expected);
+
     	/////////////////////////
     	// CHECKBOX HORIZONTAL //
 	    /////////////////////////
@@ -580,32 +602,16 @@ class BsFormHelperTest extends CakeTestCase {
 
 	    $expected = array(
 	    	array('div' => array('class' => 'form-group')),
-	    		array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
+	    		array('div' => array('class' => 'col-md-'.$this->BsForm->getRight() . ' col-md-offset-'.$this->BsForm->getLeft())),
 	    			array('div' => array('class' => 'checkbox')),
 			    		array('label' => array('for')),
-			    			array('input' => array('name', 'type' => 'hidden', 'value', 'id')),
-			    			array('input' => array('id', 'type' => 'checkbox', 'name', 'value')),
+			    			array('input' => array('id', 'name', 'type' => 'hidden', 'value')),
+			    			array('input' => array('id', 'name', 'type' => 'checkbox', 'value')),
 			    			' Test',
 			    		'/label',
 	    			'/div',
 	    		'/div',
 	    	'/div'
-	    );
-
-		$this->assertTags($result, $expected);
-
-		/////////////////////
-    	// CHECKBOX INLINE //
-	    /////////////////////
-
-	    $result = $this->BsForm->checkbox('Test', array('inline' => true));
-
-	    $expected = array(
-	    	array('label' => array('for')),
-			    array('input' => array('name', 'type' => 'hidden', 'value', 'id')),
-			    array('input' => array('id', 'type' => 'checkbox', 'name', 'value')),
-			    ' Test',
-			'/label'
 	    );
 
 		$this->assertTags($result, $expected);
@@ -625,15 +631,15 @@ class BsFormHelperTest extends CakeTestCase {
 
 	    $expected = array(
 	    	array('div' => array('class' => 'form-group')),
-	    		array('div' => array('class' => 'col-md-offset-'.$this->BsForm->getLeft().' col-md-'.$this->BsForm->getRight())),
+	    		array('div' => array('class' => 'col-md-'.$this->BsForm->getRight() . ' col-md-offset-'.$this->BsForm->getLeft())),
 	    			array('div' => array('class' => 'checkbox')),
 			    		array('label' => array('for', 'class' => 'classLabel')),
 			    			array('input' => array('type' => 'checkbox', 'name', 'value', 'class' => 'classTest', 'id' => 'myId')),
 			    			' Label',
+				    		array('span' => array('class' => 'help-block')),
+				    			'helpTest',
+				    		'/span',
 			    		'/label',
-			    		array('span' => array('class' => 'help-block')),
-			    			'helpTest',
-			    		'/span',
 	    			'/div',
 	    		'/div',
 	    	'/div'
