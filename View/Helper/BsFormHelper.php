@@ -700,10 +700,7 @@ class BsFormHelper extends FormHelper {
 			$label['class'] = $basicOptions['label-class'];
 		}
 
-		return 
-		$this->__buildCheckboxBefore($basicOptions['state']) . 
-		$this->_inputLabel($fieldName, $label, $options) . 
-		$this->__buildCheckboxAfter($basicOptions['state']);
+		return $this->__buildCheckboxBefore($basicOptions['state']) . $this->_inputLabel($fieldName, $label, $options) . $this->__buildCheckboxAfter($basicOptions['state']);
 	}
 
 /**
@@ -913,13 +910,14 @@ class BsFormHelper extends FormHelper {
 	public function radio($fieldName, $options = array(), $attributes = array()) {
 		$out = '';
 		$inline = ((isset($attributes['inline']) && $attributes['inline'] === true)) ? true : false;
+		unset($attributes['inline']);
 		$defaultAttributes = array(
 			'legend' => false,
 			'label' => false,
 		);
 		$defaultAttributes['separator'] = ($inline) ? '</label><label class="radio-inline">' : '</label></div><div class="radio"><label>';
 
-		$attributes = Hash::merge($defaultAttributes, $attributes);
+		$attributes = Set::merge($defaultAttributes, $attributes);
 		$attributesForBefore = $attributes;
 		unset($attributes['state']);
 		unset($attributes['help']);
@@ -927,10 +925,7 @@ class BsFormHelper extends FormHelper {
 
 		$radio = parent::radio($fieldName, $options, $attributes);
 
-		return 
-		$this->__buildRadioBefore($fieldName, $attributesForBefore, $inline) .
-			$radio . 
-		$this->__buildRadioAfter($inline, $attributesForBefore);
+		return $this->__buildRadioBefore($fieldName, $attributesForBefore, $inline) . $radio . $this->__buildRadioAfter($inline, $attributesForBefore);
 	}
 
 /**
@@ -938,7 +933,7 @@ class BsFormHelper extends FormHelper {
  * 
  * @param string $fieldName Name of the field
  * @param array $attributes Attributes of the select
- * @param bool $isDate      If it's a select build for a date input
+ * @param bool $inline      If radio buttons are inline
  * @return string
  */
 	private function __buildRadioBefore($fieldName, $attributes, $inline) {
@@ -970,8 +965,8 @@ class BsFormHelper extends FormHelper {
 /**
  * Build the html after the radio
  * 
+ * @param bool $inline      If radio buttons are inline
  * @param array $attributes Attributes of the select
- * @param bool $isDate      If it's a select build for a date input
  * @return string
  */
 	private function __buildRadioAfter($inline, $attributes) {
@@ -1020,45 +1015,63 @@ class BsFormHelper extends FormHelper {
  */
 	public function submit($caption = null, $options = array()) {
 		$out = '';
+		$ux = (isset($options['ux']) && $options['ux'] === false) ? false : true;
+		unset($options['ux']);
 
-		if ($this->_getFormType() == 'horizontal') {
-			$out .= '<div class="form-group">';
-			$out .= '<div class="col-md-offset-' . $this->__left . ' col-md-' . $this->__right . '">';
-		}
+		$basicOptions = array(
+			'div' => false,
+			'class' => 'btn btn-success',
+			'before' => $this->__buildSubmitBefore(),
+		);
 
-		//----- [div] option
-		if (!isset($options['div'])) {
-			$options['div'] = false;
-		}
-
-		//----- [label] option
-		if (!isset($options['label'])) {
-			$options['label'] = false;
-		}
+		$typeOfButton = 'success';
+		$types = array('danger', 'warning', 'info', 'primary');
 
 		//----- [class] option
-		if (!isset($options['class'])) {
-			$type = 'success';
-			$options['class'] = 'btn btn-success';
-		} else {
-			if (is_integer(strpos($options['class'], 'btn-danger')) || is_integer(strpos($options['class'], 'btn-warning')) || is_integer(strpos($options['class'], 'btn-info')) || is_integer(strpos($options['class'], 'btn-primary'))) {
-				$type = substr($options['class'], 4);
-				$options['class'] = 'btn ' . $options['class'];
-			} else {
-				$type = 'success';
-				$options['class'] = 'btn ' . $options['class'] . ' btn-success';
+		if (isset($options['class'])) {
+			$basicClass = $options['class'];
+			$options['class'] = $basicOptions['class'] . ' ' . $options['class'];
+
+			foreach ($types as $type) {
+				if (strpos($options['class'], $type) > 0) {
+					$typeOfButton = $type;
+					$options['class'] = 'btn ' . $basicClass;
+					break;
+				}
 			}
 		}
 
-		$out .= parent::submit($caption, $options);
+		$basicOptions['after'] = $this->__buildSubmitAfter($ux, $typeOfButton);
 
-		//----- [ux] option
-		$scriptUX = true;
-		if (isset($options['ux']) && $options['ux'] == false) {
-			$scriptUX = false;
+		$options = Set::merge($basicOptions, $options);
+
+		return parent::submit($caption, $options);
+	}
+
+/**
+ * Build the html before the submit
+ * 
+ * @return string
+ */
+	private function __buildSubmitBefore() {
+		if ($this->_getFormType() == 'horizontal') {
+			return '<div class="form-group">' . '<div class="' . $this->__rightClass(false) . '">';
 		}
 
-		if ($scriptUX) {
+		return '';
+	}
+
+/**
+ * Build the html after the radio
+ * 
+ * @param bool $ux     Check if ux animations are activated
+ * @param string $type Type of the submit button
+ * @return string
+ */
+	private function __buildSubmitAfter($ux, $type) {
+		$out = '';
+
+		if ($ux) {
 			$out .= '<i class="fa fa-spinner fa-spin form-submit-wait text-' . $type . '"></i>';
 
 			$idForm = '#' . Inflector::camelize($this->_modelForm . ' ' . $this->_actionForm . ' Form');
@@ -1076,19 +1089,6 @@ class BsFormHelper extends FormHelper {
 		}
 
 		return $out;
-	}
-
-/**
- * Closes an HTML form, cleans up values set by Bs3FormHelper::create(), and writes hidden
- * input fields where appropriate.
- * Almost the same function as the classic FormHelper, neeeded to user correctly the submit function of BsFormHelper
- *
- * @param string|array $options as a string will use $options as the value of button,
- * @param array $secureAttributes like the secureAttributes in the parent function
- * @return string a closing FORM tag optional submit button.
- */
-	public function end($options = null, $secureAttributes = array()) {
-		return parent::end($options, $secureAttributes);
 	}
 
 				/*--------------------------*
