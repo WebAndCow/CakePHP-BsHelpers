@@ -912,39 +912,85 @@ class BsFormHelper extends FormHelper {
  */
 	public function radio($fieldName, $options = array(), $attributes = array()) {
 		$out = '';
-		$inline = ($this->_getFormType() == 'inline' || (isset($attributes['inline']) && $attributes['inline'] == true)) ? true : false;
+		$inline = ((isset($attributes['inline']) && $attributes['inline'] === true)) ? true : false;
 		$defaultAttributes = array(
 			'legend' => false,
 			'label' => false,
 		);
-
-		if (!$inline) {
-
-			$defaultAttributes['separator'] = '</label></div><div class="radio"><label>';
-
-			$out .= '<div class="form-group">';
-
-			//----- [label] attribute
-			if (isset($attributes['label']) && !empty($attributes['label'])) {
-				$out .= '<label class="control-label col-md-' . $this->__left . '">' . $attributes['label'] . '</label>';
-				$out .= '<div class="col-md-' . $this->__right . '">';
-			} else {
-				$out .= '<div class="col-md-offset-' . $this->__left . ' col-md-' . $this->__right . '">';
-			}
-
-			$out .= '<div class="radio">';
-		} else {
-			$defaultAttributes['separator'] = '</label><label class="radio-inline">';
-		}
-
-		$out .= ($inline) ? '<label class="radio-inline">' : '<label>';
+		$defaultAttributes['separator'] = ($inline) ? '</label><label class="radio-inline">' : '</label></div><div class="radio"><label>';
 
 		$attributes = Hash::merge($defaultAttributes, $attributes);
+		$attributesForBefore = $attributes;
+		unset($attributes['state']);
+		unset($attributes['help']);
+		$attributes['label'] = false;
 
-		$out .= parent::radio($fieldName, $options, $attributes);
+		$radio = parent::radio($fieldName, $options, $attributes);
 
-		$out .= '</label>';
-		$out .= (!$inline) ? '</div></div></div>' : '';
+		return 
+		$this->__buildRadioBefore($fieldName, $attributesForBefore, $inline) .
+			$radio . 
+		$this->__buildRadioAfter($inline, $attributesForBefore);
+	}
+
+/**
+ * Build the html before the radio
+ * 
+ * @param string $fieldName Name of the field
+ * @param array $attributes Attributes of the select
+ * @param bool $isDate      If it's a select build for a date input
+ * @return string
+ */
+	private function __buildRadioBefore($fieldName, $attributes, $inline) {
+		$out = '';
+
+		if ($this->_getFormType() == 'horizontal') {
+			$out .= '<div class="form-group">';
+
+			if ($attributes['label']) {
+				$attributes['type'] = 'radio';
+
+				$out .= $this->_inputLabel($fieldName, array('text' => $attributes['label'], 'class' => $this->__leftClass()), $attributes);
+				$out .= '<div class="' . $this->__rightClass(true) . '">';
+			} else {
+				$out .= '<div class="' . $this->__rightClass(false) . '">';
+			}
+		}
+
+		if (isset($attributes['state'])) {
+			$out .= '<div class="has-' . $attributes['state'] . '">';
+		}
+
+		$out .= '<div class="radio">';
+		$out .= ($inline) ? '<label class="radio-inline">' : '<label>';
+
+		return $out;
+	}
+
+/**
+ * Build the html after the radio
+ * 
+ * @param array $attributes Attributes of the select
+ * @param bool $isDate      If it's a select build for a date input
+ * @return string
+ */
+	private function __buildRadioAfter($inline, $attributes) {
+		$out = '</label>';
+
+		//----- [help] attribute
+		if (isset($attributes['help'])) {
+			$out .= '<span class="help-block">' . $attributes['help'] . '</span>';
+		}
+
+		if (isset($attributes['state'])) {
+			$out .= '</div>';
+		}
+
+		if ($this->_getFormType() == 'horizontal') {
+			$out .= '</div></div>';
+		}
+
+		$out .= '</div>';
 
 		return $out;
 	}
