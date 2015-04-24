@@ -1,10 +1,10 @@
 BsFormHelper and BsHelper
 ==========================
 
-[![Build Status](https://travis-ci.org/WebAndCow/CakePHP-BsHelpers.svg?branch=master)](https://travis-ci.org/WebAndCow/CakePHP-BsHelpers) [![Coverage Status](https://coveralls.io/repos/WebAndCow/CakePHP-BsHelpers/badge.png?branch=master)](https://coveralls.io/r/WebAndCow/CakePHP-BsHelpers?branch=master)
- [![Latest Stable Version](https://poser.pugx.org/webandcow/bs_helpers/v/stable.svg)](https://packagist.org/packages/webandcow/bs_helpers)
+[![Build Status](https://travis-ci.org/WebAndCow/CakePHP-BsHelpers.svg?branch=master)](https://travis-ci.org/WebAndCow/CakePHP-BsHelpers) [![Coverage Status](https://coveralls.io/repos/WebAndCow/CakePHP-BsHelpers/badge.svg?branch=master)](https://coveralls.io/r/WebAndCow/CakePHP-BsHelpers?branch=master)
+ [![Packagist](https://img.shields.io/packagist/v/webandcow/bs_helpers.svg)](https://packagist.org/packages/webandcow/bs_helpers) [![Dependency Status](https://www.versioneye.com/user/projects/552fcd0010e714f9e5000d22/badge.svg?style=flat)](https://www.versioneye.com/user/projects/552fcd0010e714f9e5000d22) [![Dependency Status](https://www.versioneye.com/user/projects/552fccbf10e714f9e5000d1e/badge.svg?style=flat)](https://www.versioneye.com/user/projects/552fccbf10e714f9e5000d1e)
 
-Extension of the CakePHP's FormHelper to use the framework Twitter Bootstrap v3.0.0 more easily.
+Extension of the CakePHP's FormHelper to use the framework Bootstrap v3 more easily.
 
 The full documentation is available here : http://webandcow.github.io/CakePHP-BsHelpers
 

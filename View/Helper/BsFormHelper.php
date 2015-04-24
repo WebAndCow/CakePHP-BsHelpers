@@ -43,6 +43,14 @@ class BsFormHelper extends FormHelper {
 	private $__right = 9;
 
 /**
+ * Device settings (xs, sm, md, lg)
+ * Default value is :  md
+ *
+ * @var string
+ */
+	private $__device = 'md';
+
+/**
  * Defines the type of form being created, horizontal form or inline form. Set by BsFormHelper::create()
  *
  * @var string
@@ -159,6 +167,44 @@ class BsFormHelper extends FormHelper {
 	}
 
 /**
+ * Set the value of $__device
+ * 
+ * @param string $val New device
+ * @return void
+ */
+	public function setDevice($val) {
+		$this->__device = $val;
+	}
+
+/**
+ * Return the correct class for the left column of the field
+ * 
+ * @return string
+ */
+	private function __leftClass() {
+		if ($this->_getFormType() == 'horizontal') {
+			return 'control-label col-' . $this->__device . '-' . $this->__left;
+		}
+		if ($this->_getFormType() == 'inline') {
+			return 'sr-only';
+		}
+		return 'control-label';
+	}
+
+/**
+ * Return the correct class for the right column of the field
+ *
+ * @param bool $label If the field have a label
+ * @return string
+ */
+	private function __rightClass($label = false) {
+		if ($this->_getFormType() == 'horizontal') {
+			return (!empty($label)) ? 'col-' . $this->__device . '-' . $this->__right : 'col-' . $this->__device . '-' . $this->__right . ' col-' . $this->__device . '-offset-' . $this->__left;
+		}
+		return '';
+	}
+
+/**
  * Returns an HTML FORM element.
  *
  * Extends of FormHelper::create() so get same options and params
@@ -171,7 +217,6 @@ class BsFormHelper extends FormHelper {
  * @param array $options An array of html attributes and options.
  * @return string An formatted opening FORM tag.
  */
-
 	public function create($model = null, $options = array()) {
 		if (!isset($options['role'])) {
 			$options['role'] = 'form';
@@ -182,6 +227,8 @@ class BsFormHelper extends FormHelper {
 				$this->setFormType('horizontal');
 			} elseif (is_integer(strpos($options['class'], 'form-inline'))) {
 				$this->setFormType('inline');
+			} else {
+				$this->setFormType('basic');
 			}
 		} else {
 			$options['class'] = 'form-horizontal';
@@ -196,6 +243,48 @@ class BsFormHelper extends FormHelper {
 
 		return parent::create($model, $options);
 	}
+
+	/*--------------------------------*
+	*						          *
+	*			ERROR HANDLING        *
+	*					              *
+	*--------------------------------*/
+
+/**
+ * Change options if there are errors for the field
+ * 
+ * @param string $fieldName Name of the field
+ * @param array  $options   Options for the input
+ * @return array
+ */
+	private function __errorBootstrap($fieldName, $options) {
+		if (!$this->isFieldError($fieldName)) {
+			return $options;
+		}
+
+		if (isset($options['errorBootstrap']) && $options['errorBootstrap'] === false) {
+			unset($options['errorBootstrap']);
+			return $options;
+		}
+
+		$options['state'] = 'error';
+		$options['help'] = '';
+		$errors = $this->tagIsInvalid();
+
+		foreach ($errors as $error) {
+			$options['help'] .= $error . '<br />';
+		}
+
+		unset($options['errorBootstrap']);
+
+		return $options;
+	}
+
+	/*------------------------*
+	*					      *
+	*			FIELDS        *
+	*					      *
+	*------------------------*/
 
 /**
  * Generates a form input element complete with label and wrapper div
@@ -226,98 +315,229 @@ class BsFormHelper extends FormHelper {
  * @return string Completed form widget.
  */
 	public function input($fieldName, $options = array()) {
-		$formType = $this->_getFormType();
-		// If we have a 'state', record then delete from the array
-		if (isset($options['state'])) {
-			$state = $options['state'];
-			unset($options['state']);
-		} else {
-			$state = false;
-		}
-		// The same thing with 'help'
-		if (isset($options['help'])) {
-			$help = $options['help'];
-			unset($options['help']);
-		} else {
-			$help = false;
-		}
-		// To know if it's data case
-		$date = (isset($options['type']) && ($options['type'] == 'date' || $options['type'] == 'datetime')) ? true : false;
+		$labelExist = (isset($options['label']) && $options['label'] === false) ? false : true;
 
-		// Dans le cas d'un input de type date ou datetime
-		if ($date) {
-			$this->setFormType('inline');
-			if (isset($options['class'])) {
-				$options['class'] .= ' input-date';
-			} else {
-				$options['class'] = 'input-date';
+		$basicOptions = array(
+			'before' => '<div class="form-group',
+			'between' => $this->__buildInputBetween($labelExist),
+			'after' => $this->__buildInputAfter($labelExist),
+			'div' => false
+		);
+		$bootstrapOptions = array('state', 'help', 'feedback');
+
+		$options = $this->__errorBootstrapInput($fieldName, $options);
+		$optionsDate = $this->__inputDate($basicOptions, $options);
+		$basicOptions = $optionsDate['basic'];
+		$options = $optionsDate['options'];
+
+		foreach ($bootstrapOptions as $opt) {
+			if (isset($options[$opt])) {
+				$name = '__addInput' . $opt;
+				$basicOptions = $this->$name($basicOptions, $options[$opt]);
+				unset($options[$opt]);
 			}
 		}
 
-		//----- [before], [state] and [after] options
-		if (!isset($options['before'])) {
-			$states = array('error', 'warning', 'success');
-			if ($state) {
-				$state = (in_array($state, $states)) ? ' has-' . $state : '';
-				$options['before'] = '<div class="form-group' . $state . '">';
-			} else {
-				$options['before'] = '<div class="form-group">';
-			}
-			if (!isset($options['after'])) {
-				$options['after'] = '</div>';
+		$basicOptions['before'] .= '">';
+
+		if ($labelExist) {
+			$label = $this->__addInputLabel($basicOptions, $options);
+			$basicOptions = $label['basic'];
+			$options = $label['options'];
+		}
+
+		if (isset($options['_isInputGroup'])) {
+			$basicOptions = $this->__addInputGroup($basicOptions, $options);
+			unset($options['_isInputGroup']);
+		}
+
+		$options = Set::merge($basicOptions, $options);
+
+		if (!isset($options['type']) || strtolower($options['type']) != 'file') {
+			$options['class'] = (isset($options['class'])) ? 'form-control ' . $options['class'] : 'form-control';
+		}
+
+		return parent::input($fieldName, $options);
+	}
+
+/**
+ * Build the 'between' option for the input
+ * 
+ * @param bool $labelExist If the label exist
+ * @return string
+ */
+	private function __buildInputBetween($labelExist) {
+		return ($this->_getFormType() == 'horizontal') ? '<div class="' . $this->__rightClass($labelExist) . '">' : '';
+	}
+
+/**
+ * Build the 'after' option for the input
+ * 
+ * @param bool $labelExist If the label exist
+ * @return string
+ */
+	private function __buildInputAfter($labelExist) {
+		return ($this->_getFormType() == 'horizontal') ? '</div></div>' : '</div>';
+	}
+
+/**
+ * Change input options if there are errors for the field
+ * 
+ * @param string $fieldName Name of the field
+ * @param array  $options   Options for the input
+ * @return array
+ */
+	private function __errorBootstrapInput($fieldName, $options) {
+		if (!$this->isFieldError($fieldName)) {
+			return $options;
+		}
+
+		$options = $this->__errorBootstrap($fieldName, $options);
+
+		$options['feedback'] = true;
+		$options['errorMessage'] = false;
+
+		return $options;
+	}
+
+/**
+ * Change input options if the type of the input is date or datetime
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param array  $options   Options for the input
+ * @return array
+ */
+	private function __inputDate($basicOptions, $options) {
+		$inputsDate = array('date', 'datetime');
+
+		if (isset($options['type']) && in_array($options['type'], $inputsDate)) {
+			$options['class'] = (isset($options['class'])) ? 'input-date ' . $options['class'] : 'input-date';
+		}
+
+		if ($this->_getFormType() == 'basic') {
+			$basicOptions['between'] = '<div>';
+			$basicOptions['after'] = '</div></div>';
+		}
+
+		return array(
+			'basic' => $basicOptions,
+			'options' => $options
+		);
+	}
+
+/**
+ * Change the state of the input (success, error, warning)
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param string $value        State
+ * @return array
+ */
+	private function __addInputstate($basicOptions, $value) {
+		$basicOptions['before'] .= ' has-' . $value;
+
+		return $basicOptions;
+	}
+
+/**
+ * Create a bootstrap help text for the input
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param string $value       Text
+ * @return array
+ */
+	private function __addInputhelp($basicOptions, $value) {
+		$basicOptions['after'] = '<span class="help-block">' . $value . '</span>' . $basicOptions['after'];
+
+		return $basicOptions;
+	}
+
+/**
+ * Add a 'feedback' bootstrap for the input (color + icon)
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param string $value     Type of the feedback
+ * @return array
+ */
+	private function __addInputfeedback($basicOptions, $value) {
+		$basicOptions['before'] .= ' has-feedback';
+
+		$states = array(
+			'success' => array(
+				'text' => '(success)',
+				'icon' => 'ok'
+			),
+			'warning' => array(
+				'text' => '(warning)',
+				'icon' => 'warning-sign'
+			),
+			'error' => array(
+				'text' => '(error)',
+				'icon' => 'remove'
+			)
+		);
+
+		foreach ($states as $state => $stateOptions) {
+			if (strpos($basicOptions['before'], 'has-' . $state)) {
+				$basicOptions['after'] = '<span class="glyphicon glyphicon-' . $stateOptions['icon'] . ' form-control-feedback" aria-hidden="true"></span>
+										<span class="sr-only">' . $stateOptions['text'] . '</span>' .
+										$basicOptions['after'];
+				break;
 			}
 		}
 
-		//----- [div] option
-		if (!isset($options['div'])) {
-			$options['div'] = false;
-		}
+		return $basicOptions;
+	}
 
-		if (!$date) {
-			//----- [class] option
-			if (isset($options['class'])) {
-				$options['class'] .= ' form-control';
-			} else {
-				$options['class'] = 'form-control';
-			}
-		}
-
-		//----- [label] option
-		if (!isset($options['label'])) {
-			if ($this->_getFormType() == 'horizontal' || ($date && $formType == 'horizontal')) {
-				$options['label'] = array('class' => 'control-label col-md-' . $this->__left);
-			} else {
-				$options['label'] = array('class' => 'control-label sr-only');
-			}
-		} elseif ($options['label'] != false) {
+/**
+ * Define a label for the input
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param array  $options     Options for the input
+ * @return array
+ */
+	private function __addInputLabel($basicOptions, $options) {
+		if (isset($options['label'])) {
 			if (!is_array($options['label'])) {
-				$options['label'] = array('class' => 'control-label col-md-' . $this->__left, 'text' => $options['label']);
+				$basicOptions['label']['text'] = $options['label'];
+				$basicOptions['label']['class'] = $this->__leftClass();
 			} else {
+				if (isset($options['label']['text'])) {
+					$basicOptions['label']['text'] = $options['label']['text'];
+				}
 				if (isset($options['label']['class'])) {
-					$options['label']['class'] .= ' control-label col-md-' . $this->__left;
+					$basicOptions['label']['class'] = $this->__leftClass() . ' ' . $options['label']['class'];
 				} else {
-					$options['label']['class'] = 'control-label col-md-' . $this->__left;
+					$basicOptions['label']['class'] = $this->__leftClass();
 				}
 			}
+			unset($options['label']);
+
+			return array(
+				'basic' => $basicOptions,
+				'options' => $options
+			);
 		}
 
-		//----- [between], [after] and [help] options
-		if ($this->_getFormType() == 'horizontal' || ($date && $formType == 'horizontal')) {
-			if (!isset($options['between'])) {
-				$options['between'] = '<div class="col-md-' . $this->__right;
-				$options['between'] .= ($options['label'] == false) ? ' col-md-offset-' . $this->__left : '';
-				$options['between'] .= '">';
-			}
-			if ($options['after'] == '</div>') {
-				if ($help && !empty($help)) {
-					$options['after'] = '<span class="help-block">' . $help . '</span></div></div>';
-				} else {
-					$options['after'] = '</div></div>';
-				}
-			}
-		}
+		$basicOptions['label']['class'] = $this->__leftClass();
 
-		return parent::input($fieldName, $options) . $this->setFormType($formType);
+		return array(
+			'basic' => $basicOptions,
+			'options' => $options
+		);
+	}
+
+/**
+ * Special options for the input-group
+ * 
+ * @param array $basicOptions Options by default for the input
+ * @param array $options      Options for the input
+ * @return array
+ */
+	private function __addInputGroup($basicOptions, $options) {
+		$basicOptions['between'] .= '<div class="input-group">' . $options['_isInputGroup']['between'];
+		$basicOptions['after'] = $options['_isInputGroup']['after'] . '</div>' . $basicOptions['after'];
+
+		return $basicOptions;
 	}
 
 /**
@@ -339,32 +559,19 @@ class BsFormHelper extends FormHelper {
  * @return string Input-group de Bootstrap
  */
 	public function inputGroup($fieldName, $addonOptions, $options = array()) {
-		$between = '<div class="col-md-' . $this->__right . ' col-md-offset-' . $this->__left . '">';
-		$between .= '<div class="input-group">';
+		$options['_isInputGroup'] = array(
+			'between' => '',
+			'after' => ''
+		);
 
 		// Check if the addon is on the right
 		if (isset($addonOptions['side']) && $addonOptions['side'] == 'right') {
-			$after = $this->__createAddon($addonOptions) . '</div>' . '</div>';
-			unset($addonOptions['side']);
+			$options['_isInputGroup']['after'] = $this->__createAddon($addonOptions);
 		} else {
-			$between .= $this->__createAddon($addonOptions);
-			$after = '</div>' . '</div>';
+			$options['_isInputGroup']['between'] = $this->__createAddon($addonOptions);
 		}
 
-		$after .= '</div>';
-		$options['between'] = $between;
-		$options['after'] = $after;
-		if (!isset($options['before'])) {
-			$options['before'] = null;
-		}
-		if (!isset($options['div'])) {
-			$options['div'] = false;
-		}
-		if (!isset($options['label'])) {
-			$options['label'] = false;
-		}
-		$out = $this->input($fieldName, $options);
-		return $out;
+		return $this->input($fieldName, $options);
 	}
 
 /**
@@ -497,73 +704,75 @@ class BsFormHelper extends FormHelper {
  * @return string An HTML text input element.
  */
 	public function checkbox($fieldName, $options = array()) {
-		if (isset($options['help']) && !empty($options['help'])) {
-			$help = $options['help'];
-			unset($options['help']);
-		} else {
-			$help = false;
-		}
+		$basicOptions = array(
+			'help' => false,
+			'state' => false,
+			'label' => Inflector::camelize($fieldName),
+			'label-class' => ''
+		);
 
-		//----- [div] option
-		if (!isset($options['div'])) {
-			$options['div'] = false;
-		}
+		$options = $this->__errorBootstrap($fieldName, $options);
 
-		//----- [label]
-		if (isset($options['label'])) {
-			if (is_array($options['label']) && isset($options['label']['help']) && !empty($options['label']['help'])) {
-				$labelHelp = $options['label']['help'];
-			} else {
-				$labelHelp = null;
+		foreach ($basicOptions as $opt => $valueOpt) {
+			if (isset($options[$opt])) {
+				$basicOptions[$opt] = $options[$opt];
+				unset($options[$opt]);
 			}
-			$label = $options['label'];
-			unset($options['label']);
-		} else {
-			$label = Inflector::camelize($fieldName);
 		}
 
-		//----- [label] class
-		if (isset($options['label-class'])) {
-			$labelClass = array('class' => $options['label-class']);
-			unset($options['label-class']);
-		} else {
-			$labelClass = array();
+		$checkbox = parent::checkbox($fieldName, $options);
+		$checkbox .= ($basicOptions['label'] !== false) ? ' ' . $basicOptions['label'] : '';
+		$checkbox .= ($basicOptions['help']) ? '<span class="help-block">' . $basicOptions['help'] . '</span>' : '';
+
+		$options['type'] = 'checkbox';
+		$label = array(
+			'text' => $checkbox
+		);
+		if (!empty($basicOptions['label-class'])) {
+			$label['class'] = $basicOptions['label-class'];
 		}
 
+		return $this->__buildCheckboxBefore($basicOptions['state']) . $this->_inputLabel($fieldName, $label, $options) . $this->__buildCheckboxAfter($basicOptions['state']);
+	}
+
+/**
+ * Build the html before the checkbox
+ * 
+ * @param string $validationState State of the checkbox
+ * @return string
+ */
+	private function __buildCheckboxBefore($validationState) {
 		$out = '';
 
-		if ($this->_getFormType() == 'horizontal' && !isset($options['inline'])) {
-			$out .= '<div class="form-group">';
-			$out .= '<div class="col-md-offset-' . $this->__left . ' col-md-' . $this->__right . '">';
+		if ($this->_getFormType() == 'horizontal') {
+			$out .= '<div class="form-group">' .
+					'<div class="' . $this->__rightClass(false) . '">';
 		}
 
-		//----- [help] option for multiple checkboxes ([label] is an array)
-		if (isset($options['label']) && isset($labelHelp)) {
-			$out .= '<span class="help-block">' . $options['label']['help'] . '</span>';
+		if ($validationState) {
+			$out .= '<div class="has-' . $validationState . '">';
 		}
 
-		//----- [inline] option
-		if (!(isset($options['inline']) && ($options['inline'] == 'inline' || $options['inline'] == true))) {
-			$out .= '<div class="checkbox">';
-			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options) . ' ' . $label, $labelClass);
-		} else {
-			unset($options['inline']);
-			if (isset($labelClass['class'])) {
-				$label = $labelClass['class'] . ' checkbox-inline';
-			}
+		return $out .= '<div class="checkbox">';
+	}
 
-			$out .= parent::label($fieldName, parent::checkbox($fieldName, $options) . ' ' . $label, $labelClass);
-		}
+/**
+ * Build the html after the checkbox
+ * 
+ * @param string $validationState State of the checkbox
+ * @return string
+ */
+	private function __buildCheckboxAfter($validationState) {
+		$out = '</div>';
 
-		//----- [help] option for single checkbox
-		if ($this->_getFormType() == 'horizontal' && !isset($options['inline'])) {
-			if ($help) {
-				$out .= '<span class="help-block">' . $help . '</span>';
-			}
-			$out .= '</div></div></div>';
-		} else {
+		if ($validationState) {
 			$out .= '</div>';
 		}
+
+		if ($this->_getFormType() == 'horizontal') {
+			$out .= '</div>' . '</div>';
+		}
+
 		return $out;
 	}
 
@@ -586,6 +795,8 @@ class BsFormHelper extends FormHelper {
  */
 	public function select($fieldName, $options = array(), $attributes = array()) {
 		$out = '';
+		$isDate = false;
+
 		$inline = (isset($attributes['inline']) && ($attributes['inline'] == 'inline' || $attributes['inline'] == true)) ? true : false;
 
 		// MULTIPLE CHECKBOX
@@ -593,7 +804,11 @@ class BsFormHelper extends FormHelper {
 			if (!isset($attributes['class'])) {
 				$attributes['class'] = 'form-control';
 			} else {
-				$attributes['class'] .= ' form-control';
+				$isDate = (strpos($attributes['class'], 'input-date') !== false) ? true : false;
+
+				if (!$isDate) {
+					$attributes['class'] = 'form-control ' . $attributes['class'];
+				}
 			}
 		} else {
 			//----- [checkobx simple] attribute for checkbox
@@ -603,32 +818,29 @@ class BsFormHelper extends FormHelper {
 				$attributes['class'] = 'checkbox ' . $attributes['class'];
 			}
 		}
+
 		//----- [empty] attribute
 		if (!isset($attributes['empty'])) {
 			$attributes['empty'] = false;
 		}
 
-		if ($this->_getFormType() == 'horizontal') {
+		$attributes = $this->__errorBootstrap($fieldName, $attributes);
 
-			$out .= '<div class="form-group">';
-			//----- [label] attribute
-			if (isset($attributes['label']) && !empty($attributes['label'])) {
-				$out .= '<label class="control-label col-md-' . $this->__left . '">' . $attributes['label'] . '</label>';
-				$out .= '<div class="col-md-' . $this->__right . '">';
-			} else {
-				$out .= '<div class="col-md-offset-' . $this->__left . ' col-md-' . $this->__right . '">';
-			}
+		$attributesForSelect = $attributes;
+		// Clean
+		unset($attributesForSelect['state']);
+		unset($attributesForSelect['help']);
+		unset($attributesForSelect['label']);
+
+		$select = parent::select($fieldName, $options, $attributesForSelect);
+
+		if ($isDate) {
+			return $select;
 		}
 
-		$out .= parent::select($fieldName, $options, $attributes);
-
-		if ($this->_getFormType() == 'horizontal') {
-			//----- [help] attribute
-			if (isset($attributes['help']) && !empty($attributes['help'])) {
-				$out .= '<span class="help-block">' . $attributes['help'] . '</span>';
-			}
-			$out .= '</div></div>';
-		}
+		$out .= $this->__buildSelectBefore($fieldName, $attributes);
+		$out .= $select;
+		$out .= $this->__buildSelectAfter($attributes);
 
 		if ((isset($attributes['multiple']) && $attributes['multiple'] == 'checkbox')) {
 
@@ -669,6 +881,53 @@ class BsFormHelper extends FormHelper {
 	}
 
 /**
+ * Build the html before the select
+ * 
+ * @param string $fieldName Name of the field
+ * @param array $attributes Attributes of the select
+ * @return string
+ */
+	private function __buildSelectBefore($fieldName, $attributes) {
+		$out = '<div class="form-group">';
+		$labelExist = false;
+
+		//----- [label] attribute
+		if (isset($attributes['label'])) {
+			$labelExist = true;
+			$attributes['type'] = 'text';
+			$out .= $this->_inputLabel($fieldName, array('text' => $attributes['label'], 'class' => $this->__leftClass()), $attributes);
+		}
+
+		$out .= '<div class="' . $this->__rightClass($labelExist) . '">';
+
+		if (isset($attributes['state'])) {
+			$out .= '<div class="has-' . $attributes['state'] . '">';
+		}
+
+		return $out;
+	}
+
+/**
+ * Build the html after the select
+ * 
+ * @param array $attributes Attributes of the select
+ * @return string
+ */
+	private function __buildSelectAfter($attributes) {
+		$out = '';
+		//----- [help] attribute
+		if (isset($attributes['help'])) {
+			$out .= '<span class="help-block">' . $attributes['help'] . '</span>';
+		}
+
+		if (isset($attributes['state'])) {
+			$out .= '</div>';
+		}
+
+		return $out .= '</div></div>';
+	}
+
+/**
  * Creates a set of radio widgets.
  *
  * ### Attributes:
@@ -686,39 +945,85 @@ class BsFormHelper extends FormHelper {
  */
 	public function radio($fieldName, $options = array(), $attributes = array()) {
 		$out = '';
-		$inline = ($this->_getFormType() == 'inline' || (isset($attributes['inline']) && $attributes['inline'] == true)) ? true : false;
+		$inline = ((isset($attributes['inline']) && $attributes['inline'] === true)) ? true : false;
+		unset($attributes['inline']);
 		$defaultAttributes = array(
 			'legend' => false,
 			'label' => false,
 		);
+		$defaultAttributes['separator'] = ($inline) ? '</label><label class="radio-inline">' : '</label></div><div class="radio"><label>';
 
-		if (!$inline) {
+		$attributes = $this->__errorBootstrap($fieldName, $attributes);
 
-			$defaultAttributes['separator'] = '</label></div><div class="radio"><label>';
+		$attributes = Set::merge($defaultAttributes, $attributes);
+		$attributesForBefore = $attributes;
+		unset($attributes['state']);
+		unset($attributes['help']);
+		$attributes['label'] = false;
 
+		$radio = parent::radio($fieldName, $options, $attributes);
+
+		return $this->__buildRadioBefore($fieldName, $attributesForBefore, $inline) . $radio . $this->__buildRadioAfter($inline, $attributesForBefore);
+	}
+
+/**
+ * Build the html before the radio
+ * 
+ * @param string $fieldName Name of the field
+ * @param array $attributes Attributes of the select
+ * @param bool $inline      If radio buttons are inline
+ * @return string
+ */
+	private function __buildRadioBefore($fieldName, $attributes, $inline) {
+		$out = '';
+
+		if ($this->_getFormType() == 'horizontal') {
 			$out .= '<div class="form-group">';
 
-			//----- [label] attribute
-			if (isset($attributes['label']) && !empty($attributes['label'])) {
-				$out .= '<label class="control-label col-md-' . $this->__left . '">' . $attributes['label'] . '</label>';
-				$out .= '<div class="col-md-' . $this->__right . '">';
-			} else {
-				$out .= '<div class="col-md-offset-' . $this->__left . ' col-md-' . $this->__right . '">';
-			}
+			if ($attributes['label']) {
+				$attributes['type'] = 'radio';
 
-			$out .= '<div class="radio">';
-		} else {
-			$defaultAttributes['separator'] = '</label><label class="radio-inline">';
+				$out .= $this->_inputLabel($fieldName, array('text' => $attributes['label'], 'class' => $this->__leftClass()), $attributes);
+				$out .= '<div class="' . $this->__rightClass(true) . '">';
+			} else {
+				$out .= '<div class="' . $this->__rightClass(false) . '">';
+			}
 		}
 
+		if (isset($attributes['state'])) {
+			$out .= '<div class="has-' . $attributes['state'] . '">';
+		}
+
+		$out .= '<div class="radio">';
 		$out .= ($inline) ? '<label class="radio-inline">' : '<label>';
 
-		$attributes = Hash::merge($defaultAttributes, $attributes);
+		return $out;
+	}
 
-		$out .= parent::radio($fieldName, $options, $attributes);
+/**
+ * Build the html after the radio
+ * 
+ * @param bool $inline      If radio buttons are inline
+ * @param array $attributes Attributes of the select
+ * @return string
+ */
+	private function __buildRadioAfter($inline, $attributes) {
+		$out = '</label>';
 
-		$out .= '</label>';
-		$out .= (!$inline) ? '</div></div></div>' : '';
+		//----- [help] attribute
+		if (isset($attributes['help'])) {
+			$out .= '<span class="help-block">' . $attributes['help'] . '</span>';
+		}
+
+		if (isset($attributes['state'])) {
+			$out .= '</div>';
+		}
+
+		if ($this->_getFormType() == 'horizontal') {
+			$out .= '</div></div>';
+		}
+
+		$out .= '</div>';
 
 		return $out;
 	}
@@ -748,45 +1053,63 @@ class BsFormHelper extends FormHelper {
  */
 	public function submit($caption = null, $options = array()) {
 		$out = '';
+		$ux = (isset($options['ux']) && $options['ux'] === false) ? false : true;
+		unset($options['ux']);
 
-		if ($this->_getFormType() == 'horizontal') {
-			$out .= '<div class="form-group">';
-			$out .= '<div class="col-md-offset-' . $this->__left . ' col-md-' . $this->__right . '">';
-		}
+		$basicOptions = array(
+			'div' => false,
+			'class' => 'btn btn-success',
+			'before' => $this->__buildSubmitBefore(),
+		);
 
-		//----- [div] option
-		if (!isset($options['div'])) {
-			$options['div'] = false;
-		}
-
-		//----- [label] option
-		if (!isset($options['label'])) {
-			$options['label'] = false;
-		}
+		$typeOfButton = 'success';
+		$types = array('danger', 'warning', 'info', 'primary');
 
 		//----- [class] option
-		if (!isset($options['class'])) {
-			$type = 'success';
-			$options['class'] = 'btn btn-success';
-		} else {
-			if (is_integer(strpos($options['class'], 'btn-danger')) || is_integer(strpos($options['class'], 'btn-warning')) || is_integer(strpos($options['class'], 'btn-info')) || is_integer(strpos($options['class'], 'btn-primary'))) {
-				$type = substr($options['class'], 4);
-				$options['class'] = 'btn ' . $options['class'];
-			} else {
-				$type = 'success';
-				$options['class'] = 'btn ' . $options['class'] . ' btn-success';
+		if (isset($options['class'])) {
+			$basicClass = $options['class'];
+			$options['class'] = $basicOptions['class'] . ' ' . $options['class'];
+
+			foreach ($types as $type) {
+				if (strpos($options['class'], $type) > 0) {
+					$typeOfButton = $type;
+					$options['class'] = 'btn ' . $basicClass;
+					break;
+				}
 			}
 		}
 
-		$out .= parent::submit($caption, $options);
+		$basicOptions['after'] = $this->__buildSubmitAfter($ux, $typeOfButton);
 
-		//----- [ux] option
-		$scriptUX = true;
-		if (isset($options['ux']) && $options['ux'] == false) {
-			$scriptUX = false;
+		$options = Set::merge($basicOptions, $options);
+
+		return parent::submit($caption, $options);
+	}
+
+/**
+ * Build the html before the submit
+ * 
+ * @return string
+ */
+	private function __buildSubmitBefore() {
+		if ($this->_getFormType() == 'horizontal') {
+			return '<div class="form-group">' . '<div class="' . $this->__rightClass(false) . '">';
 		}
 
-		if ($scriptUX) {
+		return '';
+	}
+
+/**
+ * Build the html after the radio
+ * 
+ * @param bool $ux     Check if ux animations are activated
+ * @param string $type Type of the submit button
+ * @return string
+ */
+	private function __buildSubmitAfter($ux, $type) {
+		$out = '';
+
+		if ($ux) {
 			$out .= '<i class="fa fa-spinner fa-spin form-submit-wait text-' . $type . '"></i>';
 
 			$idForm = '#' . Inflector::camelize($this->_modelForm . ' ' . $this->_actionForm . ' Form');
@@ -804,19 +1127,6 @@ class BsFormHelper extends FormHelper {
 		}
 
 		return $out;
-	}
-
-/**
- * Closes an HTML form, cleans up values set by Bs3FormHelper::create(), and writes hidden
- * input fields where appropriate.
- * Almost the same function as the classic FormHelper, neeeded to user correctly the submit function of BsFormHelper
- *
- * @param string|array $options as a string will use $options as the value of button,
- * @param array $secureAttributes like the secureAttributes in the parent function
- * @return string a closing FORM tag optional submit button.
- */
-	public function end($options = null, $secureAttributes = array()) {
-		return parent::end($options, $secureAttributes);
 	}
 
 				/*--------------------------*

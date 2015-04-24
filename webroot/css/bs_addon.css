@@ -27,5 +27,5 @@
 /* Style for the input type date */
 .form-control.input-date {
 	display: inline;
-	width: 20%;
+	width: auto;
 }
