@@ -244,7 +244,6 @@ class BsFormHelper extends FormHelper {
 		return parent::create($model, $options);
 	}
 
-
 	/*--------------------------------*
 	*						          *
 	*			ERROR HANDLING        *
@@ -281,13 +280,11 @@ class BsFormHelper extends FormHelper {
 		return $options;
 	}
 
-
 	/*------------------------*
 	*					      *
 	*			FIELDS        *
 	*					      *
 	*------------------------*/
-
 
 /**
  * Generates a form input element complete with label and wrapper div
@@ -888,7 +885,6 @@ class BsFormHelper extends FormHelper {
  * 
  * @param string $fieldName Name of the field
  * @param array $attributes Attributes of the select
- * @param bool $isDate      If it's a select build for a date input
  * @return string
  */
 	private function __buildSelectBefore($fieldName, $attributes) {
@@ -915,7 +911,6 @@ class BsFormHelper extends FormHelper {
  * Build the html after the select
  * 
  * @param array $attributes Attributes of the select
- * @param bool $isDate      If it's a select build for a date input
  * @return string
  */
 	private function __buildSelectAfter($attributes) {
