@@ -244,6 +244,51 @@ class BsFormHelper extends FormHelper {
 		return parent::create($model, $options);
 	}
 
+
+	/*--------------------------------*
+	*						          *
+	*			ERROR HANDLING        *
+	*					              *
+	*--------------------------------*/
+
+/**
+ * Change options if there are errors for the field
+ * 
+ * @param string $fieldName Name of the field
+ * @param array  $options   Options for the input
+ * @return array
+ */
+	private function __errorBootstrap($fieldName, $options) {
+		if (!$this->isFieldError($fieldName)) {
+			return $options;
+		}
+
+		if (isset($options['errorBootstrap']) && $options['errorBootstrap'] === false) {
+			unset($options['errorBootstrap']);
+			return $options;
+		}
+
+		$options['state'] = 'error';
+		$options['help'] = '';
+		$errors = $this->tagIsInvalid();
+
+		foreach ($errors as $error) {
+			$options['help'] .= $error . '<br />';
+		}
+
+		unset($options['errorBootstrap']);
+
+		return $options;
+	}
+
+
+	/*------------------------*
+	*					      *
+	*			FIELDS        *
+	*					      *
+	*------------------------*/
+
+
 /**
  * Generates a form input element complete with label and wrapper div
  *
@@ -283,7 +328,7 @@ class BsFormHelper extends FormHelper {
 		);
 		$bootstrapOptions = array('state', 'help', 'feedback');
 
-		$options = $this->__errorBootstrap($fieldName, $options);
+		$options = $this->__errorBootstrapInput($fieldName, $options);
 		$optionsDate = $this->__inputDate($basicOptions, $options);
 		$basicOptions = $optionsDate['basic'];
 		$options = $optionsDate['options'];
@@ -345,22 +390,8 @@ class BsFormHelper extends FormHelper {
  * @param array  $options   Options for the input
  * @return array
  */
-	private function __errorBootstrap($fieldName, $options) {
-		if (!$this->isFieldError($fieldName)) {
-			return $options;
-		}
-
-		if (isset($options['errorBootstrap']) && $options['errorBootstrap'] == false) {
-			return $options;
-		}
-
-		$options['state'] = 'error';
-		$options['help'] = '';
-		$errors = $this->tagIsInvalid();
-
-		foreach ($errors as $error) {
-			$options['help'] .= $error . '<br />';
-		}
+	private function __errorBootstrapInput($fieldName, $options) {
+		$options = $this->__errorBootstrap($fieldName, $options);
 
 		$options['feedback'] = true;
 		$options['errorMessage'] = false;
@@ -679,7 +710,7 @@ class BsFormHelper extends FormHelper {
 			'label-class' => ''
 		);
 
-		// $options = $this->__errorBootstrap($fieldName, $options);
+		$options = $this->__errorBootstrap($fieldName, $options);
 
 		foreach ($basicOptions as $opt => $valueOpt) {
 			if (isset($options[$opt])) {
@@ -791,6 +822,8 @@ class BsFormHelper extends FormHelper {
 		if (!isset($attributes['empty'])) {
 			$attributes['empty'] = false;
 		}
+
+		$attributes = $this->__errorBootstrap($fieldName, $attributes);
 
 		$attributesForSelect = $attributes;
 		// Clean
@@ -916,6 +949,8 @@ class BsFormHelper extends FormHelper {
 			'label' => false,
 		);
 		$defaultAttributes['separator'] = ($inline) ? '</label><label class="radio-inline">' : '</label></div><div class="radio"><label>';
+
+		$attributes = $this->__errorBootstrap($fieldName, $attributes);
 
 		$attributes = Set::merge($defaultAttributes, $attributes);
 		$attributesForBefore = $attributes;
