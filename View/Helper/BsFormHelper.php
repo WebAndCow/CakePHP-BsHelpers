@@ -391,6 +391,10 @@ class BsFormHelper extends FormHelper {
  * @return array
  */
 	private function __errorBootstrapInput($fieldName, $options) {
+		if (!$this->isFieldError($fieldName)) {
+			return $options;
+		}
+
 		$options = $this->__errorBootstrap($fieldName, $options);
 
 		$options['feedback'] = true;
@@ -827,6 +831,7 @@ class BsFormHelper extends FormHelper {
 
 		$attributesForSelect = $attributes;
 		// Clean
+		unset($attributesForSelect['state']);
 		unset($attributesForSelect['help']);
 		unset($attributesForSelect['label']);
 
@@ -836,9 +841,9 @@ class BsFormHelper extends FormHelper {
 			return $select;
 		}
 
-		$out .= $this->__buildSelectBefore($fieldName, $attributes, $isDate);
+		$out .= $this->__buildSelectBefore($fieldName, $attributes);
 		$out .= $select;
-		$out .= $this->__buildSelectAfter($attributes, $isDate);
+		$out .= $this->__buildSelectAfter($attributes);
 
 		if ((isset($attributes['multiple']) && $attributes['multiple'] == 'checkbox')) {
 
@@ -886,11 +891,7 @@ class BsFormHelper extends FormHelper {
  * @param bool $isDate      If it's a select build for a date input
  * @return string
  */
-	private function __buildSelectBefore($fieldName, $attributes, $isDate) {
-		if ($isDate) {
-			return '';
-		}
-
+	private function __buildSelectBefore($fieldName, $attributes) {
 		$out = '<div class="form-group">';
 		$labelExist = false;
 
@@ -901,7 +902,13 @@ class BsFormHelper extends FormHelper {
 			$out .= $this->_inputLabel($fieldName, array('text' => $attributes['label'], 'class' => $this->__leftClass()), $attributes);
 		}
 
-		return $out .= '<div class="' . $this->__rightClass($labelExist) . '">';
+		$out .= '<div class="' . $this->__rightClass($labelExist) . '">';
+
+		if (isset($attributes['state'])) {
+			$out .= '<div class="has-' . $attributes['state'] . '">';
+		}
+
+		return $out;
 	}
 
 /**
@@ -911,16 +918,17 @@ class BsFormHelper extends FormHelper {
  * @param bool $isDate      If it's a select build for a date input
  * @return string
  */
-	private function __buildSelectAfter($attributes, $isDate) {
-		if ($isDate) {
-			return '';
-		}
-
+	private function __buildSelectAfter($attributes) {
 		$out = '';
 		//----- [help] attribute
 		if (isset($attributes['help'])) {
 			$out .= '<span class="help-block">' . $attributes['help'] . '</span>';
 		}
+
+		if (isset($attributes['state'])) {
+			$out .= '</div>';
+		}
+
 		return $out .= '</div></div>';
 	}
 
