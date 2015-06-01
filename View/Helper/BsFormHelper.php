@@ -73,7 +73,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Return the current value of $_left
- * 
+ *
  * @return int
  */
 	public function getLeft() {
@@ -92,7 +92,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Return the current value of $_right
- * 
+ *
  * @return int
  */
 	public function getRight() {
@@ -111,7 +111,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Return the current value of $_typeForm
- * 
+ *
  * @return string
  */
 	protected function _getFormType() {
@@ -130,7 +130,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Return the current value of $_modelForm
- * 
+ *
  * @return string
  */
 	protected function _getModelForm() {
@@ -149,7 +149,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Return the current value of $_actionForm
- * 
+ *
  * @return string
  */
 	protected function _getActionForm() {
@@ -168,7 +168,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Set the value of $__device
- * 
+ *
  * @param string $val New device
  * @return void
  */
@@ -178,7 +178,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Return the correct class for the left column of the field
- * 
+ *
  * @return string
  */
 	private function __leftClass() {
@@ -245,14 +245,14 @@ class BsFormHelper extends FormHelper {
 	}
 
 	/*--------------------------------*
-	*						          *
-	*			ERROR HANDLING        *
-	*					              *
-	*--------------------------------*/
+	 *						          *
+	 *			ERROR HANDLING        *
+	 *					              *
+	 *--------------------------------*/
 
 /**
  * Change options if there are errors for the field
- * 
+ *
  * @param string $fieldName Name of the field
  * @param array  $options   Options for the input
  * @return array
@@ -262,14 +262,14 @@ class BsFormHelper extends FormHelper {
 			return $options;
 		}
 
-		if (isset($options['errorBootstrap']) && $options['errorBootstrap'] === false) {
+		if (isset($options['errorBootstrap']) && false === $options['errorBootstrap']) {
 			unset($options['errorBootstrap']);
 			return $options;
 		}
 
 		$options['state'] = 'error';
-		$options['help'] = '';
-		$errors = $this->tagIsInvalid();
+		$options['help']  = '';
+		$errors           = $this->tagIsInvalid();
 
 		foreach ($errors as $error) {
 			$options['help'] .= $error . '<br />';
@@ -281,10 +281,10 @@ class BsFormHelper extends FormHelper {
 	}
 
 	/*------------------------*
-	*					      *
-	*			FIELDS        *
-	*					      *
-	*------------------------*/
+	 *					      *
+	 *			FIELDS        *
+	 *					      *
+	 *------------------------*/
 
 /**
  * Generates a form input element complete with label and wrapper div
@@ -315,24 +315,24 @@ class BsFormHelper extends FormHelper {
  * @return string Completed form widget.
  */
 	public function input($fieldName, $options = array()) {
-		$labelExist = (isset($options['label']) && $options['label'] === false) ? false : true;
+		$labelExist = (isset($options['label']) && false === $options['label']) ? false : true;
 
 		$basicOptions = array(
-			'before' => '<div class="form-group',
+			'before'  => '<div class="form-group',
 			'between' => $this->__buildInputBetween($labelExist),
-			'after' => $this->__buildInputAfter($labelExist),
-			'div' => false
+			'after'   => $this->__buildInputAfter($labelExist),
+			'div'     => false,
 		);
 		$bootstrapOptions = array('state', 'help', 'feedback');
 
-		$options = $this->__errorBootstrapInput($fieldName, $options);
-		$optionsDate = $this->__inputDate($basicOptions, $options);
+		$options      = $this->__errorBootstrapInput($fieldName, $options);
+		$optionsDate  = $this->__inputDate($basicOptions, $options);
 		$basicOptions = $optionsDate['basic'];
-		$options = $optionsDate['options'];
+		$options      = $optionsDate['options'];
 
 		foreach ($bootstrapOptions as $opt) {
 			if (isset($options[$opt])) {
-				$name = '__addInput' . $opt;
+				$name         = '__addInput' . $opt;
 				$basicOptions = $this->$name($basicOptions, $options[$opt]);
 				unset($options[$opt]);
 			}
@@ -341,9 +341,9 @@ class BsFormHelper extends FormHelper {
 		$basicOptions['before'] .= '">';
 
 		if ($labelExist) {
-			$label = $this->__addInputLabel($basicOptions, $options);
+			$label        = $this->__addInputLabel($basicOptions, $options);
 			$basicOptions = $label['basic'];
-			$options = $label['options'];
+			$options      = $label['options'];
 		}
 
 		if (isset($options['_isInputGroup'])) {
@@ -362,7 +362,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Build the 'between' option for the input
- * 
+ *
  * @param bool $labelExist If the label exist
  * @return string
  */
@@ -372,7 +372,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Build the 'after' option for the input
- * 
+ *
  * @param bool $labelExist If the label exist
  * @return string
  */
@@ -382,7 +382,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Change input options if there are errors for the field
- * 
+ *
  * @param string $fieldName Name of the field
  * @param array  $options   Options for the input
  * @return array
@@ -394,7 +394,7 @@ class BsFormHelper extends FormHelper {
 
 		$options = $this->__errorBootstrap($fieldName, $options);
 
-		$options['feedback'] = true;
+		$options['feedback']     = true;
 		$options['errorMessage'] = false;
 
 		return $options;
@@ -402,7 +402,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Change input options if the type of the input is date or datetime
- * 
+ *
  * @param array $basicOptions Options by default for the input
  * @param array  $options   Options for the input
  * @return array
@@ -416,18 +416,18 @@ class BsFormHelper extends FormHelper {
 
 		if ($this->_getFormType() == 'basic') {
 			$basicOptions['between'] = '<div>';
-			$basicOptions['after'] = '</div></div>';
+			$basicOptions['after']   = '</div></div>';
 		}
 
 		return array(
-			'basic' => $basicOptions,
-			'options' => $options
+			'basic'   => $basicOptions,
+			'options' => $options,
 		);
 	}
 
 /**
  * Change the state of the input (success, error, warning)
- * 
+ *
  * @param array $basicOptions Options by default for the input
  * @param string $value        State
  * @return array
@@ -440,7 +440,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Create a bootstrap help text for the input
- * 
+ *
  * @param array $basicOptions Options by default for the input
  * @param string $value       Text
  * @return array
@@ -453,7 +453,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Add a 'feedback' bootstrap for the input (color + icon)
- * 
+ *
  * @param array $basicOptions Options by default for the input
  * @param string $value     Type of the feedback
  * @return array
@@ -464,23 +464,23 @@ class BsFormHelper extends FormHelper {
 		$states = array(
 			'success' => array(
 				'text' => '(success)',
-				'icon' => 'ok'
+				'icon' => 'ok',
 			),
 			'warning' => array(
 				'text' => '(warning)',
-				'icon' => 'warning-sign'
+				'icon' => 'warning-sign',
 			),
-			'error' => array(
+			'error'   => array(
 				'text' => '(error)',
-				'icon' => 'remove'
-			)
+				'icon' => 'remove',
+			),
 		);
 
 		foreach ($states as $state => $stateOptions) {
 			if (strpos($basicOptions['before'], 'has-' . $state)) {
 				$basicOptions['after'] = '<span class="glyphicon glyphicon-' . $stateOptions['icon'] . ' form-control-feedback" aria-hidden="true"></span>
 										<span class="sr-only">' . $stateOptions['text'] . '</span>' .
-										$basicOptions['after'];
+				$basicOptions['after'];
 				break;
 			}
 		}
@@ -490,7 +490,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Define a label for the input
- * 
+ *
  * @param array $basicOptions Options by default for the input
  * @param array  $options     Options for the input
  * @return array
@@ -498,7 +498,7 @@ class BsFormHelper extends FormHelper {
 	private function __addInputLabel($basicOptions, $options) {
 		if (isset($options['label'])) {
 			if (!is_array($options['label'])) {
-				$basicOptions['label']['text'] = $options['label'];
+				$basicOptions['label']['text']  = $options['label'];
 				$basicOptions['label']['class'] = $this->__leftClass();
 			} else {
 				if (isset($options['label']['text'])) {
@@ -513,22 +513,22 @@ class BsFormHelper extends FormHelper {
 			unset($options['label']);
 
 			return array(
-				'basic' => $basicOptions,
-				'options' => $options
+				'basic'   => $basicOptions,
+				'options' => $options,
 			);
 		}
 
 		$basicOptions['label']['class'] = $this->__leftClass();
 
 		return array(
-			'basic' => $basicOptions,
-			'options' => $options
+			'basic'   => $basicOptions,
+			'options' => $options,
 		);
 	}
 
 /**
  * Special options for the input-group
- * 
+ *
  * @param array $basicOptions Options by default for the input
  * @param array $options      Options for the input
  * @return array
@@ -561,11 +561,11 @@ class BsFormHelper extends FormHelper {
 	public function inputGroup($fieldName, $addonOptions, $options = array()) {
 		$options['_isInputGroup'] = array(
 			'between' => '',
-			'after' => ''
+			'after'   => '',
 		);
 
 		// Check if the addon is on the right
-		if (isset($addonOptions['side']) && $addonOptions['side'] == 'right') {
+		if (isset($addonOptions['side']) && 'right' == $addonOptions['side']) {
 			$options['_isInputGroup']['after'] = $this->__createAddon($addonOptions);
 		} else {
 			$options['_isInputGroup']['between'] = $this->__createAddon($addonOptions);
@@ -603,13 +603,13 @@ class BsFormHelper extends FormHelper {
 					$options['class'] = $state;
 				}
 
-				$buttonOptions['div'] = false;
+				$buttonOptions['div']    = false;
 				$buttonOptions['escape'] = false;
-				$buttonOptions['type'] = $options['type'];
-				$buttonOptions['class'] = $options['class'];
-				if ($options['type'] == 'image') {
-					$buttonOptions['src'] = $options['src'];
-					$buttonOptions['type'] = 'image';
+				$buttonOptions['type']   = $options['type'];
+				$buttonOptions['class']  = $options['class'];
+				if ('image' == $options['type']) {
+					$buttonOptions['src']   = $options['src'];
+					$buttonOptions['type']  = 'image';
 					$buttonOptions['label'] = false;
 					$out .= parent::input($options['content'], $buttonOptions);
 				} else {
@@ -705,10 +705,10 @@ class BsFormHelper extends FormHelper {
  */
 	public function checkbox($fieldName, $options = array()) {
 		$basicOptions = array(
-			'help' => false,
-			'state' => false,
-			'label' => Inflector::camelize($fieldName),
-			'label-class' => ''
+			'help'        => false,
+			'state'       => false,
+			'label'       => Inflector::camelize($fieldName),
+			'label-class' => '',
 		);
 
 		$options = $this->__errorBootstrap($fieldName, $options);
@@ -721,12 +721,12 @@ class BsFormHelper extends FormHelper {
 		}
 
 		$checkbox = parent::checkbox($fieldName, $options);
-		$checkbox .= ($basicOptions['label'] !== false) ? ' ' . $basicOptions['label'] : '';
+		$checkbox .= (false !== $basicOptions['label']) ? ' ' . $basicOptions['label'] : '';
 		$checkbox .= ($basicOptions['help']) ? '<span class="help-block">' . $basicOptions['help'] . '</span>' : '';
 
 		$options['type'] = 'checkbox';
-		$label = array(
-			'text' => $checkbox
+		$label           = array(
+			'text' => $checkbox,
 		);
 		if (!empty($basicOptions['label-class'])) {
 			$label['class'] = $basicOptions['label-class'];
@@ -737,7 +737,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Build the html before the checkbox
- * 
+ *
  * @param string $validationState State of the checkbox
  * @return string
  */
@@ -746,7 +746,7 @@ class BsFormHelper extends FormHelper {
 
 		if ($this->_getFormType() == 'horizontal') {
 			$out .= '<div class="form-group">' .
-					'<div class="' . $this->__rightClass(false) . '">';
+			'<div class="' . $this->__rightClass(false) . '">';
 		}
 
 		if ($validationState) {
@@ -758,7 +758,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Build the html after the checkbox
- * 
+ *
  * @param string $validationState State of the checkbox
  * @return string
  */
@@ -794,13 +794,13 @@ class BsFormHelper extends FormHelper {
  * @return string Formatted SELECT element
  */
 	public function select($fieldName, $options = array(), $attributes = array()) {
-		$out = '';
+		$out    = '';
 		$isDate = false;
 
-		$inline = (isset($attributes['inline']) && ($attributes['inline'] == 'inline' || $attributes['inline'] == true)) ? true : false;
+		$inline = (isset($attributes['inline']) && ('inline' == $attributes['inline'] || true == $attributes['inline'])) ? true : false;
 
 		// MULTIPLE CHECKBOX
-		if ((isset($attributes['multiple']) && $attributes['multiple'] != 'checkbox') || !isset($attributes['multiple'])) {
+		if ((isset($attributes['multiple']) && 'checkbox' != $attributes['multiple']) || !isset($attributes['multiple'])) {
 			if (!isset($attributes['class'])) {
 				$attributes['class'] = 'form-control';
 			} else {
@@ -842,15 +842,15 @@ class BsFormHelper extends FormHelper {
 		$out .= $select;
 		$out .= $this->__buildSelectAfter($attributes);
 
-		if ((isset($attributes['multiple']) && $attributes['multiple'] == 'checkbox')) {
+		if ((isset($attributes['multiple']) && 'checkbox' == $attributes['multiple'])) {
 
 			$regex = '/(<label for=.*?>)/';
 			if (preg_match_all($regex, $out, $labels)) {
 
 				foreach ($labels[0] as $label) {
 
-					$r1 = '/(<label.*.for="?)/';
-					$r2 = '/(".*>)/';
+					$r1    = '/(<label.*.for="?)/';
+					$r2    = '/(".*>)/';
 					$field = preg_replace($r1, '', $label);
 					$field = preg_replace($r2, '', $field);
 
@@ -859,7 +859,7 @@ class BsFormHelper extends FormHelper {
 						if (preg_match($r3, $label, $labelClass)) {
 							$label = preg_replace($r3, $labelClass[1] . 'checkbox-inline ' . $attributes['class'] . ' ' . $labelClass[2], $label);
 						} else {
-							$r4 = '/(<label for="' . $field . '".*)(.*>)/';
+							$r4    = '/(<label for="' . $field . '".*)(.*>)/';
 							$label = preg_replace($r4, '$1' . ' class="checkbox-inline" ' . '$2', $label);
 						}
 
@@ -882,18 +882,18 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Build the html before the select
- * 
+ *
  * @param string $fieldName Name of the field
  * @param array $attributes Attributes of the select
  * @return string
  */
 	private function __buildSelectBefore($fieldName, $attributes) {
-		$out = '<div class="form-group">';
+		$out        = '<div class="form-group">';
 		$labelExist = false;
 
 		//----- [label] attribute
 		if (isset($attributes['label'])) {
-			$labelExist = true;
+			$labelExist         = true;
 			$attributes['type'] = 'text';
 			$out .= $this->_inputLabel($fieldName, array('text' => $attributes['label'], 'class' => $this->__leftClass()), $attributes);
 		}
@@ -909,7 +909,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Build the html after the select
- * 
+ *
  * @param array $attributes Attributes of the select
  * @return string
  */
@@ -944,18 +944,18 @@ class BsFormHelper extends FormHelper {
  * @return string Completed radio widget set.
  */
 	public function radio($fieldName, $options = array(), $attributes = array()) {
-		$out = '';
-		$inline = ((isset($attributes['inline']) && $attributes['inline'] === true)) ? true : false;
+		$out    = '';
+		$inline = ((isset($attributes['inline']) && true === $attributes['inline'])) ? true : false;
 		unset($attributes['inline']);
 		$defaultAttributes = array(
 			'legend' => false,
-			'label' => false,
+			'label'  => false,
 		);
 		$defaultAttributes['separator'] = ($inline) ? '</label><label class="radio-inline">' : '</label></div><div class="radio"><label>';
 
 		$attributes = $this->__errorBootstrap($fieldName, $attributes);
 
-		$attributes = Set::merge($defaultAttributes, $attributes);
+		$attributes          = Set::merge($defaultAttributes, $attributes);
 		$attributesForBefore = $attributes;
 		unset($attributes['state']);
 		unset($attributes['help']);
@@ -968,7 +968,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Build the html before the radio
- * 
+ *
  * @param string $fieldName Name of the field
  * @param array $attributes Attributes of the select
  * @param bool $inline      If radio buttons are inline
@@ -1002,7 +1002,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Build the html after the radio
- * 
+ *
  * @param bool $inline      If radio buttons are inline
  * @param array $attributes Attributes of the select
  * @return string
@@ -1053,26 +1053,26 @@ class BsFormHelper extends FormHelper {
  */
 	public function submit($caption = null, $options = array()) {
 		$out = '';
-		$ux = (isset($options['ux']) && $options['ux'] === false) ? false : true;
+		$ux  = (isset($options['ux']) && false === $options['ux']) ? false : true;
 		unset($options['ux']);
 
 		$basicOptions = array(
-			'div' => false,
-			'class' => 'btn btn-success',
+			'div'    => false,
+			'class'  => 'btn btn-success',
 			'before' => $this->__buildSubmitBefore(),
 		);
 
 		$typeOfButton = 'success';
-		$types = array('danger', 'warning', 'info', 'primary');
+		$types        = array('danger', 'warning', 'info', 'primary');
 
 		//----- [class] option
 		if (isset($options['class'])) {
-			$basicClass = $options['class'];
+			$basicClass       = $options['class'];
 			$options['class'] = $basicOptions['class'] . ' ' . $options['class'];
 
 			foreach ($types as $type) {
 				if (strpos($options['class'], $type) > 0) {
-					$typeOfButton = $type;
+					$typeOfButton     = $type;
 					$options['class'] = 'btn ' . $basicClass;
 					break;
 				}
@@ -1088,7 +1088,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Build the html before the submit
- * 
+ *
  * @return string
  */
 	private function __buildSubmitBefore() {
@@ -1101,7 +1101,7 @@ class BsFormHelper extends FormHelper {
 
 /**
  * Build the html after the radio
- * 
+ *
  * @param bool $ux     Check if ux animations are activated
  * @param string $type Type of the submit button
  * @return string
@@ -1129,11 +1129,11 @@ class BsFormHelper extends FormHelper {
 		return $out;
 	}
 
-				/*--------------------------*
-				*						    *
-				*			TAG FORM        *
-				*					        *
-				*--------------------------*/
+	/*--------------------------*
+	 *						    *
+	 *			TAG FORM        *
+	 *					        *
+	 *--------------------------*/
 
 /**
  * Returns an HTML element
@@ -1154,7 +1154,7 @@ class BsFormHelper extends FormHelper {
  * @return string the formatted HTML with a row, columns and the indications in a p
  */
 	public function indications($text, $class = '') {
-		if ($class != '') {
+		if ('' != $class) {
 			return $this->__tagForm('p', $text, array('class' => $class));
 		} else {
 			return $this->__tagForm('p', $text);
@@ -1179,6 +1179,33 @@ class BsFormHelper extends FormHelper {
 
 		$out .= $this->Bs->close(2);
 
+		return $out;
+	}
+
+/* Return an html element with chosen attached
+ *
+ * @param String name of the field
+ * @param Array options of the select
+ * @param Array attributes of the select element (multiple etc...)
+ *
+ */
+	public function chosen($fieldName, $options = array(), $attr = array()) {
+		if (!isset($attr['default'])) {
+			$attr['default'] = 'Select an item';
+		}
+		if (!isset($attr['multiple'])) {
+			$attr['multiple'] = '';
+		}
+		if (!isset($attr['label'])) {
+			$attr['label'] = '';
+		}
+		$out = '';
+
+		$out .= '<select class="chosen" ' . $attr['multiple'] . ' data-placeholder="' . $attr['default'] . '">';
+		foreach ($options as $value => $text) {
+			$out .= '<option value="' . $value . '">' . $text . '</option>';
+		}
+		$out .= '</select>';
 		return $out;
 	}
 }
