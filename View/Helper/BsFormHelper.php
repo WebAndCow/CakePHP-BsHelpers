@@ -1182,6 +1182,48 @@ class BsFormHelper extends FormHelper {
 		return $out;
 	}
 
+/**
+ * check how deeper is an array
+ * @param  [Array] $array [array given]
+ * @return [Int]        [depth]
+ */
+	private function __checkDepth($array) {
+
+		$max_depth = 1;
+
+		foreach ($array as $value) {
+			if (is_array($value)) {
+				$depth = $this->__checkDepth($value) + 1;
+
+				if ($depth > $max_depth) {
+					$max_depth = $depth;
+				}
+			}
+		}
+
+		return $max_depth;
+	}
+
+/**
+ * array deeper than 1 goes with optgroup in select
+ * @param  [Array] $array [array given]
+ * @return [String]        [all the options]
+ */
+	private function __arrayToOptgroup($array) {
+		$array_out = '';
+		foreach ($array as $clef => $valeur) {
+			if (is_array($valeur)) {
+				$array_out .= '<optgroup label="' . $clef . '"></option>';
+				foreach ($valeur as $value => $text) {
+					$array_out .= '<option value="' . $value . '">' . $text . '</option>';
+				}
+			} else {
+				$array_out .= '<option value="' . $clef . '">' . $valeur . '</option>';
+			}
+		}
+		return $array_out;
+	}
+
 /* Return an html element with chosen attached
  *
  * @param String name of the field
@@ -1199,13 +1241,23 @@ class BsFormHelper extends FormHelper {
 		if (!isset($attr['label'])) {
 			$attr['label'] = '';
 		}
-		$out = '';
 
+		$out = '';
 		$out .= '<select class="chosen" ' . $attr['multiple'] . ' data-placeholder="' . $attr['default'] . '">';
-		foreach ($options as $value => $text) {
-			$out .= '<option value="' . $value . '">' . $text . '</option>';
+
+		$depth = $this->__checkDepth($options);
+		if (1 === $depth) {
+			foreach ($options as $value => $text) {
+				$out .= '<option value="' . $value . '">' . $text . '</option>';
+			}
+		} elseif (2 === $depth) {
+			$out .= $this->__arrayToOptgroup($options);
+		} else {
+			return 'The array is too deep (>2)';
 		}
+
 		$out .= '</select>';
 		return $out;
 	}
+
 }
