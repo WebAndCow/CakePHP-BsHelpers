@@ -1182,18 +1182,19 @@ class BsFormHelper extends FormHelper {
 		return $out;
 	}
 
-/* Return an html element with chosen attached
+/** Return an html element with chosen attached
  *
  * @param String name of the field
  * @param Array options of the select
  * @param Array attributes of the select element (multiple etc...)
+ * @param Array attributes of the chosen js call
  * @return string
  */
 	public function chosen($fieldName, $options = array(), $attr = array(), $chosenAttr = array()) {
 		//default option pour le select
 		$defaultAttr = array(
 			'label'            => '',
-			'class'            => 'chosen',
+			'class'            => 'chosen-' . $fieldName,
 			'data-placeholder' => 'Cliquez pour choisir',
 			'',
 		);
@@ -1222,7 +1223,7 @@ class BsFormHelper extends FormHelper {
 
 		//début du js (chargement du dom -> ok)
 		$js = '$(document).ready(function(){';
-		$js .= '$(".chosen").chosen(' . $chosenAttr . ');';
+		$js .= '$(".chosen-' . $fieldName . '").chosen(' . $chosenAttr . ');';
 		$js .= '});';
 
 		//debug($js);
