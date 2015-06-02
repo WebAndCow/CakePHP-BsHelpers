@@ -1208,15 +1208,11 @@ class BsFormHelper extends FormHelper {
 		);
 
 		//on mélange ancien et nouveau tableau
-		//debug($chosenAttr);
-		//debug($attr);
 		$chosenAttr = Hash::merge($defaultChosenAttr, $chosenAttr);
 		$attr       = Hash::merge($defaultAttr, $attr);
 
 		//on encode la tableau de chosen pour le js
 		$chosenAttr = json_encode($chosenAttr);
-		//debug($chosenAttr);
-		//debug($attr);
 
 		//on appelle le select avec les options dans $attr
 		echo $this->select($fieldName, $options, $attr);
@@ -1225,11 +1221,8 @@ class BsFormHelper extends FormHelper {
 		$js = '$(document).ready(function(){';
 		$js .= '$(".chosen-' . $fieldName . '").chosen(' . $chosenAttr . ');';
 		$js .= '});';
-
-		//debug($js);
-
+		//envoi du js dans la page
 		echo $this->Html->scriptBlock($js);
-
 	}
 
 }
