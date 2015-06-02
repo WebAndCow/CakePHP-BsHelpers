@@ -1189,7 +1189,7 @@ class BsFormHelper extends FormHelper {
  * @param Array attributes of the select element (multiple etc...)
  * @return string
  */
-	public function chosen($fieldName, $options = array(), $chosenAttr = array(), $attr = array()) {
+	public function chosen($fieldName, $options = array(), $attr = array(), $chosenAttr = array()) {
 		//default option pour le select
 		$defaultAttr = array(
 			'label'            => '',
