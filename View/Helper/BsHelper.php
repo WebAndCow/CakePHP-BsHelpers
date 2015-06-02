@@ -92,7 +92,7 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $pathChosenCSS = 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css';
+	public $pathChosenCSS = 'custom_chosen';
 
 /**
  * Path for Chosen Sprite

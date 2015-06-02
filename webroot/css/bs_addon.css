@@ -33,7 +33,7 @@
 
 
 .chosen-container-multi .chosen-choices {
-  position: relative;
+  position: relative; 
   overflow: hidden;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -45,7 +45,6 @@
   height: 1%;
   border: 1px solid #aaa;
   background-color: #fff !important;
-
   cursor: text;
 }
 
@@ -72,7 +71,6 @@
   position: relative;
   margin: 10px 12px;
   padding: 5px 20px 3px 10px!important;
-  border: 1px solid #aaa;
   border-radius: 5px;
   font-size: 1.1em;
   color: #333;

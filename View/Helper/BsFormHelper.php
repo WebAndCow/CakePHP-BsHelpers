@@ -1182,82 +1182,53 @@ class BsFormHelper extends FormHelper {
 		return $out;
 	}
 
-/**
- * check how deeper is an array
- * @param  [Array] $array [array given]
- * @return [Int]        [depth]
- */
-	private function __checkDepth($array) {
-
-		$max_depth = 1;
-
-		foreach ($array as $value) {
-			if (is_array($value)) {
-				$depth = $this->__checkDepth($value) + 1;
-
-				if ($depth > $max_depth) {
-					$max_depth = $depth;
-				}
-			}
-		}
-
-		return $max_depth;
-	}
-
-/**
- * array deeper than 1 goes with optgroup in select
- * @param  [Array] $array [array given]
- * @return [String]        [all the options]
- */
-	private function __arrayToOptgroup($array) {
-		$array_out = '';
-		foreach ($array as $clef => $valeur) {
-			if (is_array($valeur)) {
-				$array_out .= '<optgroup label="' . $clef . '"></option>';
-				foreach ($valeur as $value => $text) {
-					$array_out .= '<option value="' . $value . '">' . $text . '</option>';
-				}
-			} else {
-				$array_out .= '<option value="' . $clef . '">' . $valeur . '</option>';
-			}
-		}
-		return $array_out;
-	}
-
 /* Return an html element with chosen attached
  *
  * @param String name of the field
  * @param Array options of the select
  * @param Array attributes of the select element (multiple etc...)
- *
+ * @return string
  */
-	public function chosen($fieldName, $options = array(), $attr = array()) {
-		if (!isset($attr['default'])) {
-			$attr['default'] = 'Select an item';
-		}
-		if (!isset($attr['multiple'])) {
-			$attr['multiple'] = '';
-		}
-		if (!isset($attr['label'])) {
-			$attr['label'] = '';
-		}
+	public function chosen($fieldName, $options = array(), $chosenAttr = array(), $attr = array()) {
+		//default option pour le select
+		$defaultAttr = array(
+			'label'            => '',
+			'class'            => 'chosen',
+			'data-placeholder' => 'Cliquez pour choisir',
+			'',
+		);
 
-		$out = '';
-		$out .= '<select class="chosen" ' . $attr['multiple'] . ' data-placeholder="' . $attr['default'] . '">';
+		//default option pour chosen
+		$defaultChosenAttr = array(
+			'width'                  => "100%",
+			'default_multiple_text'  => 'Cliquez pour choisir',
+			'default_single_text'    => 'Cliquez pour choisir',
+			'default_no_result_text' => 'Pas de correspondance pour : ',
+		);
 
-		$depth = $this->__checkDepth($options);
-		if (1 === $depth) {
-			foreach ($options as $value => $text) {
-				$out .= '<option value="' . $value . '">' . $text . '</option>';
-			}
-		} elseif (2 === $depth) {
-			$out .= $this->__arrayToOptgroup($options);
-		} else {
-			return 'The array is too deep (>2)';
-		}
+		//on mélange ancien et nouveau tableau
+		//debug($chosenAttr);
+		//debug($attr);
+		$chosenAttr = Hash::merge($defaultChosenAttr, $chosenAttr);
+		$attr       = Hash::merge($defaultAttr, $attr);
 
-		$out .= '</select>';
-		return $out;
+		//on encode la tableau de chosen pour le js
+		$chosenAttr = json_encode($chosenAttr);
+		//debug($chosenAttr);
+		//debug($attr);
+
+		//on appelle le select avec les options dans $attr
+		echo $this->select($fieldName, $options, $attr);
+
+		//début du js (chargement du dom -> ok)
+		$js = '$(document).ready(function(){';
+		$js .= '$(".chosen").chosen(' . $chosenAttr . ');';
+		$js .= '});';
+
+		//debug($js);
+
+		echo $this->Html->scriptBlock($js);
+
 	}
 
 }
