@@ -17,7 +17,7 @@ class BsFormHelper extends FormHelper {
  *
  * @var array
  */
-	public $helpers = array('Bs', 'Html');
+	public $helpers = array('Bs', 'Html', 'Js');
 
 /**
  * The name of the helper
@@ -351,7 +351,7 @@ class BsFormHelper extends FormHelper {
 			unset($options['_isInputGroup']);
 		}
 
-		$options = Set::merge($basicOptions, $options);
+		$options = Hash::merge($basicOptions, $options);
 
 		if (!isset($options['type']) || strtolower($options['type']) != 'file') {
 			$options['class'] = (isset($options['class'])) ? 'form-control ' . $options['class'] : 'form-control';
@@ -955,7 +955,7 @@ class BsFormHelper extends FormHelper {
 
 		$attributes = $this->__errorBootstrap($fieldName, $attributes);
 
-		$attributes          = Set::merge($defaultAttributes, $attributes);
+		$attributes          = Hash::merge($defaultAttributes, $attributes);
 		$attributesForBefore = $attributes;
 		unset($attributes['state']);
 		unset($attributes['help']);
@@ -1081,7 +1081,7 @@ class BsFormHelper extends FormHelper {
 
 		$basicOptions['after'] = $this->__buildSubmitAfter($ux, $typeOfButton);
 
-		$options = Set::merge($basicOptions, $options);
+		$options = Hash::merge($basicOptions, $options);
 
 		return parent::submit($caption, $options);
 	}
@@ -1201,28 +1201,21 @@ class BsFormHelper extends FormHelper {
 
 		//default option pour chosen
 		$defaultChosenAttr = array(
-			'width'                  => "100%",
+			'width'                  => '100%',
 			'default_multiple_text'  => 'Cliquez pour choisir',
 			'default_single_text'    => 'Cliquez pour choisir',
 			'default_no_result_text' => 'Pas de correspondance pour : ',
 		);
 
-		//on mélange ancien et nouveau tableau
-		$chosenAttr = Hash::merge($defaultChosenAttr, $chosenAttr);
-		$attr       = Hash::merge($defaultAttr, $attr);
-
 		//on encode la tableau de chosen pour le js
-		$chosenAttr = json_encode($chosenAttr);
+		$chosenAttr = json_encode(Hash::merge($defaultChosenAttr, $chosenAttr));
 
 		//on appelle le select avec les options dans $attr
-		echo $this->select($fieldName, $options, $attr);
+		echo $this->select($fieldName, $options, Hash::merge($defaultAttr, $attr));
 
-		//début du js (chargement du dom -> ok)
-		$js = '$(document).ready(function(){';
-		$js .= '$(".chosen-' . $fieldName . '").chosen(' . $chosenAttr . ');';
-		$js .= '});';
 		//envoi du js dans la page
-		echo $this->Html->scriptBlock($js);
+		echo $this->Js->buffer('$(".chosen-' . $fieldName . '").chosen(' . $chosenAttr . ');');
+		echo $this->Js->writeBuffer();
 	}
 
 }

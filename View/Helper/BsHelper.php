@@ -92,7 +92,7 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $pathChosenCSS = 'custom_chosen';
+	public $pathChosenCSS = 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css';
 
 /**
  * Path for Chosen Sprite
@@ -108,18 +108,31 @@ class BsHelper extends HtmlHelper {
  */
 	public $pathChosenJS = 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js';
 
-	/**
-	 * Path for Chosen JS
-	 *
-	 * @var string
-	 */
-	public $pathChosen_call = 'chosen_call';
-
 /**
  * If Chosen CSS is loaded
  * @var bool
  */
 	public $chosenAddonLoad = true;
+
+/**
+ * Path for Chosen Sprite
+ *
+ * @var string
+ */
+	public $pathJasnyCSS = 'BsHelpers.jasny-bootstrap';
+
+/**
+ * Path for Chosen JS
+ *
+ * @var string
+ */
+	public $pathJasnyJS = 'BsHelpers.jasny-bootstrap';
+
+/**
+ * If Jasny is loaded
+ * @var bool
+ */
+	public $jasnyAddonLoad = true;
 
 	/*--------------------------*
 	 *						    *
@@ -205,11 +218,14 @@ class BsHelper extends HtmlHelper {
 		if ($this->bsAddonLoad) {
 			$out .= parent::css($this->bsAddonPath);
 		}
-		if ($this->chosenAddonLoad) {
-			$out .= parent::css($this->pathChosenCSS);
+		if ($this->jasnyAddonLoad) {
+			$out .= parent::css($this->pathJasnyCSS);
 		}
 		if ($this->chosenAddonLoad) {
 			$out .= parent::css($this->pathChosenSprite);
+		}
+		if ($this->chosenAddonLoad) {
+			$out .= parent::css($this->pathChosenCSS);
 		}
 
 		// Others CSS
@@ -236,7 +252,9 @@ class BsHelper extends HtmlHelper {
 		}
 		if ($this->chosenAddonLoad) {
 			$out .= parent::script($this->pathChosenJS);
-			$out .= parent::script($this->pathChosen_call);
+		}
+		if ($this->jasnyAddonLoad) {
+			$out .= parent::script($this->pathJasnyJS);
 		}
 
 		// Others JS
