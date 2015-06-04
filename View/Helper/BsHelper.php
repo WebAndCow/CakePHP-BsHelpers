@@ -388,7 +388,7 @@ class BsHelper extends HtmlHelper {
 			}
 		}
 
-		$arrayDevice  = array('xs', 'sm', 'md', 'lg');
+		$arrayDevice = array('xs', 'sm', 'md', 'lg');
 		$arrayOptions = array('of', 'ph', 'pl');
 
 		foreach ($devices as $device) {
@@ -782,7 +782,7 @@ class BsHelper extends HtmlHelper {
 		} else {
 			$cle1 = "zarnfjdlvjezprizejrjpzojazjpodffp";
 			$cle2 = "251848416487764197191944948794449";
-			$cle  = '';
+			$cle = '';
 			for ($i = 0; $i < 15; $i++) {
 				$tab = array($cle1, $cle2);
 				if (0 == $i) {
@@ -911,7 +911,7 @@ class BsHelper extends HtmlHelper {
 			),
 		);
 
-		$buttons['open']['class'] = $buttons['confirm']['class']   = (isset($options['color']) && '' != $options['color']) ? 'btn-' . $options['color'] : 'btn-success';
+		$buttons['open']['class'] = $buttons['confirm']['class'] = (isset($options['color']) && '' != $options['color']) ? 'btn-' . $options['color'] : 'btn-success';
 		$buttons['confirm']['name'] = (isset($options['button']) && '' != $options['button']) ? $options['button'] : $button;
 		$body = (isset($options['texte']) && '' != $options['texte']) ? $options['texte'] : 'Voulez-vous vraiment continuer votre action ?';
 		$header = (isset($options['header']) && '' != $options['header']) ? $options['header'] : $button;
