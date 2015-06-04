@@ -88,33 +88,6 @@ class BsHelper extends HtmlHelper {
 	public $pathJS = '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js';
 
 /**
- * Path for Chosen CSS
- *
- * @var string
- */
-	public $pathChosenCSS = 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css';
-
-/**
- * Path for Chosen Sprite
- *
- * @var string
- */
-	public $pathChosenSprite = 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png';
-
-/**
- * Path for Chosen JS
- *
- * @var string
- */
-	public $pathChosenJS = 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js';
-
-/**
- * If Chosen CSS is loaded
- * @var bool
- */
-	public $chosenAddonLoad = true;
-
-/**
  * Path for Chosen Sprite
  *
  * @var string
@@ -133,6 +106,20 @@ class BsHelper extends HtmlHelper {
  * @var bool
  */
 	public $jasnyAddonLoad = true;
+
+	public function loadCSS($url) {
+		$this->_View->append('cssTop', parent::css($url));
+		return $this->_View->end();
+	}
+
+	public function loadJS($url, $type = false, $options = array()) {
+		if (true === $type) {
+			$this->_View->append('scriptBottom', parent::scriptBlock($url, $options));
+		} else {
+			$this->_View->append('scriptBottom', parent::script($url));
+		}
+		return $this->_View->end();
+	}
 
 	/*--------------------------*
 	 *						    *
@@ -221,12 +208,6 @@ class BsHelper extends HtmlHelper {
 		if ($this->jasnyAddonLoad) {
 			$out .= parent::css($this->pathJasnyCSS);
 		}
-		if ($this->chosenAddonLoad) {
-			$out .= parent::css($this->pathChosenSprite);
-		}
-		if ($this->chosenAddonLoad) {
-			$out .= parent::css($this->pathChosenCSS);
-		}
 
 		// Others CSS
 		foreach ($path as $css) {
@@ -250,9 +231,7 @@ class BsHelper extends HtmlHelper {
 		if ($this->ckEditorLoad) {
 			$out .= parent::script($this->ckEditorJsPath);
 		}
-		if ($this->chosenAddonLoad) {
-			$out .= parent::script($this->pathChosenJS);
-		}
+
 		if ($this->jasnyAddonLoad) {
 			$out .= parent::script($this->pathJasnyJS);
 		}
@@ -920,4 +899,5 @@ class BsHelper extends HtmlHelper {
 
 		return $this->modal($header, $body, null, $buttons);
 	}
+
 }

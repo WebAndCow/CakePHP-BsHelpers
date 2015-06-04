@@ -12,6 +12,15 @@ App::uses('Set', 'Utility');
 class BsFormHelper extends FormHelper {
 
 /**
+ * Check which addon is loaded and which is not
+ *
+ * @var array
+ */
+	protected $loaded = array(
+		'chosen' => false,
+	);
+
+/**
  * BsForm uses the BsHelper so it can use some feature of it
  * BsForm uses the FormHelper
  *
@@ -70,6 +79,10 @@ class BsFormHelper extends FormHelper {
  * @var string
  */
 	protected $_actionForm = null;
+
+	///////////////////
+	//	A COMMENTER	 //
+	///////////////////
 
 /**
  * Return the current value of $_left
@@ -1196,7 +1209,6 @@ class BsFormHelper extends FormHelper {
 			'label'            => '',
 			'class'            => 'chosen-' . $fieldName,
 			'data-placeholder' => 'Cliquez pour choisir',
-			'',
 		);
 
 		//default option pour chosen
@@ -1211,11 +1223,19 @@ class BsFormHelper extends FormHelper {
 		$chosenAttr = json_encode(Hash::merge($defaultChosenAttr, $chosenAttr));
 
 		//on appelle le select avec les options dans $attr
-		echo $this->select($fieldName, $options, Hash::merge($defaultAttr, $attr));
+		//debug($this->loaded);
+		if (false === $this->loaded['chosen']) {
+			echo $this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css');
+			echo $this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png');
+			echo $this->Bs->loadJS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js');
+			$this->loaded['chosen'] = true;
+		}
 
+		//debug($this->__loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css'));
 		//envoi du js dans la page
-		echo $this->Js->buffer('$(".chosen-' . $fieldName . '").chosen(' . $chosenAttr . ');');
-		echo $this->Js->writeBuffer();
+		echo $this->Bs->loadJS('$(document).ready(function(){$(".chosen-' . $fieldName . '").chosen(' . $chosenAttr . ');});', true, array('block' => 'scriptBottom'));
+		//debug(Hash::merge($defaultAttr, $attr));
+		return $this->select($fieldName, $options, Hash::merge($defaultAttr, $attr));
 	}
 
 }

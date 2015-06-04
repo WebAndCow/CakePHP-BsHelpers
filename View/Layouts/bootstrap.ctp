@@ -4,7 +4,7 @@ echo $this->Bs->html($title_for_layout , $description_for_layout).
 
 	// HEAD
 		$this->Bs->css(array('style.css')).
-		$this->Bs->js().
+		$this->fetch('cssTop').
 	// \HEAD
 	// BODY
 		$this->Bs->body().
@@ -13,5 +13,6 @@ echo $this->Bs->html($title_for_layout , $description_for_layout).
 			$content_for_layout;
 
 	// \BODY
-
-echo $this->Bs->end();
+		$this->Bs->js().
+		$this->fetch('scriptBottom').
+$this->Bs->end();
