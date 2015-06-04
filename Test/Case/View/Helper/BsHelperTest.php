@@ -2,6 +2,7 @@
 App::uses('View', 'View');
 App::uses('BsHelper', 'BsHelpers.View/Helper');
 App::uses('BsFormHelper', 'BsHelpers.View/Helper');
+App::uses('HtmlHelper', 'View/Helper');
 
 /**
  * BsHelper Test Case
@@ -16,9 +17,10 @@ class BsHelperTest extends CakeTestCase {
  */
 	public function setUp() {
 		parent::setUp();
-		$View         = new View();
-		$this->Bs     = new BsHelper($View);
-		$this->BsForm = new BsFormHelper($View);
+		$this->View   = new View();
+		$this->Bs     = new BsHelper($this->View);
+		$this->BsForm = new BsFormHelper($this->View);
+		$this->Html   = new HtmlHelper($this->View);
 	}
 
 	public function testHtml() {
@@ -937,13 +939,51 @@ class BsHelperTest extends CakeTestCase {
 		$this->assertTags($result, $expected);
 	}
 
+	public function testLoadCSS() {
+		$value = 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css';
+
+		$this->View->assign('cssTop', 'Block');
+		$this->Bs->loadCSS($value);
+
+		$result = $this->View->fetch('cssTop');
+
+		$this->assertSame('Block' . $this->Html->css($value), $result);
+	}
+
+	public function testLoadJS() {
+		$value = 'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.js';
+
+		$this->View->assign('scriptBottom', 'Block');
+
+		/////////////////
+		// SANS OPTION //
+		/////////////////
+
+		$this->Bs->loadJS($value);
+
+		$result = $this->View->fetch('scriptBottom');
+		$this->assertSame('Block' . $this->Html->script($value), $result);
+
+		/////////////////
+		// SANS OPTION //
+		/////////////////
+		$this->View->assign('scriptBottom', '');
+
+		$this->Bs->loadJS($value, true, array('block' => 'scriptBottom'));
+
+		$result = $this->View->fetch('scriptBottom');
+		$this->assertSame($this->Html->scriptBlock($value), $result);
+	}
+
 /**
  * tearDown method
  *
  * @return void
  */
 	public function tearDown() {
+		unset($this->View);
 		unset($this->Bs);
+		unset($this->BsForm);
 
 		parent::tearDown();
 	}

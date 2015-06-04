@@ -1137,36 +1137,97 @@ class BsFormHelperTest extends CakeTestCase {
 		/////////////////////
 		// WITHOUT OPTIONS //
 		/////////////////////
+		$tab = array(
+			'hello' => 'you',
+			'try'   => 'it',
+		);
+
 		$field  = 'title';
-		$result = $this->BsForm->chosen($field);
+		$result = $this->BsForm->chosen($field, $tab);
 
-		$expected = '<div class="form-group"><label class="control-label col-md-3" for="' . $field . '"></label><div class="col-md-9"><select class="form-control chosen-' . $field . '" data-placeholder="Cliquez pour choisir" id="' . $field . '" name="data[' . $field . ']"></select></div></div>';
-		echo $result;
-		echo $expected;
-
+		$expected = array(
+			array('div' => array(
+				'class' => 'form-group',
+			)),
+			array('label' => array(
+				'for'   => $field,
+				'class' => 'control-label col-md-3',
+			)),
+			'/label',
+			array('div' => array(
+				'class' => 'col-md-9',
+			)),
+			array('select' => array(
+				'name'             => 'data[' . $field . ']',
+				'class'            => 'form-control chosen-' . $field,
+				'data-placeholder' => 'Cliquez pour choisir',
+				'id'               => $field,
+			)),
+			array('option' => array(
+				'value' => 'hello',
+			)),
+			'you',
+			'/option',
+			array('option' => array(
+				'value' => 'try',
+			)),
+			'it',
+			'/option',
+			'/select',
+			'/div',
+			'/div',
+		);
 		$this->assertTags($result, $expected);
 
-		// $expected = $this->BsForm->select('Title');
+		////////////////////
+		//	 WITH OPTIONS //
+		////////////////////
 
-		// $this->assertTags($result, $expected);
+		$tab = array(
+			'hello' => 'you',
+			'try'   => 'it',
+		);
 
-		// /////////////////////////////////
-		// // WITH A SPECIFIC TITLE LEVEL //
-		// /////////////////////////////////
+		$field  = 'title';
+		$result = $this->BsForm->chosen($field, $tab, array(
+			'label'            => 'Ca, ici.',
+			'data-placeholder' => 'Cliquez pour selectionner les valeurs recherchées',
+		));
 
-		// $result = $this->BsForm->select('Title', 2);
-
-		// $expected = array(
-		// 	array('div' => array('class' => 'row')),
-		// 	array('div' => array('class' => 'col-md-' . $this->BsForm->getRight() . ' col-md-offset-' . $this->BsForm->getLeft())),
-		// 	'<h2',
-		// 	'Title',
-		// 	'/h2',
-		// 	'/div',
-		// 	'/div',
-		// );
-
-		// $this->assertTags($result, $expected);
+		$expected = array(
+			array('div' => array(
+				'class' => 'form-group',
+			)),
+			array('label' => array(
+				'for'   => $field,
+				'class' => 'control-label col-md-3',
+			)),
+			'Ca, ici.',
+			'/label',
+			array('div' => array(
+				'class' => 'col-md-9',
+			)),
+			array('select' => array(
+				'name'             => 'data[' . $field . ']',
+				'class'            => 'form-control chosen-' . $field,
+				'data-placeholder' => 'Cliquez pour selectionner les valeurs recherchées',
+				'id'               => $field,
+			)),
+			array('option' => array(
+				'value' => 'hello',
+			)),
+			'you',
+			'/option',
+			array('option' => array(
+				'value' => 'try',
+			)),
+			'it',
+			'/option',
+			'/select',
+			'/div',
+			'/div',
+		);
+		$this->assertTags($result, $expected);
 	}
 
 /**

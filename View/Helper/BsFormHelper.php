@@ -1197,10 +1197,10 @@ class BsFormHelper extends FormHelper {
 
 /** Return an html element with chosen attached
  *
- * @param String name of the field
- * @param Array options of the select
- * @param Array attributes of the select element (multiple etc...)
- * @param Array attributes of the chosen js call
+ * @param String $fieldName name of the field
+ * @param Array $options options of the select
+ * @param Array $attr attributes of the select element (multiple etc...)
+ * @param Array $chosenAttr attributes of the chosen js call
  * @return string
  */
 	public function chosen($fieldName, $options = array(), $attr = array(), $chosenAttr = array()) {
