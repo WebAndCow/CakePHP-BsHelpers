@@ -281,8 +281,8 @@ class BsFormHelper extends FormHelper {
 		}
 
 		$options['state'] = 'error';
-		$options['help']  = '';
-		$errors           = $this->tagIsInvalid();
+		$options['help'] = '';
+		$errors = $this->tagIsInvalid();
 
 		foreach ($errors as $error) {
 			$options['help'] .= $error . '<br />';
@@ -331,21 +331,21 @@ class BsFormHelper extends FormHelper {
 		$labelExist = (isset($options['label']) && false === $options['label']) ? false : true;
 
 		$basicOptions = array(
-			'before'  => '<div class="form-group',
+			'before' => '<div class="form-group',
 			'between' => $this->__buildInputBetween($labelExist),
-			'after'   => $this->__buildInputAfter($labelExist),
-			'div'     => false,
+			'after' => $this->__buildInputAfter($labelExist),
+			'div' => false,
 		);
 		$bootstrapOptions = array('state', 'help', 'feedback');
 
-		$options      = $this->__errorBootstrapInput($fieldName, $options);
-		$optionsDate  = $this->__inputDate($basicOptions, $options);
+		$options = $this->__errorBootstrapInput($fieldName, $options);
+		$optionsDate = $this->__inputDate($basicOptions, $options);
 		$basicOptions = $optionsDate['basic'];
-		$options      = $optionsDate['options'];
+		$options = $optionsDate['options'];
 
 		foreach ($bootstrapOptions as $opt) {
 			if (isset($options[$opt])) {
-				$name         = '__addInput' . $opt;
+				$name = '__addInput' . $opt;
 				$basicOptions = $this->$name($basicOptions, $options[$opt]);
 				unset($options[$opt]);
 			}
@@ -354,9 +354,9 @@ class BsFormHelper extends FormHelper {
 		$basicOptions['before'] .= '">';
 
 		if ($labelExist) {
-			$label        = $this->__addInputLabel($basicOptions, $options);
+			$label = $this->__addInputLabel($basicOptions, $options);
 			$basicOptions = $label['basic'];
-			$options      = $label['options'];
+			$options = $label['options'];
 		}
 
 		if (isset($options['_isInputGroup'])) {
@@ -407,7 +407,7 @@ class BsFormHelper extends FormHelper {
 
 		$options = $this->__errorBootstrap($fieldName, $options);
 
-		$options['feedback']     = true;
+		$options['feedback'] = true;
 		$options['errorMessage'] = false;
 
 		return $options;
@@ -429,11 +429,11 @@ class BsFormHelper extends FormHelper {
 
 		if ($this->_getFormType() == 'basic') {
 			$basicOptions['between'] = '<div>';
-			$basicOptions['after']   = '</div></div>';
+			$basicOptions['after'] = '</div></div>';
 		}
 
 		return array(
-			'basic'   => $basicOptions,
+			'basic' => $basicOptions,
 			'options' => $options,
 		);
 	}
@@ -526,7 +526,7 @@ class BsFormHelper extends FormHelper {
 			unset($options['label']);
 
 			return array(
-				'basic'   => $basicOptions,
+				'basic' => $basicOptions,
 				'options' => $options,
 			);
 		}
@@ -534,7 +534,7 @@ class BsFormHelper extends FormHelper {
 		$basicOptions['label']['class'] = $this->__leftClass();
 
 		return array(
-			'basic'   => $basicOptions,
+			'basic' => $basicOptions,
 			'options' => $options,
 		);
 	}
@@ -574,7 +574,7 @@ class BsFormHelper extends FormHelper {
 	public function inputGroup($fieldName, $addonOptions, $options = array()) {
 		$options['_isInputGroup'] = array(
 			'between' => '',
-			'after'   => '',
+			'after' => '',
 		);
 
 		// Check if the addon is on the right
@@ -616,13 +616,13 @@ class BsFormHelper extends FormHelper {
 					$options['class'] = $state;
 				}
 
-				$buttonOptions['div']    = false;
+				$buttonOptions['div'] = false;
 				$buttonOptions['escape'] = false;
-				$buttonOptions['type']   = $options['type'];
+				$buttonOptions['type'] = $options['type'];
 				$buttonOptions['class']  = $options['class'];
 				if ('image' == $options['type']) {
-					$buttonOptions['src']   = $options['src'];
-					$buttonOptions['type']  = 'image';
+					$buttonOptions['src'] = $options['src'];
+					$buttonOptions['type'] = 'image';
 					$buttonOptions['label'] = false;
 					$out .= parent::input($options['content'], $buttonOptions);
 				} else {
@@ -718,9 +718,9 @@ class BsFormHelper extends FormHelper {
  */
 	public function checkbox($fieldName, $options = array()) {
 		$basicOptions = array(
-			'help'        => false,
-			'state'       => false,
-			'label'       => Inflector::camelize($fieldName),
+			'help' => false,
+			'state' => false,
+			'label' => Inflector::camelize($fieldName),
 			'label-class' => '',
 		);
 
@@ -738,7 +738,7 @@ class BsFormHelper extends FormHelper {
 		$checkbox .= ($basicOptions['help']) ? '<span class="help-block">' . $basicOptions['help'] . '</span>' : '';
 
 		$options['type'] = 'checkbox';
-		$label           = array(
+		$label = array(
 			'text' => $checkbox,
 		);
 		if (!empty($basicOptions['label-class'])) {
@@ -807,7 +807,7 @@ class BsFormHelper extends FormHelper {
  * @return string Formatted SELECT element
  */
 	public function select($fieldName, $options = array(), $attributes = array()) {
-		$out    = '';
+		$out = '';
 		$isDate = false;
 
 		$inline = (isset($attributes['inline']) && ('inline' == $attributes['inline'] || true == $attributes['inline'])) ? true : false;
@@ -862,8 +862,8 @@ class BsFormHelper extends FormHelper {
 
 				foreach ($labels[0] as $label) {
 
-					$r1    = '/(<label.*.for="?)/';
-					$r2    = '/(".*>)/';
+					$r1 = '/(<label.*.for="?)/';
+					$r2 = '/(".*>)/';
 					$field = preg_replace($r1, '', $label);
 					$field = preg_replace($r2, '', $field);
 
@@ -901,7 +901,7 @@ class BsFormHelper extends FormHelper {
  * @return string
  */
 	private function __buildSelectBefore($fieldName, $attributes) {
-		$out        = '<div class="form-group">';
+		$out = '<div class="form-group">';
 		$labelExist = false;
 
 		//----- [label] attribute
@@ -957,18 +957,18 @@ class BsFormHelper extends FormHelper {
  * @return string Completed radio widget set.
  */
 	public function radio($fieldName, $options = array(), $attributes = array()) {
-		$out    = '';
+		$out = '';
 		$inline = ((isset($attributes['inline']) && true === $attributes['inline'])) ? true : false;
 		unset($attributes['inline']);
 		$defaultAttributes = array(
 			'legend' => false,
-			'label'  => false,
+			'label' => false,
 		);
 		$defaultAttributes['separator'] = ($inline) ? '</label><label class="radio-inline">' : '</label></div><div class="radio"><label>';
 
 		$attributes = $this->__errorBootstrap($fieldName, $attributes);
 
-		$attributes          = Hash::merge($defaultAttributes, $attributes);
+		$attributes = Hash::merge($defaultAttributes, $attributes);
 		$attributesForBefore = $attributes;
 		unset($attributes['state']);
 		unset($attributes['help']);
@@ -1070,22 +1070,22 @@ class BsFormHelper extends FormHelper {
 		unset($options['ux']);
 
 		$basicOptions = array(
-			'div'    => false,
+			'div' => false,
 			'class'  => 'btn btn-success',
 			'before' => $this->__buildSubmitBefore(),
 		);
 
 		$typeOfButton = 'success';
-		$types        = array('danger', 'warning', 'info', 'primary');
+		$types = array('danger', 'warning', 'info', 'primary');
 
 		//----- [class] option
 		if (isset($options['class'])) {
-			$basicClass       = $options['class'];
+			$basicClass = $options['class'];
 			$options['class'] = $basicOptions['class'] . ' ' . $options['class'];
 
 			foreach ($types as $type) {
 				if (strpos($options['class'], $type) > 0) {
-					$typeOfButton     = $type;
+					$typeOfButton = $type;
 					$options['class'] = 'btn ' . $basicClass;
 					break;
 				}
@@ -1207,16 +1207,16 @@ class BsFormHelper extends FormHelper {
 	public function chosen($fieldName, $options = array(), $attr = array(), $chosenAttr = array()) {
 		//default option pour le select
 		$defaultAttr = array(
-			'label'            => '',
-			'class'            => 'chosen-' . $fieldName,
+			'label' => '',
+			'class' => 'chosen-' . $fieldName,
 			'data-placeholder' => 'Cliquez pour choisir',
 		);
 
 		//default option pour chosen
 		$defaultChosenAttr = array(
-			'width'                  => '100%',
-			'default_multiple_text'  => 'Cliquez pour choisir',
-			'default_single_text'    => 'Cliquez pour choisir',
+			'width' => '100%',
+			'default_multiple_text' => 'Cliquez pour choisir',
+			'default_single_text' => 'Cliquez pour choisir',
 			'default_no_result_text' => 'Pas de correspondance pour : ',
 		);
 
