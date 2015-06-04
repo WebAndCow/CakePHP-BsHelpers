@@ -71,6 +71,7 @@ class BsHelper extends HtmlHelper {
  *
  */
 	public $pathJquery = 'http://code.jquery.com/jquery-1.11.3.js';
+
 /**
  * If Bootstrap addon is loaded
  * @var bool
@@ -113,7 +114,8 @@ class BsHelper extends HtmlHelper {
 
 /**
  * Charge du CSS dans la vue lorsqu'il est requis
- * @param  [string] $url url du css
+ * 
+ * @param [string] $url url du css
  * @return [Void]   ferme le block
  */
 	public function loadCSS($url) {
@@ -123,10 +125,11 @@ class BsHelper extends HtmlHelper {
 
 /**
  * [loadJS description]
- * @param  string  $url     url du JS
- * @param  boolean $type    à true créer un block en ligne, à false charge le fichier lointain
- * @param  array   $options option pour scriptBlock
- * @return Void           ferme le block
+ * 
+ * @param string  $url url du JS
+ * @param bool $type à true créer un block en ligne, à false charge le fichier lointain
+ * @param array $options option pour scriptBlock
+ * @return Void ferme le block
  */
 	public function loadJS($url, $type = false, array $options = array()) {
 		if (true === $type) {
@@ -318,7 +321,7 @@ class BsHelper extends HtmlHelper {
  * @return string Div element with the class 'container'
  */
 	public function container($options = array()) {
-		$out   = '';
+		$out = '';
 		$class = 'container';
 		if (isset($options['class'])) {
 			$class .= ' ' . $options['class'];
@@ -334,7 +337,7 @@ class BsHelper extends HtmlHelper {
  * @return string Div element with the class 'row'
  */
 	public function row($options = array()) {
-		$out   = '';
+		$out = '';
 		$class = 'row';
 		if (isset($options['class'])) {
 			$class .= ' ' . $options['class'];
@@ -372,8 +375,8 @@ class BsHelper extends HtmlHelper {
  * @return string DIV tag element
  */
 	public function col() {
-		$class      = '';
-		$devices    = array();
+		$class = '';
+		$devices = array();
 		$attributes = array();
 
 		$args = func_get_args();
@@ -389,19 +392,19 @@ class BsHelper extends HtmlHelper {
 		$arrayOptions = array('of', 'ph', 'pl');
 
 		foreach ($devices as $device) {
-			$ecran   = null;
-			$taille  = null;
-			$opt     = null;
+			$ecran = null;
+			$taille = null;
+			$opt = null;
 			$replace = array('(', ')', '-', '_', '/', '\\', ';', ',', ':', ' ');
-			$device  = str_replace($replace, '.', $device);
-			$device  = explode('.', $device);
+			$device = str_replace($replace, '.', $device);
+			$device = explode('.', $device);
 
 			// Sould define the device in first
 			foreach ($device as $elem) {
 				if (!$ecran) {
 					$nom = substr($elem, 0, 2);
 					if (in_array($nom, $arrayDevice)) {
-						$ecran  = $nom;
+						$ecran = $nom;
 						$taille = substr($elem, 2);
 					}
 				} else {
@@ -440,7 +443,7 @@ class BsHelper extends HtmlHelper {
 	private function __optCol($elem, $screen) {
 		$attr = substr($elem, 0, 2);
 		$size = substr($elem, 2);
-		$res  = null;
+		$res = null;
 		if (is_integer($size) || !(0 == $size && 'sm' == $screen)) {
 			switch ($attr) {
 				case 'pl':
@@ -507,7 +510,7 @@ class BsHelper extends HtmlHelper {
  */
 	public function table($titles, $class = array()) {
 		$classes = '';
-		$out     = '<div class="table-responsive">';
+		$out = '<div class="table-responsive">';
 
 		if (!empty($class)) {
 			foreach ($class as $opt) {
@@ -523,9 +526,9 @@ class BsHelper extends HtmlHelper {
 			$out .= '<tr>';
 
 			$tableClassesCells = array();
-			$tablePos          = 0;
-			$nbColumn          = count($titles);
-			$width             = false;
+			$tablePos = 0;
+			$nbColumn = count($titles);
+			$width = false;
 
 			foreach ($titles as $title) {
 				$classVisibility = '';
@@ -553,10 +556,10 @@ class BsHelper extends HtmlHelper {
 			$out .= '</thead>';
 			$out .= '<tbody>';
 
-			$this->_nbColumn          = $nbColumn - 1;
+			$this->_nbColumn = $nbColumn - 1;
 			$this->_tableClassesCells = $tableClassesCells;
-			$this->_cellPos           = 0;
-			$this->_openLine          = 0;
+			$this->_cellPos = 0;
+			$this->_openLine = 0;
 		}
 		return $out;
 	}
@@ -570,9 +573,9 @@ class BsHelper extends HtmlHelper {
  * @return string
  */
 	public function cell($content, $class = '', $autoformat = true) {
-		$out             = '';
+		$out = '';
 		$classVisibility = '';
-		$cellPos         = $this->_cellPos;
+		$cellPos = $this->_cellPos;
 
 		if (0 == $cellPos && 0 == $this->_openLine) {
 			$out .= '<tr>';
@@ -621,7 +624,7 @@ class BsHelper extends HtmlHelper {
  * @return string
  */
 	public function lineColor($color) {
-		$out             = '<tr class="' . $color . '">';
+		$out = '<tr class="' . $color . '">';
 		$this->_openLine = 1;
 		return $out;
 	}
@@ -704,7 +707,7 @@ class BsHelper extends HtmlHelper {
  */
 	public function icon($iconLabel, $classes = array(), $attributes = array()) {
 		$class = '';
-		$more  = '';
+		$more = '';
 
 		if (!empty($classes)) {
 			foreach ($classes as $opt) {
@@ -899,7 +902,7 @@ class BsHelper extends HtmlHelper {
  */
 	public function confirm($button, $link, $options = array()) {
 		$buttons = array(
-			'open'    => array(
+			'open' => array(
 				'name' => $button,
 			),
 			'close',

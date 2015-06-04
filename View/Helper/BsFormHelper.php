@@ -483,7 +483,7 @@ class BsFormHelper extends FormHelper {
 				'text' => '(warning)',
 				'icon' => 'warning-sign',
 			),
-			'error'   => array(
+			'error' => array(
 				'text' => '(error)',
 				'icon' => 'remove',
 			),
@@ -511,7 +511,7 @@ class BsFormHelper extends FormHelper {
 	private function __addInputLabel($basicOptions, $options) {
 		if (isset($options['label'])) {
 			if (!is_array($options['label'])) {
-				$basicOptions['label']['text']  = $options['label'];
+				$basicOptions['label']['text'] = $options['label'];
 				$basicOptions['label']['class'] = $this->__leftClass();
 			} else {
 				if (isset($options['label']['text'])) {
@@ -619,7 +619,7 @@ class BsFormHelper extends FormHelper {
 				$buttonOptions['div'] = false;
 				$buttonOptions['escape'] = false;
 				$buttonOptions['type'] = $options['type'];
-				$buttonOptions['class']  = $options['class'];
+				$buttonOptions['class'] = $options['class'];
 				if ('image' == $options['type']) {
 					$buttonOptions['src'] = $options['src'];
 					$buttonOptions['type'] = 'image';
@@ -872,7 +872,7 @@ class BsFormHelper extends FormHelper {
 						if (preg_match($r3, $label, $labelClass)) {
 							$label = preg_replace($r3, $labelClass[1] . 'checkbox-inline ' . $attributes['class'] . ' ' . $labelClass[2], $label);
 						} else {
-							$r4    = '/(<label for="' . $field . '".*)(.*>)/';
+							$r4 = '/(<label for="' . $field . '".*)(.*>)/';
 							$label = preg_replace($r4, '$1' . ' class="checkbox-inline" ' . '$2', $label);
 						}
 
@@ -906,7 +906,7 @@ class BsFormHelper extends FormHelper {
 
 		//----- [label] attribute
 		if (isset($attributes['label'])) {
-			$labelExist         = true;
+			$labelExist = true;
 			$attributes['type'] = 'text';
 			$out .= $this->_inputLabel($fieldName, array('text' => $attributes['label'], 'class' => $this->__leftClass()), $attributes);
 		}
@@ -1066,12 +1066,12 @@ class BsFormHelper extends FormHelper {
  */
 	public function submit($caption = null, $options = array()) {
 		$out = '';
-		$ux  = (isset($options['ux']) && false === $options['ux']) ? false : true;
+		$ux = (isset($options['ux']) && false === $options['ux']) ? false : true;
 		unset($options['ux']);
 
 		$basicOptions = array(
 			'div' => false,
-			'class'  => 'btn btn-success',
+			'class' => 'btn btn-success',
 			'before' => $this->__buildSubmitBefore(),
 		);
 
