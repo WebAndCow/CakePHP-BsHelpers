@@ -16,7 +16,7 @@ class BsFormHelper extends FormHelper {
  *
  * @var array
  */
-	protected $loaded = array(
+	protected $_loaded = array(
 		'chosen' => false,
 	);
 
@@ -1224,11 +1224,11 @@ class BsFormHelper extends FormHelper {
 
 		//on appelle le select avec les options dans $attr
 		//debug($this->loaded);
-		if (false === $this->loaded['chosen']) {
+		if (false === $this->_loaded['chosen']) {
 			echo $this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css');
 			echo $this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png');
 			echo $this->Bs->loadJS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js');
-			$this->loaded['chosen'] = true;
+			$this->_loaded['chosen'] = true;
 		}
 
 		//debug($this->__loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css'));
