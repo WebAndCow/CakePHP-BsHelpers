@@ -1195,7 +1195,8 @@ class BsFormHelper extends FormHelper {
 		return $out;
 	}
 
-/** Return an html element with chosen attached
+/**
+ * Return an html element with chosen attached
  *
  * @param String $fieldName name of the field
  * @param Array $options options of the select

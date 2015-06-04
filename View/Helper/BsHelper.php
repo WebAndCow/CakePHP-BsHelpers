@@ -64,8 +64,11 @@ class BsHelper extends HtmlHelper {
  * @var bool
  */
 	public $faLoad = true;
-/*
+
+/**
+ * jquerypath
  * @var string
+ *
  */
 	public $pathJquery = 'http://code.jquery.com/jquery-1.11.3.js';
 /**
@@ -905,10 +908,10 @@ class BsHelper extends HtmlHelper {
 			),
 		);
 
-		$buttons['open']['class']   = $buttons['confirm']['class']   = (isset($options['color']) && '' != $options['color']) ? 'btn-' . $options['color'] : 'btn-success';
+		$buttons['open']['class'] = $buttons['confirm']['class']   = (isset($options['color']) && '' != $options['color']) ? 'btn-' . $options['color'] : 'btn-success';
 		$buttons['confirm']['name'] = (isset($options['button']) && '' != $options['button']) ? $options['button'] : $button;
-		$body                       = (isset($options['texte']) && '' != $options['texte']) ? $options['texte'] : 'Voulez-vous vraiment continuer votre action ?';
-		$header                     = (isset($options['header']) && '' != $options['header']) ? $options['header'] : $button;
+		$body = (isset($options['texte']) && '' != $options['texte']) ? $options['texte'] : 'Voulez-vous vraiment continuer votre action ?';
+		$header = (isset($options['header']) && '' != $options['header']) ? $options['header'] : $button;
 
 		return $this->modal($header, $body, null, $buttons);
 	}
