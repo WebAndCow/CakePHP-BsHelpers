@@ -1204,15 +1204,15 @@ class BsFormHelper extends FormHelper {
  * @param Array $chosenAttr attributes of the chosen js call
  * @return string
  */
-	public function chosen($fieldName, $options = array(), $attr = array(), $chosenAttr = array()) {
-		//default option pour le select
+	public function chosen($fieldName = 'fieldname', $options = array(), $attr = array(), $chosenAttr = array()) {
+		// Default option for the select
 		$defaultAttr = array(
 			'label' => '',
 			'class' => 'chosen-' . $fieldName,
 			'data-placeholder' => 'Cliquez pour choisir',
 		);
 
-		//default option pour chosen
+		// Default option for chosen
 		$defaultChosenAttr = array(
 			'width' => '100%',
 			'default_multiple_text' => 'Cliquez pour choisir',
@@ -1220,11 +1220,10 @@ class BsFormHelper extends FormHelper {
 			'default_no_result_text' => 'Pas de correspondance pour : ',
 		);
 
-		//on encode la tableau de chosen pour le js
+		// Chosen attribute encoded to pass it to JS
 		$chosenAttr = json_encode(Hash::merge($defaultChosenAttr, $chosenAttr));
 
-		//on appelle le select avec les options dans $attr
-		//debug($this->loaded);
+		// 3rd party libraries and css
 		if (false === $this->_loaded['chosen']) {
 			echo $this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css');
 			echo $this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png');
@@ -1232,10 +1231,9 @@ class BsFormHelper extends FormHelper {
 			$this->_loaded['chosen'] = true;
 		}
 
-		//debug($this->__loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css'));
-		//envoi du js dans la page
+		// JS send to the page
 		echo $this->Bs->loadJS('$(document).ready(function(){$(".chosen-' . $fieldName . '").chosen(' . $chosenAttr . ');});', true, array('block' => 'scriptBottom'));
-		//debug(Hash::merge($defaultAttr, $attr));
+		// Chosen select created ->
 		return $this->select($fieldName, $options, Hash::merge($defaultAttr, $attr));
 	}
 

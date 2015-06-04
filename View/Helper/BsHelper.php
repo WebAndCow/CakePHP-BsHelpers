@@ -113,10 +113,10 @@ class BsHelper extends HtmlHelper {
 	public $jasnyAddonLoad = true;
 
 /**
- * Charge du CSS dans la vue lorsqu'il est requis
+ * Load CSS in view when needed
  * 
- * @param [string] $url url du css
- * @return [Void]   ferme le block
+ * @param [string] $url The CSS url
+ * @return [Void]   Closes the view block
  */
 	public function loadCSS($url) {
 		$this->_View->append('cssTop', parent::css($url));
@@ -124,12 +124,13 @@ class BsHelper extends HtmlHelper {
 	}
 
 /**
- * [loadJS description]
+ * Load JS in view when needed
  * 
- * @param string  $url url du JS
- * @param bool $type à true créer un block en ligne, à false charge le fichier lointain
- * @param array $options option pour scriptBlock
- * @return Void ferme le block
+ * @param string  $url The JS url
+ * @param bool $type True for inline block, false to load form external link
+ * @param array $options Option for scriptBlock
+ * @return Void Close the view
+ *  block
  */
 	public function loadJS($url, $type = false, array $options = array()) {
 		if (true === $type) {
