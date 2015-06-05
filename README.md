@@ -55,3 +55,4 @@ For more information on SemVer, please visit http://semver.org.
 ##License
 
 BsHelpers is licensed under the MIT license.
+ 
