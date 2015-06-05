@@ -428,13 +428,41 @@ class BsHelperTest extends CakeTestCase {
 			'<tr',
 			array('td' => array('class' => ' rowlink-skip hidden-xs')),
 			'Test3',
-			'/td',
-			'/tr'
+			'/td'
 		);
-		debug($expected);
+		$this->assertTags($result, $expected);
+
+
+		$this->Bs->table($titles, array(), true);
+		$this->Bs->setCellLink(array('controller' => 'url', 'action' => 'test'));
+		$result = $this->Bs->cell('Test1', 'classTest', true) .
+		$this->Bs->cell('Test2', '', false) .
+		$this->Bs->cell('Test3', '', false);
+		$this->Bs->endTable();
+
+		$expected = array(
+			'<tr',
+			array('td' => array('class' => 'classTest hidden-xs')),
+			array('a'  => array('href' => "/url/test")),
+			'Test1',
+			'/a',
+			'/td',
+			array('td' => array('class' => ' rowlink-skip ')),
+			'Test2',
+			'/td',
+			'/tr',
+			'<tr',
+			array('td' => array('class' => ' rowlink-skip hidden-xs')),
+			'Test3',
+			'/td'
+		);
 		debug($result);
 		$this->assertTags($result, $expected);
+
+
+
 	}
+
 
 	public function testLineColor() {
 		$titles = array(
@@ -451,24 +479,25 @@ class BsHelperTest extends CakeTestCase {
 
 		$expected = array(
 			array('tr' => array('class' => 'success')),
-			'<td',
+			array('td' => array('class' => ' rowlink-skip ')),
 			'Test1',
 			'/td',
-			'<td',
+			array('td' => array('class' => ' rowlink-skip ')),
 			'Test2',
 			'/td',
 			'/tr',
 			'<tr',
-			'<td',
+			array('td' => array('class' => ' rowlink-skip ')),
 			'Test3',
 			'/td',
-			'<td',
+			array('td' => array('class' => ' rowlink-skip ')),
 			'Test4',
 			'/td',
 			'/tr',
 		);
-
 		$this->assertTags($result, $expected);
+
+
 	}
 
 	public function testEndTable() {

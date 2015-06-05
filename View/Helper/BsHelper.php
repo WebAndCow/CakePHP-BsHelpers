@@ -240,9 +240,6 @@ class BsHelper extends HtmlHelper {
 		if ($this->bsAddonLoad) {
 			$out .= parent::css($this->bsAddonPath);
 		}
-		if ($this->jasnyAddonLoad) {
-			$out .= parent::css($this->pathJasnyCSS);
-		}
 
 		// Others CSS
 		foreach ($path as $css) {
@@ -265,10 +262,6 @@ class BsHelper extends HtmlHelper {
 		// CkEditor JS
 		if ($this->ckEditorLoad) {
 			$out .= parent::script($this->ckEditorJsPath);
-		}
-
-		if ($this->jasnyAddonLoad) {
-			$out .= parent::script($this->pathJasnyJS);
 		}
 
 		// Others JS
