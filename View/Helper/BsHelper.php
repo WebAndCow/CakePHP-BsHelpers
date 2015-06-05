@@ -38,6 +38,7 @@ class BsHelper extends HtmlHelper {
 	private $__loaded = array(
 		'chosen' => false,
 		'jasny' => false,
+		'ckeditor' => false,
 	);
 
 /**
@@ -66,14 +67,7 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $ckEditorJsPath = 'BsHelpers.../assets/ckeditor/ckeditor';
-
-/**
- * If CkEditor is loaded
- *
- * @var bool
- */
-	public $ckEditorLoad = false;
+	public $ckEditorJsPath = '//cdn.ckeditor.com/4.4.7/standard/ckeditor.js';
 
 /**
  * If Font Awesome is loaded
@@ -148,8 +142,8 @@ class BsHelper extends HtmlHelper {
 
 /**
  * nesting the writing access to private __loaded
- * @param  [string] $key   The key you want to save
- * @param  [bool] $value The value associated to that key
+ * @param [string] $key   The key you want to save
+ * @param [bool] $value The value associated to that key
  * @return [bool]        The result of the array saving
  */
 	public function load($key, $value) {
@@ -518,7 +512,7 @@ class BsHelper extends HtmlHelper {
 /**
  * true if there must be a link on a tr
  * 
- * @var boolean
+ * @var bool
  */
 	protected $_cellLinkActive = false;
 
@@ -529,6 +523,7 @@ class BsHelper extends HtmlHelper {
  * 'width' => width in percent of the cell
  * 'hidden' => layout
  * @param array $class classes of the table (hover, striped, etc)
+ * @param bool $rowlink set rowlink on a table when true
  * @return string
  */
 	public function table($titles, $class = array(), $rowlink = false) {
@@ -601,6 +596,7 @@ class BsHelper extends HtmlHelper {
  *
  * @param string $content Informations in the cell
  * @param string $class Classe(s) of the cell
+ * @param bool $rowlink set to true by default, create the link on the row with setCellLine
  * @param bool $autoformat Close or not the cell when it is the last of the line
  * @return string
  */
@@ -677,7 +673,9 @@ class BsHelper extends HtmlHelper {
 
 /**
  * set link for the tr
+ * 
  * @param [string] $link The link where the td brings
+ * @return void it changes local variables
  */
 	public function setCellLink($link) {
 		$this->_cellLinkActive = true;
