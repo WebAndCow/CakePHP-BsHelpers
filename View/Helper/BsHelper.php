@@ -133,7 +133,7 @@ class BsHelper extends HtmlHelper {
 /**
  * nesting the read access to private __loaded
  * 
- * @param  [string] $key The key of the element you're looking for
+ * @param [string] $key The key of the element you're looking for
  * @return [bool]      The value associated to the key
  */
 	public function loaded($key) {
@@ -142,6 +142,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * nesting the writing access to private __loaded
+ * 
  * @param [string] $key   The key you want to save
  * @param [bool] $value The value associated to that key
  * @return [bool]        The result of the array saving
@@ -596,7 +597,7 @@ class BsHelper extends HtmlHelper {
  *
  * @param string $content Informations in the cell
  * @param string $class Classe(s) of the cell
- * @param bool $rowlink set to true by default, create the link on the row with setCellLine
+ * @param bool $rowLink set to true by default, create the link on the row with setCellLine
  * @param bool $autoformat Close or not the cell when it is the last of the line
  * @return string
  */
