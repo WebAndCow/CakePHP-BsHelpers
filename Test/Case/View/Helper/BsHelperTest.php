@@ -134,7 +134,6 @@ class BsHelperTest extends CakeTestCase {
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
-			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => '/css/myCss.css')),
 			array('link' => array('rel' => 'stylesheet', 'type' => 'text/css', 'href' => '/css/myOther.css')),
 		);
@@ -168,7 +167,6 @@ class BsHelperTest extends CakeTestCase {
 		$expected = array(
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
-			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 		);
 
 		$this->assertTags($result, $expected);
@@ -184,7 +182,6 @@ class BsHelperTest extends CakeTestCase {
 		$result                 = $this->Bs->js(array('myJs', 'myOther'));
 
 		$expected = array(
-			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src' => '/js/myJs.js')), '/script',
@@ -381,18 +378,16 @@ class BsHelperTest extends CakeTestCase {
 		$this->Bs->cell('Test2');
 
 		$this->Bs->endTable();
-
 		$expected = array(
 			'<tr',
-			array('td' => array('class' => 'hidden-xs')),
+			array('td' => array('class' => ' rowlink-skip hidden-xs')),
 			'Test1',
 			'/td',
-			'<td',
+			array('td' => array('class' => ' rowlink-skip ')),
 			'Test2',
 			'/td',
 			'/tr',
 		);
-
 		$this->assertTags($result, $expected);
 
 		//////////////////
@@ -406,13 +401,13 @@ class BsHelperTest extends CakeTestCase {
 
 		$expected = array(
 			'<tr',
-			array('td' => array('class' => 'classTest hidden-xs')),
+			array('td' => array('class' => 'classTest rowlink-skip hidden-xs')),
 			'Test1',
 			'/td',
-			'<td',
+			array('td' => array('class' => ' rowlink-skip ')),
 			'Test2',
 		);
-
+		
 		$this->assertTags($result, $expected);
 
 		$this->Bs->table($titles);
@@ -423,15 +418,21 @@ class BsHelperTest extends CakeTestCase {
 
 		$expected = array(
 			'<tr',
-			array('td' => array('class' => 'classTest hidden-xs')),
+			array('td' => array('class' => 'classTest rowlink-skip hidden-xs')),
 			'Test1',
-			'<td',
+			'/td',
+			array('td' => array('class' => ' rowlink-skip ')),
 			'Test2',
+			'/td',
+			'/tr',
 			'<tr',
-			array('td' => array('class' => 'hidden-xs')),
+			array('td' => array('class' => ' rowlink-skip hidden-xs')),
 			'Test3',
+			'/td',
+			'/tr'
 		);
-
+		debug($expected);
+		debug($result);
 		$this->assertTags($result, $expected);
 	}
 
