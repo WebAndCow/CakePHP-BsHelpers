@@ -456,7 +456,6 @@ class BsHelperTest extends CakeTestCase {
 			'Test3',
 			'/td'
 		);
-		debug($result);
 		$this->assertTags($result, $expected);
 
 
