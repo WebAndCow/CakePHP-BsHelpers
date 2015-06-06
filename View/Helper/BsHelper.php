@@ -18,11 +18,28 @@ class BsHelper extends HtmlHelper {
  */
 	public $name = 'Bs';
 
+/**
+ * Helper needed
+ * 
+ * @var array
+ */
+	public $helpers = array('Html');
 	/*--------------------------*
 	 *						    *
 	 *			CONFIG          *
 	 *					        *
 	 *--------------------------*/
+
+/**
+ * Check which addon is loaded and which is not
+ *
+ * @var array
+ */
+	private $__loaded = array(
+		'chosen' => false,
+		'jasny' => false,
+		'ckeditor' => false,
+	);
 
 /**
  * Path for Bootstrap CSS
@@ -50,14 +67,7 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $ckEditorJsPath = 'BsHelpers.../assets/ckeditor/ckeditor';
-
-/**
- * If CkEditor is loaded
- *
- * @var bool
- */
-	public $ckEditorLoad = false;
+	public $ckEditorJsPath = '//cdn.ckeditor.com/4.4.7/standard/ckeditor.js';
 
 /**
  * If Font Awesome is loaded
@@ -92,27 +102,6 @@ class BsHelper extends HtmlHelper {
 	public $pathJS = '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js';
 
 /**
- * Path for Chosen Sprite
- *
- * @var string
- */
-	public $pathJasnyCSS = 'BsHelpers.jasny-bootstrap';
-
-/**
- * Path for Chosen JS
- *
- * @var string
- */
-	public $pathJasnyJS = 'BsHelpers.jasny-bootstrap';
-
-/**
- * If Jasny is loaded
- *
- * @var bool
- */
-	public $jasnyAddonLoad = true;
-
-/**
  * Load CSS in view when needed
  * 
  * @param [string] $url The CSS url
@@ -139,6 +128,27 @@ class BsHelper extends HtmlHelper {
 			$this->_View->append('scriptBottom', parent::script($url));
 		}
 		return $this->_View->end();
+	}
+
+/**
+ * nesting the read access to private __loaded
+ * 
+ * @param [string] $key The key of the element you're looking for
+ * @return [bool]      The value associated to the key
+ */
+	public function loaded($key) {
+		return $this->__loaded[$key];
+	}
+
+/**
+ * nesting the writing access to private __loaded
+ * 
+ * @param [string] $key   The key you want to save
+ * @param [bool] $value The value associated to that key
+ * @return [bool]        The result of the array saving
+ */
+	public function load($key, $value) {
+		return $this->__loaded[$key] = $value;
 	}
 
 	/*--------------------------*
@@ -225,9 +235,6 @@ class BsHelper extends HtmlHelper {
 		if ($this->bsAddonLoad) {
 			$out .= parent::css($this->bsAddonPath);
 		}
-		if ($this->jasnyAddonLoad) {
-			$out .= parent::css($this->pathJasnyCSS);
-		}
 
 		// Others CSS
 		foreach ($path as $css) {
@@ -250,10 +257,6 @@ class BsHelper extends HtmlHelper {
 		// CkEditor JS
 		if ($this->ckEditorLoad) {
 			$out .= parent::script($this->ckEditorJsPath);
-		}
-
-		if ($this->jasnyAddonLoad) {
-			$out .= parent::script($this->pathJasnyJS);
 		}
 
 		// Others JS
@@ -500,6 +503,20 @@ class BsHelper extends HtmlHelper {
  */
 	protected $_openLine = 0;
 
+/** * 
+ * set the link for a tr
+ * 
+ * @var string
+ */
+	protected $_cellLink = '';
+
+/**
+ * true if there must be a link on a tr
+ * 
+ * @var bool
+ */
+	protected $_cellLinkActive = false;
+
 /**
  * Initialize the table with the head and the body element.
  *
@@ -507,9 +524,10 @@ class BsHelper extends HtmlHelper {
  * 'width' => width in percent of the cell
  * 'hidden' => layout
  * @param array $class classes of the table (hover, striped, etc)
+ * @param bool $rowlink set rowlink on a table when true
  * @return string
  */
-	public function table($titles, $class = array()) {
+	public function table($titles, $class = array(), $rowlink = false) {
 		$classes = '';
 		$out = '<div class="table-responsive">';
 
@@ -555,7 +573,16 @@ class BsHelper extends HtmlHelper {
 
 			$out .= '</tr>';
 			$out .= '</thead>';
-			$out .= '<tbody>';
+			if ($rowlink === true) {
+				$out .= '<tbody data-link="row" class="rowlink">';
+				if (!$this->loaded('jasny')) {
+					echo $this->loadCSS('BsHelpers.jasny-bootstrap');
+					echo $this->loadJS('BsHelpers.jasny-bootstrap');
+					$this->load('jasny', true);
+				}
+			} else {
+				$out .= '<tbody>';
+			}
 
 			$this->_nbColumn = $nbColumn - 1;
 			$this->_tableClassesCells = $tableClassesCells;
@@ -570,10 +597,18 @@ class BsHelper extends HtmlHelper {
  *
  * @param string $content Informations in the cell
  * @param string $class Classe(s) of the cell
+ * @param bool $rowLink set to true by default, create the link on the row with setCellLine
  * @param bool $autoformat Close or not the cell when it is the last of the line
  * @return string
  */
-	public function cell($content, $class = '', $autoformat = true) {
+	public function cell($content, $class = '', $rowLink = true, $autoformat = true) {
+		if (!$rowLink) {
+			$class .= ' rowlink-skip';
+		} else {
+			if ($this->_cellLinkActive !== true) {
+				$class .= ' rowlink-skip';
+			}
+		}
 		$out = '';
 		$classVisibility = '';
 		$cellPos = $this->_cellPos;
@@ -596,15 +631,22 @@ class BsHelper extends HtmlHelper {
 			$out .= '<td>';
 		}
 
-		$out .= $content;
+		if ($this->_cellLinkActive === true) {
+				if ($rowLink) {
+					$out .= $this->Html->link($content, $this->_cellLink);
+				} else {
+					$out .= $content;
+				}
+		} else {
+			$out .= $content;
+		}
 
 		if ($autoformat) {
-
 			$out .= '</td>';
-
 			if ($cellPos == $this->_nbColumn) {
 				$out .= '</tr>';
 				$this->_cellPos = 0;
+				$this->_cellLinkActive = false;
 			} else {
 				$this->_cellPos = $cellPos + 1;
 			}
@@ -628,6 +670,17 @@ class BsHelper extends HtmlHelper {
 		$out = '<tr class="' . $color . '">';
 		$this->_openLine = 1;
 		return $out;
+	}
+
+/**
+ * set link for the tr
+ * 
+ * @param [string] $link The link where the td brings
+ * @return void it changes local variables
+ */
+	public function setCellLink($link) {
+		$this->_cellLinkActive = true;
+		$this->_cellLink = $link;
 	}
 
 /**

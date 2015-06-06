@@ -104,6 +104,23 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 
+		/////////////////////
+		// WITH INPUT MASK //
+		/////////////////////
+
+		$result = $this->BsForm->input('Name', array('data-mask' => '99-99-99-99-99'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+			array('label' => array('for' =>'Name', 'class' => 'control-label col-md-' . $this->BsForm->getLeft())), 'Name', '/label',
+			array('div' => array('class' => 'col-md-' . $this->BsForm->getRight())),
+			array('input' => array('name', 'data-mask' => '99-99-99-99-99', 'class' => 'form-control', 'type', 'id')),
+			'/div',
+			'/div',
+		);
+		$this->assertTags($result, $expected);
+
+
 		//////////////////////
 		// WITH LABEL ARRAY //
 		//////////////////////
