@@ -201,7 +201,7 @@ class BsFormHelper extends FormHelper {
  * @param bool $label If the field have a label
  * @return string
  */
-	private function __rightClass($label = false) {
+	private function __rightClass($label = false) {	
 		if ($this->_getFormType() == 'horizontal') {
 			return (!empty($label)) ? 'col-' . $this->__device . '-' . $this->__right : 'col-' . $this->__device . '-' . $this->__right . ' col-' . $this->__device . '-offset-' . $this->__left;
 		}
@@ -262,11 +262,13 @@ class BsFormHelper extends FormHelper {
  * @return array
  */
 	private function __errorBootstrap($fieldName, $options) {
+		debug($options);
+		debug($this->isFieldError($fieldName));
 		if (!$this->isFieldError($fieldName)) {
 			return $options;
 		}
 
-		if (isset($options['errorBootstrap']) && false === $options['errorBootstrap']) {
+		if (isset($options['errorBootstrap']) && $options['errorBootstrap'] === false) {
 			unset($options['errorBootstrap']);
 			return $options;
 		}
@@ -729,7 +731,6 @@ class BsFormHelper extends FormHelper {
 				unset($options[$opt]);
 			}
 		}
-
 		$checkbox = parent::checkbox($fieldName, $options);
 		$checkbox .= (false !== $basicOptions['label']) ? ' ' . $basicOptions['label'] : '';
 		$checkbox .= ($basicOptions['help']) ? '<span class="help-block">' . $basicOptions['help'] . '</span>' : '';
@@ -752,6 +753,7 @@ class BsFormHelper extends FormHelper {
  * @return string
  */
 	private function __buildCheckboxBefore($validationState) {
+		//debug($validationState);
 		$out = '';
 
 		if ($this->_getFormType() == 'horizontal') {
