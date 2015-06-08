@@ -309,7 +309,7 @@ class BsHelper extends HtmlHelper {
  * @return void
  */
 	public function setCkEditorLoad($load = true) {
-		$this->ckEditorLoad = $load;
+		return $this->ckEditorLoad = $load;
 	}
 
 	/*--------------------------*

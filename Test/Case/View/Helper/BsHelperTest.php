@@ -178,16 +178,16 @@ class BsHelperTest extends CakeTestCase {
 		// MORE JS //
 		/////////////
 
-		$this->Bs->ckEditorLoad = false;
+		$this->Bs->ckEditorLoad = true;
 		$result                 = $this->Bs->js(array('myJs', 'myOther'));
 
 		$expected = array(
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
+			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src' => '/js/myJs.js')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src' => '/js/myOther.js')), '/script',
 		);
-
 		$this->assertTags($result, $expected);
 	}
 
@@ -227,6 +227,12 @@ class BsHelperTest extends CakeTestCase {
 
 		$expected = array('/header');
 
+		$this->assertTags($result, $expected);
+	}
+
+	public function testSetCkEditorLoad() {
+		$result = $this->Bs->setCkEditorLoad();
+		$expected = true;
 		$this->assertTags($result, $expected);
 	}
 
@@ -397,6 +403,20 @@ class BsHelperTest extends CakeTestCase {
 		$this->Bs->table($titles);
 		$result = $this->Bs->cell('Test1', 'classTest') .
 		$this->Bs->cell('Test2', '', false);
+		$this->Bs->endTable();
+
+		$expected = array(
+			'<tr',
+			array('td' => array('class' => 'classTest rowlink-skip hidden-xs')),
+			'Test1',
+			'/td',
+			array('td' => array('class' => ' rowlink-skip ')),
+			'Test2',
+		);
+
+		$this->Bs->table($titles);
+		$result = $this->Bs->cell('Test1', 'classTest', false) .
+		$this->Bs->cell('Test2', '', false, false);
 		$this->Bs->endTable();
 
 		$expected = array(
