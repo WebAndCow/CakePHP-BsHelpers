@@ -69,3 +69,49 @@ echo '<br/>'.
 		'</div>'.
 	'</div>'.
 '</div>';
+
+// Fourth Form
+
+$tab = array(
+	'1' => 'Choice 1',
+ 	'2' => 'Choice 2'
+);
+
+$tab2 = array(
+	'group 1' => array(
+		'1' => 'Choice 1',
+		'2' => 'Choice 2'
+	),
+	'group 2' => array(
+		'3' => 'Choice 3',
+	 	'4' => 'Choice 4'
+	)			
+);
+
+echo $this->BsForm->create('Test', array('action' => 'answer'));
+echo $this->BsForm->chosen(
+	'Tag.Tag', 
+	$tab2, 
+	array(
+		'label'            => 'Chosen with options', 
+		'data-placeholder' => 'Cliquez pour selectionner les valeurs recherchées',
+		'default' => array('4'),
+		'disabled' => array('1'),
+		'multiple' => true,
+	)
+	
+);
+echo $this->BsForm->chosen(
+	'Chien.name', 
+	$tab, 
+	array(
+		'label'            => 'Simple chosen', 
+		'data-placeholder' => 'Cliquez pour selectionner les valeurs recherchées',
+		'default' => '2',
+	)
+);
+
+
+echo $this->BsForm->input('field', array('data-mask' => '99-99-99-99-99'));
+
+echo $this->BsForm->end('Send');
