@@ -513,6 +513,95 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 
 		$this->assertTags($result, $expected);
+
+		$model = ClassRegistry::init('Test');
+		$model->useTable = false;
+		$model->validator()->add('password', 'required', array(
+		    'rule' => 'notEmpty',
+		    'required' => 'create'
+		));
+		$datas = array('Test', array('password' => 'fcokdf'));
+		$model->set($datas);
+		$model->validates();
+		$invalidFields = $model->invalidFields();
+		$resultInput = $this->BsForm->input('Test.password');
+
+
+		$expectedFields = array(
+			'password' => array('required', 'required')
+		);
+
+
+		$expectedInput = array(
+			array('div' => array('class' => 'form-group has-error has-feedback')),
+			array('label' => array('for', 'class')),
+			'Password',
+			'/label',
+			array('div' => array('class')),
+			array('input' => array('name', 'class' => 'form-control form-error', 'type', 'id', 'required')),
+			array('span' => array('class', 'aria-hidden')),
+			'/span',
+			array('span' => array('class')),
+			'(error)',
+			'/span',
+			array('span' => array('class')),
+			'required',
+			'<br',
+			'required',
+			'<br',
+			'/span',
+			'/div',
+			'/div',
+		);
+		debug($resultInput);
+		debug($expectedInput);
+		
+		$this->assertTags($resultInput, $expectedInput);
+		$this->assertEquals($invalidFields, $expectedFields);
+
+
+		
+		/////////////////////
+		// error_bootstrap //
+		/////////////////////
+		$model = ClassRegistry::init('Test');
+		$this->BsForm->create('Test');
+		$model->useTable = false;
+		$model->validator()->add('Password', 'required', array(
+		    'rule' => 'notEmpty',
+		    'required' => 'create',
+		    'alphanumeric' => '!@&§',
+		));
+
+		$datas = array('Test', array('Password' => ''));
+
+		$model->set($datas);
+		$model->validates();
+
+		$model->invalidFields();
+		$resultInput = $this->BsForm->input('Test.password', array('errorBootstrap' => false));
+
+		$expectedFields = array(
+			'password' => array('required', 'required')
+		);
+
+
+		$expectedInput = array(
+			array('div' => array('class' => 'form-group has-feedback')),
+			array('label' => array('for', 'class')),
+			'Password',
+			'/label',
+			array('div' => array('class')),
+			array('input' => array('name', 'class' => 'form-control form-error', 'type', 'id', 'required')),
+			
+			'/div',
+			'/div',
+		);
+		debug($resultInput);
+		debug($expectedInput);
+		
+		$this->assertTags($resultInput, $expectedInput);
+		$this->assertEquals($invalidFields, $expectedFields);
 	}
 
 	  public function testInputGroupWithLabel()
@@ -917,6 +1006,37 @@ class BsFormHelperTest extends CakeTestCase {
 			'Test2',
 			'/label',
 			'/div',
+			'/div',
+			'/div',
+		);
+		$this->assertTags($result, $expected);
+		$this->BsForm->end();
+		////////////////////////////////////////////////////////////
+		// MULTIPLE CHECKBOX INLINE WHERE CLASS AND LABEL ARE === //
+		////////////////////////////////////////////////////////////
+		$this->BsForm->create('classic', array('form-inline'));
+		$result = $this->BsForm->select('classic', $selectOptions, array(
+			'multiple' => 'checkbox', 
+			'class' => 'classic', 
+			'label' => 'classic',
+			'inline' => true,
+		));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+			array('label' => array('for', 'class')),
+			'classic',
+			'/label',
+			array('div' => array('class' => 'col-md-' . $this->BsForm->getRight())),
+			array('input' => array('type' => 'hidden', 'name', 'value' => '', 'id')),
+			array('label' => array('for', 'class')),
+			array('input' => array('type' => 'checkbox', 'name', 'value' => 'first', 'id')),
+			'Test1',
+			'/label',
+			array('label' => array('for', 'class')),
+			array('input' => array('type' => 'checkbox', 'name', 'value' => 'second', 'id')),			
+			'Test2',
+			'/label',
 			'/div',
 			'/div',
 		);
@@ -1547,56 +1667,6 @@ class BsFormHelperTest extends CakeTestCase {
 		$this->assertTags($result, $expected);
 
 	}
-
-	public function testErreurs()
-	{
-		$model = ClassRegistry::init('Test');
-		$model->useTable = false;
-		$model->validator()->add('password', 'required', array(
-		    'rule' => 'notEmpty',
-		    'required' => 'create'
-		));
-
-		$datas = array('Test', array('truc' => 'fcokdf'));
-
-		$model->set($datas);
-		$model->validates();
-
-		$model->invalidFields();
-		$this->BsForm->input('Test.password');
-
-
-		////////
-		// II //
-		////////
-			
-		//Should get into this -> if (isset($options['errorBootstrap']) && false === $options['errorBootstrap']) but don't
-		
-		$model = ClassRegistry::init('Test');
-		$this->BsForm->create('Test');
-		$model->useTable = false;
-		$model->validator()->add('password', 'required', array(
-		    'rule' => 'notEmpty',
-		    'required' => 'create'
-		));
-
-		$datas = array('Test', array('truc' => 'fcokdf'));
-
-		$model->set($datas);
-		$model->validates();
-
-		$model->invalidFields();
-		$this->BsForm->input('Test', array('errorBootstrap' => false));
-
-
-		
-		
-
-
-	}
-
-
-
 
 /**
  * tearDown method
