@@ -366,7 +366,13 @@ class BsFormHelper extends FormHelper {
 		}
 
 		$options = Hash::merge($basicOptions, $options);
-
+		if (isset($options['data-mask'])) {
+			if (!$this->Bs->loaded('jasny')) {
+					echo $this->Bs->loadCSS('BsHelpers.jasny-bootstrap');
+					echo $this->Bs->loadJS('BsHelpers.jasny-bootstrap');
+					$this->Bs->load('jasny', true);
+			}
+		}
 		if (!isset($options['type']) || strtolower($options['type']) != 'file') {
 			$options['class'] = (isset($options['class'])) ? 'form-control ' . $options['class'] : 'form-control';
 		}
@@ -1232,10 +1238,11 @@ class BsFormHelper extends FormHelper {
  * @return string
  */
 	public function chosen($fieldName = 'fieldname', $options = array(), $attr = array(), $chosenAttr = array()) {
+		$class = Inflector::slug($fieldName);
 		// Default option for the select
 		$defaultAttr = array(
 			'label' => '',
-			'class' => 'chosen-' . $fieldName,
+			'class' => 'chosen-' . $class,
 			'data-placeholder' => 'Cliquez pour choisir',
 		);
 
@@ -1251,15 +1258,15 @@ class BsFormHelper extends FormHelper {
 		$chosenAttr = json_encode(Hash::merge($defaultChosenAttr, $chosenAttr));
 
 		// 3rd party libraries and css
-		if (false === $this->_loaded['chosen']) {
+		if ($this->Bs->loaded('chosen') === false) {
 			echo $this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css');
 			echo $this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png');
 			echo $this->Bs->loadJS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js');
-			$this->_loaded['chosen'] = true;
+			$this->Bs->load('chosen', true);
 		}
 
 		// JS send to the page
-		echo $this->Bs->loadJS('$(document).ready(function(){$(".chosen-' . $fieldName . '").chosen(' . $chosenAttr . ');});', true, array('block' => 'scriptBottom'));
+		echo $this->Bs->loadJS('$(document).ready(function(){$(".chosen-' . $class . '").chosen(' . $chosenAttr . ');});', true, array('block' => 'scriptBottom'));
 		// Chosen select created ->
 		return $this->select($fieldName, $options, Hash::merge($defaultAttr, $attr));
 	}

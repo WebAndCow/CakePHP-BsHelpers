@@ -104,6 +104,23 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 
+		/////////////////////
+		// WITH INPUT MASK //
+		/////////////////////
+
+		$result = $this->BsForm->input('Name', array('data-mask' => '99-99-99-99-99'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+			array('label' => array('for' =>'Name', 'class' => 'control-label col-md-' . $this->BsForm->getLeft())), 'Name', '/label',
+			array('div' => array('class' => 'col-md-' . $this->BsForm->getRight())),
+			array('input' => array('name', 'data-mask' => '99-99-99-99-99', 'class' => 'form-control', 'type', 'id')),
+			'/div',
+			'/div',
+		);
+		$this->assertTags($result, $expected);
+
+
 		//////////////////////
 		// WITH LABEL ARRAY //
 		//////////////////////
@@ -679,6 +696,29 @@ class BsFormHelperTest extends CakeTestCase {
 			'/div',
 		);
 
+
+		///////////////////////////
+		// SIMPLE SELECT W/ CLASS//
+		///////////////////////////
+
+		$result = $this->BsForm->select('Test', $selectOptions, array('class' => 'testingClass'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+			array('div' => array('class' => 'col-md-' . $this->BsForm->getRight() . ' col-md-offset-' . $this->BsForm->getLeft())),
+			array('select' => array('class' => 'form-control testingClass', 'name', 'id')),
+			array('option' => array('value' => 'first')),
+			'Test1',
+			'/option',
+			array('option' => array('value' => 'second')),
+			'Test2',
+			'/option',
+			'/select',
+			'/div',
+			'/div',
+		);
+		$this->assertTags($result, $expected);
+
 		////////////////////////////////////////////
 		// SIMPLE SELECT WITH HELP TEXT AND LABEL //
 		////////////////////////////////////////////
@@ -779,6 +819,34 @@ class BsFormHelperTest extends CakeTestCase {
 			'/div',
 		);
 
+		$this->assertTags($result, $expected);
+
+
+		///////////////////////////////////////
+		// MULTIPLE CHECKBOX INLINE W/ CLASS //
+		///////////////////////////////////////
+
+		$result = $this->BsForm->select('Test', $selectOptions, array('multiple' => 'checkbox', 'class' => 'classic'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+			array('div' => array('class' => 'col-md-' . $this->BsForm->getRight() . ' col-md-offset-' . $this->BsForm->getLeft())),
+			array('input' => array('type' => 'hidden', 'name', 'value' => '', 'id')),
+			array('div' => array('class' => 'checkbox classic')),
+			array('label' => array('for')),
+			array('input' => array('type' => 'checkbox', 'name', 'value' => 'first', 'id')),
+			'Test1',
+			'/label',
+			'/div',
+			array('div' => array('class' => 'checkbox classic')),
+			array('label' => array('for')),
+			array('input' => array('type' => 'checkbox', 'name', 'value' => 'second', 'id')),			
+			'Test2',
+			'/label',
+			'/div',
+			'/div',
+			'/div',
+		);
 		$this->assertTags($result, $expected);
 	}
 
@@ -989,6 +1057,8 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 
 		$this->assertTags($result, $expected);
+
+		
 	}
 
 /**
@@ -1245,6 +1315,60 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 	}
+
+
+
+/**
+ * Turn an input into a ckeditor input, w/ all options
+ * 
+ * @return [string] Html tags for the input and ckeditor js call
+ */
+	public function testCkEditor(){
+		///////////////////
+		//With only field//
+		///////////////////
+		$result = $this->BsForm->ckEditor('testField');
+		$expected = array(
+			array('div' => array('class')),
+			array('label' => array('for' => 'testField', 'class')),
+			'Test Field',
+			'/label',
+			array('div' => array('class')),
+			array('textarea' => array('name', 'class', 'cols', 'rows', 'id' => 'testField')),
+			'/textarea',
+			'/div',
+			'/div',
+			'<script',
+			'CKEDITOR.replace("TestField");',
+			'/script',
+		);
+		$this->assertTags($result, $expected);
+
+		////////////////////////
+		//With modelname.field//
+		////////////////////////
+		
+		$result = $this->BsForm->ckEditor('testModel.testField');
+		$expected = array(
+			array('div' => array('class')),
+			array('label' => array('for' => 'testModelTestField', 'class')),
+			'Test Field',
+			'/label',
+			array('div' => array('class')),
+			array('textarea' => array('name', 'class', 'cols', 'rows', 'id' => 'testModelTestField')),
+			'/textarea',
+			'/div',
+			'/div',
+			'<script',
+			'CKEDITOR.replace("TestModel.testField");',
+			'/script',
+		);
+		$this->assertTags($result, $expected);
+
+	}
+
+
+
 
 /**
  * tearDown method
