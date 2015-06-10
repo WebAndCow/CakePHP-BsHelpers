@@ -111,6 +111,40 @@ $this->BsForm->input('User.name', array('label' => 'Full Name', 'state' => 'succ
 
         <br>
 
+
+<code class='php'>
+echo $this->BsForm->chosen(
+  'Tag.Tag', 
+  $tab2, 
+  array(
+    'label'            => 'Chosen 1', 
+    'data-placeholder' => 'Cliquez pour selectionner les valeurs recherchées',
+    'default'          => array('2', '4'),
+    'disabled'         => array('1'),
+    'multiple'         => true,
+  )  
+);
+</code>
+<code class='html'>
+  &lt;div class="form-group"&gt;
+    &lt;label for="TagTag" class="control-label col-md-3"&gt;Chosen 1&lt;/label&gt;
+    &lt;div class="col-md-9"&gt;
+      &lt;input type="hidden" name="data[Tag][Tag]" value="" id="TagTag_"/&gt;
+      &lt;select name="data[Tag][Tag][]" class="checkbox chosen-Tag_Tag" data-placeholder="Cliquez pour selectionner les valeurs recherchées" multiple="multiple" id="TagTag"&gt;
+        &lt;optgroup label="group 1"&gt;
+          &lt;option value="1" disabled="disabled"&gt;Choice 1&lt;/option&gt;
+          &lt;option value="2" selected="selected"&gt;Choice 2&lt;/option&gt;
+        &lt;/optgroup&gt;
+          &lt;optgroup label="group 2"&gt;
+          &lt;option value="3"&gt;Choice 3&lt;/option&gt;
+          &lt;option value="4" selected="selected"&gt;Choice 4&lt;/option&gt;
+        &lt;/optgroup&gt;
+      &lt;/select&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+</code>
+
+
 <!-- Fonction INPUTGROUP -->
         <h3>inputGroup()</h3>
         <p>Create a bootstrap input group.</p>
