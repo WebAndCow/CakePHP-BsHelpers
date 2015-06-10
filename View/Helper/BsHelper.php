@@ -60,6 +60,27 @@ class BsHelper extends HtmlHelper {
 	public $ckEditorLoad = false;
 
 /**
+ * Path for JS LengthDetector
+ *
+ * @var string
+ */
+	public $lengthDetectorJsPath = 'BsHelpers./js/bootstrap-length-detector/src/bootstrap-length-detector';
+
+/**
+ * Path for JS LengthDetector config
+ *
+ * @var string
+ */
+	public $lengthDetectorConfigJsPath = 'BsHelpers./js/bootstrap-length-detector/configs/default';
+
+/**
+ * If LengthDetector is loaded
+ *
+ * @var bool
+ */
+	public $lengthDetectorLoad = false;
+
+/**
  * If Font Awesome is loaded
  * @var bool
  */
@@ -254,6 +275,11 @@ class BsHelper extends HtmlHelper {
 
 		if ($this->jasnyAddonLoad) {
 			$out .= parent::script($this->pathJasnyJS);
+		}
+
+		if ($this->lengthDetectorLoad) {
+			$out .= parent::script($this->lengthDetectorJsPath);
+			$out .= parent::script($this->lengthDetectorConfigJsPath);
 		}
 
 		// Others JS

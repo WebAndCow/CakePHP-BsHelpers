@@ -331,6 +331,22 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 
+		/////////////////////
+		// LENGTH DETECTOR //
+		/////////////////////
+
+		$result = $this->BsForm->input('Name', array('class' => 'length-detector', 'maxlength' => '140'));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+			array('label' => array('for', 'class' => 'control-label col-md-' . $this->BsForm->getLeft())), 'Name', '/label',
+			array('div' => array('class' => 'col-md-' . $this->BsForm->getRight())),
+			array('input' => array('name', 'class' => 'form-control length-detector', 'maxlength' => '140', 'type', 'id')),
+			'/div',
+			'/div',
+		);
+		$this->assertTags($result, $expected);
+
 		///////////////////////////
 		// INPUT DATE BASIC FORM //
 		///////////////////////////
@@ -368,7 +384,7 @@ class BsFormHelperTest extends CakeTestCase {
 			'/div',
 			'/div',
 		);
-		$this->assertTags($result, $expected);
+		$this->assertTags($result, $expected);		
 	}
 
 	public function testInputGroup() {
