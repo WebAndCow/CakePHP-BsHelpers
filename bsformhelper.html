@@ -239,6 +239,83 @@ echo $this->BsForm->select('User.animal', $animals, array('label' => "What's you
 
         <br>
 
+
+        <!-- Fonction CHOSEN -->
+          <h3>chosen()</h3>
+          <p>Create a select with Chosen plugin attached.</p>
+          <pre>
+            <code class='php'>&lt;?php 
+$tab2 = 
+  array(
+    'group 1' => array(
+    '1' => 'Choice 1',
+    '2' => 'Choice 2'
+  ),
+  'group 2' => array(
+    '3' => 'Choice 3',
+    '4' => 'Choice 4'
+  )     
+);
+
+echo 
+$this->BsForm->chosen(
+  'Tag.Tag', 
+  $tab2, 
+  array(
+    'label'            => 'Chosen 1', 
+    'data-placeholder' => 'Cliquez pour selectionner les valeurs recherchées',
+    'default'          => array('2', '4'),
+    'disabled'         => array('1'),
+    'multiple'         => true,
+  )  
+);
+?&gt;
+            </code>
+          </pre>
+          <pre class="result">
+            <code class='html'>
+&lt;div class="form-group"&gt;
+  &lt;label for="TagTag" class="control-label col-md-3"&gt;Chosen 1&lt;/label&gt;
+  &lt;div class="col-md-9"&gt;
+    &lt;input type="hidden" name="data[Tag][Tag]" value="" id="TagTag_"/&gt;
+    &lt;select name="data[Tag][Tag][]" class="checkbox chosen-Tag_Tag" data-placeholder="Cliquez pour selectionner les valeurs recherchées" multiple="multiple" id="TagTag"&gt;
+      &lt;optgroup label="group 1"&gt;
+        &lt;option value="1" disabled="disabled"&gt;Choice 1&lt;/option&gt;
+        &lt;option value="2" selected="selected"&gt;Choice 2&lt;/option&gt;
+      &lt;/optgroup&gt;
+        &lt;optgroup label="group 2"&gt;
+        &lt;option value="3"&gt;Choice 3&lt;/option&gt;
+        &lt;option value="4" selected="selected"&gt;Choice 4&lt;/option&gt;
+      &lt;/optgroup&gt;
+    &lt;/select&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+            </code>
+          </pre>
+          <h4 class="parameters">Parameters</h4>
+          <ul>
+            <li><code>[string] fieldName</code> - This should be "Modelname.fieldname"</li>
+            <li>
+              <code>[array] Select content</code> - Item of the select (default = array())
+              <code>[array] Select option</code>  - Options of the select HTML tag
+              <ul>
+                <li>'data-placeholder' - Placeholder on multiselect.</li>
+                <li>'label' - Associated label</li>
+                <li>'class' - Add HTML class attribute.</li>
+                <li>'default' - What item are select by default</li>
+                <li>'multiple' - True or not (by default)</li>
+                <li>'disabled' - What element cannot be selected</li>
+              </ul>
+            </li>
+            <li>
+              <code>[array] Chosen option</code> -
+              <a href='http://harvesthq.github.io/chosen/options.html'>Some options for chosen JS</a>
+            </li>
+            
+          </ul>
+          <br>
+
+
 <!-- Fonction RADIO -->
         <h3>radio()</h3>
         <p>Create a bootstrap radio field.</p>
