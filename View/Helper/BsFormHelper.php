@@ -12,6 +12,16 @@ App::uses('Set', 'Utility');
 class BsFormHelper extends FormHelper {
 
 /**
+ * Check which addon is loaded and which is not
+ *
+ * @var array
+ */
+	protected $_loaded = array(
+		'chosen' => false,
+		'lengthDetector' => false,
+	);
+
+/**
  * BsForm uses the BsHelper so it can use some feature of it
  * BsForm uses the FormHelper
  *
@@ -367,6 +377,32 @@ class BsFormHelper extends FormHelper {
 			$options['class'] = (isset($options['class'])) ? 'form-control ' . $options['class'] : 'form-control';
 		}
 
+		// ----- Length Detector ----- \\
+		if (isset($options['length-detector-option']) || (isset($options['class']) && $options['class'] === 'length-detector')) {
+
+			$jsOptions = '';
+			$ldClass = 'defaults';
+			if (isset($options['length-detector-option'])) {
+				if (isset($options['length-detector-option']['class'])) {
+					$ldClass = $options['length-detector-option']['class'];
+					unset($options['length-detector-option']['class']);
+				}
+				// Length detector attribute encoded to pass it to JS
+				$jsOptions = json_encode($options['length-detector-option']);
+			}
+
+			// Load JS
+			if (!$this->_loaded['lengthDetector']) {
+				echo
+				$this->Bs->loadJS($this->Bs->lengthDetectorJsPath);
+				$this->Bs->loadJS($this->Bs->lengthDetectorConfigJsPath);
+				$this->_loaded['lengthDetector'] = true;
+			}
+			// JS send to the page
+			echo
+			$this->Bs->loadJS('$(document).ready(function(){$("[name*=' . $fieldName . '\].length-detector").attr("data-length-detector-class", "' . $ldClass . '").lengthDetector(' . $jsOptions . ');});', true, array('block' => 'scriptBottom'));
+			unset($options['length-detector-option']);
+		}
 		return parent::input($fieldName, $options);
 	}
 
