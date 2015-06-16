@@ -20,7 +20,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * Helper needed
- * 
+ *
  * @var array
  */
 	public $helpers = array('Html');
@@ -36,8 +36,8 @@ class BsHelper extends HtmlHelper {
  * @var array
  */
 	private $__loaded = array(
-		'chosen' => false,
-		'jasny' => false,
+		'chosen'   => false,
+		'jasny'    => false,
 		'ckeditor' => false,
 	);
 
@@ -74,14 +74,14 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $lengthDetectorJsPath = 'BsHelpers./js/bootstrap-length-detector/src/bootstrap-length-detector';
+	public $lengthDetectorJsPath = 'BsHelpers./js/bootstrap-length-detector/bootstrap-length-detector.min.js';
 
 /**
  * Path for JS LengthDetector config
  *
  * @var string
  */
-	public $lengthDetectorConfigJsPath = 'BsHelpers./js/bootstrap-length-detector/configs/default';
+	public $lengthDetectorConfigJsPath = 'BsHelpers./js/bootstrap-length-detector/configs/default.js';
 
 /**
  * If LengthDetector is loaded
@@ -124,7 +124,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * Load CSS in view when needed
- * 
+ *
  * @param [string] $url The CSS url
  * @return [Void]   Closes the view block
  */
@@ -135,7 +135,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * Load JS in view when needed
- * 
+ *
  * @param string  $url The JS url
  * @param bool $type True for inline block, false to load form external link
  * @param array $options Option for scriptBlock
@@ -153,7 +153,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * nesting the read access to private __loaded
- * 
+ *
  * @param [string] $key The key of the element you're looking for
  * @return [bool]      The value associated to the key
  */
@@ -163,7 +163,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * nesting the writing access to private __loaded
- * 
+ *
  * @param [string] $key   The key you want to save
  * @param [bool] $value The value associated to that key
  * @return [bool]        The result of the array saving
@@ -355,7 +355,7 @@ class BsHelper extends HtmlHelper {
  * @return string Div element with the class 'container'
  */
 	public function container($options = array()) {
-		$out = '';
+		$out   = '';
 		$class = 'container';
 		if (isset($options['class'])) {
 			$class .= ' ' . $options['class'];
@@ -371,7 +371,7 @@ class BsHelper extends HtmlHelper {
  * @return string Div element with the class 'row'
  */
 	public function row($options = array()) {
-		$out = '';
+		$out   = '';
 		$class = 'row';
 		if (isset($options['class'])) {
 			$class .= ' ' . $options['class'];
@@ -409,8 +409,8 @@ class BsHelper extends HtmlHelper {
  * @return string DIV tag element
  */
 	public function col() {
-		$class = '';
-		$devices = array();
+		$class      = '';
+		$devices    = array();
 		$attributes = array();
 
 		$args = func_get_args();
@@ -422,23 +422,23 @@ class BsHelper extends HtmlHelper {
 			}
 		}
 
-		$arrayDevice = array('xs', 'sm', 'md', 'lg');
+		$arrayDevice  = array('xs', 'sm', 'md', 'lg');
 		$arrayOptions = array('of', 'ph', 'pl');
 
 		foreach ($devices as $device) {
-			$ecran = null;
-			$taille = null;
-			$opt = null;
+			$ecran   = null;
+			$taille  = null;
+			$opt     = null;
 			$replace = array('(', ')', '-', '_', '/', '\\', ';', ',', ':', ' ');
-			$device = str_replace($replace, '.', $device);
-			$device = explode('.', $device);
+			$device  = str_replace($replace, '.', $device);
+			$device  = explode('.', $device);
 
 			// Sould define the device in first
 			foreach ($device as $elem) {
 				if (!$ecran) {
 					$nom = substr($elem, 0, 2);
 					if (in_array($nom, $arrayDevice)) {
-						$ecran = $nom;
+						$ecran  = $nom;
 						$taille = substr($elem, 2);
 					}
 				} else {
@@ -477,7 +477,7 @@ class BsHelper extends HtmlHelper {
 	private function __optCol($elem, $screen) {
 		$attr = substr($elem, 0, 2);
 		$size = substr($elem, 2);
-		$res = null;
+		$res  = null;
 		if (is_integer($size) || !(0 == $size && 'sm' == $screen)) {
 			switch ($attr) {
 				case 'pl':
@@ -533,16 +533,16 @@ class BsHelper extends HtmlHelper {
  */
 	protected $_openLine = 0;
 
-/** * 
+/** *
  * set the link for a tr
- * 
+ *
  * @var string
  */
 	protected $_cellLink = '';
 
 /**
  * true if there must be a link on a tr
- * 
+ *
  * @var bool
  */
 	protected $_cellLinkActive = false;
@@ -559,7 +559,7 @@ class BsHelper extends HtmlHelper {
  */
 	public function table($titles, $class = array(), $rowlink = false) {
 		$classes = '';
-		$out = '<div class="table-responsive">';
+		$out     = '<div class="table-responsive">';
 
 		if (!empty($class)) {
 			foreach ($class as $opt) {
@@ -575,9 +575,9 @@ class BsHelper extends HtmlHelper {
 			$out .= '<tr>';
 
 			$tableClassesCells = array();
-			$tablePos = 0;
-			$nbColumn = count($titles);
-			$width = false;
+			$tablePos          = 0;
+			$nbColumn          = count($titles);
+			$width             = false;
 
 			foreach ($titles as $title) {
 				$classVisibility = '';
@@ -603,7 +603,7 @@ class BsHelper extends HtmlHelper {
 
 			$out .= '</tr>';
 			$out .= '</thead>';
-			if ($rowlink === true) {
+			if (true === $rowlink) {
 				$out .= '<tbody data-link="row" class="rowlink">';
 				if (!$this->loaded('jasny')) {
 					echo $this->loadCSS('BsHelpers.jasny-bootstrap');
@@ -614,10 +614,10 @@ class BsHelper extends HtmlHelper {
 				$out .= '<tbody>';
 			}
 
-			$this->_nbColumn = $nbColumn - 1;
+			$this->_nbColumn          = $nbColumn - 1;
 			$this->_tableClassesCells = $tableClassesCells;
-			$this->_cellPos = 0;
-			$this->_openLine = 0;
+			$this->_cellPos           = 0;
+			$this->_openLine          = 0;
 		}
 		return $out;
 	}
@@ -635,13 +635,13 @@ class BsHelper extends HtmlHelper {
 		if (!$rowLink) {
 			$class .= ' rowlink-skip';
 		} else {
-			if ($this->_cellLinkActive !== true) {
+			if (true !== $this->_cellLinkActive) {
 				$class .= ' rowlink-skip';
 			}
 		}
-		$out = '';
+		$out             = '';
 		$classVisibility = '';
-		$cellPos = $this->_cellPos;
+		$cellPos         = $this->_cellPos;
 
 		if (0 == $cellPos && 0 == $this->_openLine) {
 			$out .= '<tr>';
@@ -661,12 +661,12 @@ class BsHelper extends HtmlHelper {
 			$out .= '<td>';
 		}
 
-		if ($this->_cellLinkActive === true) {
-				if ($rowLink) {
-					$out .= $this->Html->link($content, $this->_cellLink);
-				} else {
-					$out .= $content;
-				}
+		if (true === $this->_cellLinkActive) {
+			if ($rowLink) {
+				$out .= $this->Html->link($content, $this->_cellLink);
+			} else {
+				$out .= $content;
+			}
 		} else {
 			$out .= $content;
 		}
@@ -675,7 +675,7 @@ class BsHelper extends HtmlHelper {
 			$out .= '</td>';
 			if ($cellPos == $this->_nbColumn) {
 				$out .= '</tr>';
-				$this->_cellPos = 0;
+				$this->_cellPos        = 0;
 				$this->_cellLinkActive = false;
 			} else {
 				$this->_cellPos = $cellPos + 1;
@@ -697,20 +697,20 @@ class BsHelper extends HtmlHelper {
  * @return string
  */
 	public function lineColor($color) {
-		$out = '<tr class="' . $color . '">';
+		$out             = '<tr class="' . $color . '">';
 		$this->_openLine = 1;
 		return $out;
 	}
 
 /**
  * set link for the tr
- * 
+ *
  * @param [string] $link The link where the td brings
  * @return void it changes local variables
  */
 	public function setCellLink($link) {
 		$this->_cellLinkActive = true;
-		$this->_cellLink = $link;
+		$this->_cellLink       = $link;
 	}
 
 /**
@@ -791,7 +791,7 @@ class BsHelper extends HtmlHelper {
  */
 	public function icon($iconLabel, $classes = array(), $attributes = array()) {
 		$class = '';
-		$more = '';
+		$more  = '';
 
 		if (!empty($classes)) {
 			foreach ($classes as $opt) {
@@ -866,7 +866,7 @@ class BsHelper extends HtmlHelper {
 		} else {
 			$cle1 = "zarnfjdlvjezprizejrjpzojazjpodffp";
 			$cle2 = "251848416487764197191944948794449";
-			$cle = '';
+			$cle  = '';
 			for ($i = 0; $i < 15; $i++) {
 				$tab = array($cle1, $cle2);
 				if (0 == $i) {
@@ -986,7 +986,7 @@ class BsHelper extends HtmlHelper {
  */
 	public function confirm($button, $link, $options = array()) {
 		$buttons = array(
-			'open' => array(
+			'open'    => array(
 				'name' => $button,
 			),
 			'close',
@@ -995,10 +995,10 @@ class BsHelper extends HtmlHelper {
 			),
 		);
 
-		$buttons['open']['class'] = $buttons['confirm']['class'] = (isset($options['color']) && '' != $options['color']) ? 'btn-' . $options['color'] : 'btn-success';
+		$buttons['open']['class']   = $buttons['confirm']['class']   = (isset($options['color']) && '' != $options['color']) ? 'btn-' . $options['color'] : 'btn-success';
 		$buttons['confirm']['name'] = (isset($options['button']) && '' != $options['button']) ? $options['button'] : $button;
-		$body = (isset($options['texte']) && '' != $options['texte']) ? $options['texte'] : 'Voulez-vous vraiment continuer votre action ?';
-		$header = (isset($options['header']) && '' != $options['header']) ? $options['header'] : $button;
+		$body                       = (isset($options['texte']) && '' != $options['texte']) ? $options['texte'] : 'Voulez-vous vraiment continuer votre action ?';
+		$header                     = (isset($options['header']) && '' != $options['header']) ? $options['header'] : $button;
 
 		return $this->modal($header, $body, null, $buttons);
 	}
