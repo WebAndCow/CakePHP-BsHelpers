@@ -266,7 +266,7 @@ class BsFormHelper extends FormHelper {
 			return $options;
 		}
 
-		if (isset($options['errorBootstrap']) && false === $options['errorBootstrap']) {
+		if (isset($options['errorBootstrap']) && $options['errorBootstrap'] === false) {
 			unset($options['errorBootstrap']);
 			return $options;
 		}
@@ -729,7 +729,6 @@ class BsFormHelper extends FormHelper {
 				unset($options[$opt]);
 			}
 		}
-
 		$checkbox = parent::checkbox($fieldName, $options);
 		$checkbox .= (false !== $basicOptions['label']) ? ' ' . $basicOptions['label'] : '';
 		$checkbox .= ($basicOptions['help']) ? '<span class="help-block">' . $basicOptions['help'] . '</span>' : '';
@@ -752,6 +751,7 @@ class BsFormHelper extends FormHelper {
  * @return string
  */
 	private function __buildCheckboxBefore($validationState) {
+		//debug($validationState);
 		$out = '';
 
 		if ($this->_getFormType() == 'horizontal') {
