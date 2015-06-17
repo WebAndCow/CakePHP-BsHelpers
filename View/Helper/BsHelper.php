@@ -20,7 +20,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * Helper needed
- * 
+ *
  * @var array
  */
 	public $helpers = array('Html');
@@ -70,6 +70,20 @@ class BsHelper extends HtmlHelper {
 	public $ckEditorJsPath = '//cdn.ckeditor.com/4.4.7/standard/ckeditor.js';
 
 /**
+ * Path for JS LengthDetector
+ *
+ * @var string
+ */
+	public $lengthDetectorJsPath = 'BsHelpers./js/bootstrap-length-detector/bootstrap-length-detector.min.js';
+
+/**
+ * Path for JS LengthDetector config
+ *
+ * @var string
+ */
+	public $lengthDetectorConfigJsPath = 'BsHelpers./js/bootstrap-length-detector/configs/default.js';
+
+/**
  * If Font Awesome is loaded
  * @var bool
  */
@@ -103,7 +117,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * Load CSS in view when needed
- * 
+ *
  * @param [string] $url The CSS url
  * @return [Void]   Closes the view block
  */
@@ -114,7 +128,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * Load JS in view when needed
- * 
+ *
  * @param string  $url The JS url
  * @param bool $type True for inline block, false to load form external link
  * @param array $options Option for scriptBlock
@@ -122,7 +136,7 @@ class BsHelper extends HtmlHelper {
  *  block
  */
 	public function loadJS($url, $type = false, array $options = array()) {
-		if (true === $type) {
+		if ($type === true) {
 			$this->_View->append('scriptBottom', parent::scriptBlock($url, $options));
 		} else {
 			$this->_View->append('scriptBottom', parent::script($url));
@@ -132,7 +146,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * nesting the read access to private __loaded
- * 
+ *
  * @param [string] $key The key of the element you're looking for
  * @return [bool]      The value associated to the key
  */
@@ -142,7 +156,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * nesting the writing access to private __loaded
- * 
+ *
  * @param [string] $key   The key you want to save
  * @param [bool] $value The value associated to that key
  * @return [bool]        The result of the array saving
@@ -448,7 +462,7 @@ class BsHelper extends HtmlHelper {
 		$attr = substr($elem, 0, 2);
 		$size = substr($elem, 2);
 		$res = null;
-		if (is_integer($size) || !(0 == $size && 'sm' == $screen)) {
+		if (is_integer($size) || !($size == 0 && $screen == 'sm')) {
 			switch ($attr) {
 				case 'pl':
 					$res = 'col-' . $screen . '-pull-' . $size;
@@ -503,16 +517,16 @@ class BsHelper extends HtmlHelper {
  */
 	protected $_openLine = 0;
 
-/** * 
+/** *
  * set the link for a tr
- * 
+ *
  * @var string
  */
 	protected $_cellLink = '';
 
 /**
  * true if there must be a link on a tr
- * 
+ *
  * @var bool
  */
 	protected $_cellLinkActive = false;
@@ -539,7 +553,7 @@ class BsHelper extends HtmlHelper {
 
 		$out .= '<table class="table' . $classes . '">';
 
-		if (null != $titles) {
+		if ($titles != null) {
 
 			$out .= '<thead>';
 			$out .= '<tr>';
@@ -566,7 +580,7 @@ class BsHelper extends HtmlHelper {
 						$width = true;
 					}
 				}
-				$out .= ('' != $classVisibility) ? ' ' : '';
+				$out .= ($classVisibility != '') ? ' ' : '';
 				$out .= $classVisibility . '">' . $title['title'] . '</th>';
 				$tablePos++;
 			}
@@ -613,7 +627,7 @@ class BsHelper extends HtmlHelper {
 		$classVisibility = '';
 		$cellPos = $this->_cellPos;
 
-		if (0 == $cellPos && 0 == $this->_openLine) {
+		if ($cellPos == 0 && $this->_openLine == 0) {
 			$out .= '<tr>';
 		}
 
@@ -623,7 +637,7 @@ class BsHelper extends HtmlHelper {
 			$classVisibility = $this->_tableClassesCells[$cellPos];
 		}
 
-		if ('' != $classVisibility || '' != $class) {
+		if ($classVisibility != '' || $class != '') {
 			$out .= '<td class="' . $class;
 			$out .= ('' != $class) ? ' ' : '';
 			$out .= $classVisibility . '">';
@@ -632,11 +646,11 @@ class BsHelper extends HtmlHelper {
 		}
 
 		if ($this->_cellLinkActive === true) {
-				if ($rowLink) {
-					$out .= $this->Html->link($content, $this->_cellLink);
-				} else {
-					$out .= $content;
-				}
+			if ($rowLink) {
+				$out .= $this->Html->link($content, $this->_cellLink);
+			} else {
+				$out .= $content;
+			}
 		} else {
 			$out .= $content;
 		}
@@ -674,7 +688,7 @@ class BsHelper extends HtmlHelper {
 
 /**
  * set link for the tr
- * 
+ *
  * @param [string] $link The link where the td brings
  * @return void it changes local variables
  */
@@ -716,7 +730,7 @@ class BsHelper extends HtmlHelper {
 		} else {
 			$options['class'] = 'alert alert-' . $state . ' ' . $options['class'];
 		}
-		if (!isset($options['dismiss']) || 'true' == $options['dismiss']) {
+		if (!isset($options['dismiss']) || $options['dismiss'] == 'true') {
 			$dismiss = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
 		}
 		unset($options['dismiss']);
@@ -801,13 +815,13 @@ class BsHelper extends HtmlHelper {
 		$class .= (isset($options['class'])) ? ' ' . $options['class'] : '';
 		$options['class'] = $class;
 
-		if ('a' != $tag) {
+		if ($tag != 'a') {
 			unset($options['tag']);
 			unset($options['type']);
 			unset($options['size']);
 		}
 
-		if ('a' != $tag) {
+		if ($tag != 'a') {
 			return parent::tag($tag, $text, $options);
 		} else {
 			return parent::link($text, $url, $options, $confirmMessage);
@@ -826,12 +840,12 @@ class BsHelper extends HtmlHelper {
 	public function modal($header, $body, $options = array(), $buttons = array()) {
 		$classes = (isset($options['class'])) ? $options['class'] : '';
 		// Is it a form ?
-		$form = (isset($options['form']) && true == $options['form']) ? true : false;
+		$form = (isset($options['form']) && $options['form'] == true) ? true : false;
 		// If it's a form then there is a submit button
 		$type = ($form) ? 'submit' : 'button';
 
 		// Generate a random id if it doesn't exist
-		if (isset($options['id']) && '' != $options['id']) {
+		if (isset($options['id']) && $options['id'] != '') {
 			$id = $options['id'];
 		} else {
 			$cle1 = "zarnfjdlvjezprizejrjpzojazjpodffp";
@@ -851,10 +865,10 @@ class BsHelper extends HtmlHelper {
 
 		// Create the open button
 		if (!empty($buttons)) {
-			if (isset($buttons['open']) && '' != $buttons['open']) {
+			if (isset($buttons['open']) && $buttons['open'] != '') {
 				if (is_array(($buttons['open']))) {
 					// Create a simple font-awesome icon instead of a button
-					if (isset($buttons['open']['button']) && false === $buttons['open']['button']) {
+					if (isset($buttons['open']['button']) && $buttons['open']['button'] === false) {
 						$out = $this->icon($buttons['open']['name'], array('open-modal'), array('data-toggle' => 'modal', 'data-target' => '#' . $id));
 					} else {
 						$out = $this->btn(__($buttons['open']['name']), null, array('tag' => 'button', 'class' => $buttons['open']['class'], 'data-toggle' => 'modal', 'data-target' => '#' . $id));
@@ -928,7 +942,7 @@ class BsHelper extends HtmlHelper {
 				$outFooter .= $this->btn(__('Confirmer'), null, array('tag' => 'button', 'class' => 'btn-success', 'type' => $type));
 			}
 
-			if ('' != $outFooter) {
+			if ($outFooter != '') {
 				$out .= '<div class="modal-footer">';
 				$out .= $outFooter;
 				$out .= '</div>';
@@ -965,10 +979,10 @@ class BsHelper extends HtmlHelper {
 			),
 		);
 
-		$buttons['open']['class'] = $buttons['confirm']['class'] = (isset($options['color']) && '' != $options['color']) ? 'btn-' . $options['color'] : 'btn-success';
-		$buttons['confirm']['name'] = (isset($options['button']) && '' != $options['button']) ? $options['button'] : $button;
-		$body = (isset($options['texte']) && '' != $options['texte']) ? $options['texte'] : 'Voulez-vous vraiment continuer votre action ?';
-		$header = (isset($options['header']) && '' != $options['header']) ? $options['header'] : $button;
+		$buttons['open']['class'] = $buttons['confirm']['class'] = (isset($options['color']) && $options['color'] != '') ? 'btn-' . $options['color'] : 'btn-success';
+		$buttons['confirm']['name'] = (isset($options['button']) && $options['button'] != '') ? $options['button'] : $button;
+		$body = (isset($options['texte']) && $options['texte'] != '') ? $options['texte'] : 'Voulez-vous vraiment continuer votre action ?';
+		$header = (isset($options['header']) && $options['header'] != '') ? $options['header'] : $button;
 
 		return $this->modal($header, $body, null, $buttons);
 	}
