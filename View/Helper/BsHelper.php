@@ -273,10 +273,6 @@ class BsHelper extends HtmlHelper {
 			$out .= parent::script($this->ckEditorJsPath);
 		}
 
-		if ($this->jasnyAddonLoad) {
-			$out .= parent::script($this->pathJasnyJS);
-		}
-
 		// Others JS
 		foreach ($arrayJs as $js) {
 			$out .= parent::script($js);
