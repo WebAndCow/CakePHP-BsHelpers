@@ -368,8 +368,7 @@ class BsFormHelper extends FormHelper {
 		}
 
 		// ----- Length Detector ----- \\
-		if (isset($options['length-detector-option']) || (isset($options['class']) && 'length-detector' === $options['class'])) {
-
+		if (isset($options['length-detector-option']) || (isset($options['class']) && is_integer(strpos($options['class'], 'length-detector')))) {
 			$jsOptions = '';
 			$ldClass = 'defaults';
 			if (isset($options['length-detector-option'])) {
@@ -383,8 +382,8 @@ class BsFormHelper extends FormHelper {
 
 			// Load JS
 			if (!$this->Bs->loaded('lengthDetector')) {
-				$this->Bs->loadJS($this->Bs->lengthDetectorJsPath);
 				$this->Bs->loadJS($this->Bs->lengthDetectorConfigJsPath);
+				$this->Bs->loadJS($this->Bs->lengthDetectorJsPath);
 				$this->Bs->load('lengthDetector', true);
 			}
 			// JS send to the page
