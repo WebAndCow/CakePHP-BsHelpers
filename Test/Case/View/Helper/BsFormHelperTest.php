@@ -364,6 +364,43 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 
+		/////////////////////////////
+		// LENGTH DETECTOR CONFIGS //
+		/////////////////////////////
+
+		$result = $this->BsForm->input('Name', array('class' => 'length-detector', 'maxlength' => '140',
+			'length-detector-option' => array(
+				'class' => 'title')));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+			array('label' => array('for', 'class' => 'control-label col-md-' . $this->BsForm->getLeft())), 'Name', '/label',
+			array('div' => array('class' => 'col-md-' . $this->BsForm->getRight())),
+			array('input' => array('name', 'class' => 'form-control length-detector', 'maxlength' => '140', 'type', 'id')),
+			'/div',
+			'/div',
+		);
+		$this->assertTags($result, $expected);
+
+		/////////////////////////////
+		// LENGTH DETECTOR OPTIONS //
+		/////////////////////////////
+
+		$result = $this->BsForm->input('Name', array('class' => 'length-detector', 'maxlength' => '140',
+			'length-detector-option' => array(
+				'interval' => array(
+					array('limitChars' => 20, 'bsClass' => 'success')))));
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+			array('label' => array('for', 'class' => 'control-label col-md-' . $this->BsForm->getLeft())), 'Name', '/label',
+			array('div' => array('class' => 'col-md-' . $this->BsForm->getRight())),
+			array('input' => array('name', 'class' => 'form-control length-detector', 'maxlength' => '140', 'type', 'id')),
+			'/div',
+			'/div',
+		);
+		$this->assertTags($result, $expected);
+
 		///////////////////////////
 		// INPUT DATE BASIC FORM //
 		///////////////////////////

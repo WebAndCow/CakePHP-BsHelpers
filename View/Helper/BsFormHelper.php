@@ -368,9 +368,9 @@ class BsFormHelper extends FormHelper {
 		$options = Hash::merge($basicOptions, $options);
 		if (isset($options['data-mask'])) {
 			if (!$this->Bs->loaded('jasny')) {
-					echo $this->Bs->loadCSS('BsHelpers.jasny-bootstrap');
-					echo $this->Bs->loadJS('BsHelpers.jasny-bootstrap');
-					$this->Bs->load('jasny', true);
+				echo $this->Bs->loadCSS('BsHelpers.jasny-bootstrap');
+				echo $this->Bs->loadJS('BsHelpers.jasny-bootstrap');
+				$this->Bs->load('jasny', true);
 			}
 		}
 		if (!isset($options['type']) || strtolower($options['type']) != 'file') {
@@ -378,7 +378,7 @@ class BsFormHelper extends FormHelper {
 		}
 
 		// ----- Length Detector ----- \\
-		if (isset($options['length-detector-option']) || (isset($options['class']) && $options['class'] === 'length-detector')) {
+		if (isset($options['length-detector-option']) || (isset($options['class']) && 'length-detector' === $options['class'])) {
 
 			$jsOptions = '';
 			$ldClass = 'defaults';
@@ -393,13 +393,11 @@ class BsFormHelper extends FormHelper {
 
 			// Load JS
 			if (!$this->_loaded['lengthDetector']) {
-				echo
 				$this->Bs->loadJS($this->Bs->lengthDetectorJsPath);
 				$this->Bs->loadJS($this->Bs->lengthDetectorConfigJsPath);
 				$this->_loaded['lengthDetector'] = true;
 			}
 			// JS send to the page
-			echo
 			$this->Bs->loadJS('$(document).ready(function(){$("[name*=' . $fieldName . '\].length-detector").attr("data-length-detector-class", "' . $ldClass . '").lengthDetector(' . $jsOptions . ');});', true, array('block' => 'scriptBottom'));
 			unset($options['length-detector-option']);
 		}
@@ -653,7 +651,7 @@ class BsFormHelper extends FormHelper {
 				$buttonOptions['escape'] = false;
 				$buttonOptions['type'] = $options['type'];
 				$buttonOptions['class'] = $options['class'];
-				if ('image' == $options['type']) {
+				if ($options['type'] == 'image') {
 					$buttonOptions['src'] = $options['src'];
 					$buttonOptions['type'] = 'image';
 					$buttonOptions['label'] = false;
@@ -767,7 +765,7 @@ class BsFormHelper extends FormHelper {
 		}
 
 		$checkbox = parent::checkbox($fieldName, $options);
-		$checkbox .= (false !== $basicOptions['label']) ? ' ' . $basicOptions['label'] : '';
+		$checkbox .= ($basicOptions['label'] !== false) ? ' ' . $basicOptions['label'] : '';
 		$checkbox .= ($basicOptions['help']) ? '<span class="help-block">' . $basicOptions['help'] . '</span>' : '';
 
 		$options['type'] = 'checkbox';
