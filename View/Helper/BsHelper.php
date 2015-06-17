@@ -24,6 +24,7 @@ class BsHelper extends HtmlHelper {
  * @var array
  */
 	public $helpers = array('Html');
+
 	/*--------------------------*
 	 *						    *
 	 *			CONFIG          *
@@ -39,6 +40,7 @@ class BsHelper extends HtmlHelper {
 		'chosen' => false,
 		'jasny' => false,
 		'ckeditor' => false,
+		'lengthDetector' => false
 	);
 
 /**
@@ -46,7 +48,14 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $pathCSS = '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css';
+	public $pathCSS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css';
+
+/**
+ * Path for JS bootstrap
+ *
+ * @var string
+ */
+	public $pathJS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js';
 
 /**
  * Path for Font Awesome
@@ -61,13 +70,6 @@ class BsHelper extends HtmlHelper {
  * @var string
  */
 	public $bsAddonPath = 'BsHelpers.bs_addon';
-
-/**
- * Path for JS CkEditor
- *
- * @var string
- */
-	public $ckEditorJsPath = '//cdn.ckeditor.com/4.4.7/standard/ckeditor.js';
 
 /**
  * Path for JS LengthDetector
@@ -107,13 +109,6 @@ class BsHelper extends HtmlHelper {
  * @var bool
  */
 	public $faPrefix = 'fa';
-
-/**
- * Path for JS bootstrap
- *
- * @var string
- */
-	public $pathJS = '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js';
 
 /**
  * Load CSS in view when needed
@@ -268,11 +263,6 @@ class BsHelper extends HtmlHelper {
 		$out = parent::script($this->pathJquery);
 		$out .= parent::script($this->pathJS);
 
-		// CkEditor JS
-		if ($this->ckEditorLoad) {
-			$out .= parent::script($this->ckEditorJsPath);
-		}
-
 		// Others JS
 		foreach ($arrayJs as $js) {
 			$out .= parent::script($js);
@@ -313,17 +303,6 @@ class BsHelper extends HtmlHelper {
  */
 	public function closeHeader() {
 		return '</header>';
-	}
-
-/**
- * Change the value of ckEditorLoad
- * In a layout, this function must be called before the js function
- *
- * @param bool $load to know if the js must be loaded or not
- * @return void
- */
-	public function setCkEditorLoad($load = true) {
-		return $this->ckEditorLoad = $load;
 	}
 
 	/*--------------------------*
@@ -590,8 +569,8 @@ class BsHelper extends HtmlHelper {
 			if ($rowlink === true) {
 				$out .= '<tbody data-link="row" class="rowlink">';
 				if (!$this->loaded('jasny')) {
-					echo $this->loadCSS('BsHelpers.jasny-bootstrap');
-					echo $this->loadJS('BsHelpers.jasny-bootstrap');
+					$this->loadCSS('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css');
+					$this->loadJS('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js');
 					$this->load('jasny', true);
 				}
 			} else {

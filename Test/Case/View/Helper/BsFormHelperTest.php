@@ -606,8 +606,6 @@ class BsFormHelperTest extends CakeTestCase {
 			'/div',
 			'/div',
 		);
-		debug($resultInput);
-		debug($expectedInput);
 		
 		$this->assertTags($resultInput, $expectedInput);
 		$this->assertEquals($invalidFields, $expectedFields);
@@ -650,8 +648,6 @@ class BsFormHelperTest extends CakeTestCase {
 			'/div',
 			'/div',
 		);
-		debug($resultInput);
-		debug($expectedInput);
 		
 		$this->assertTags($resultInput, $expectedInput);
 		$this->assertEquals($invalidFields, $expectedFields);
@@ -685,62 +681,34 @@ class BsFormHelperTest extends CakeTestCase {
 	  	$this->assertTags($result, $expected);
 	  }
 
-	  public function testInputGroupWithButtonFullOptions()
-	  {
+	public function testInputGroupWithButtonFullOptions()
+	{
 	  	$result = $this->BsForm->inputGroup('User.test', array('content' => 'Simple', 'type' => 'button', 'state' => 'warning', 'side' => 'right', 'class' => 'ma-class'), array('label' => 'Mon Label'));
-	$expected = array(
-		array("div" => array("class" => "form-group")),
-		"label" => array("class" => "control-label col-md-3", "for" => "UserTest"),
-		"Mon Label",
-		"/label",
-		array("div" => array("class" => "col-md-9")),
-		array("div" => array("class" => "input-group")),
-		"input" => array(
-			"name" => "data[User][test]",
-			"type" => "text",
-			"id" => "UserTest",
-			"class" => "form-control"
-		),
-		array("span" => array("class" => "input-group-btn")),
-		"button" => array("type" => "button", "class" => "ma-class btn btn-warning"),
-		"Simple",
-		"/button",
-		"/span",
-		"/div",
-		"/div",
-		"/div"
-	);
+		$expected = array(
+			array("div" => array("class" => "form-group")),
+			"label" => array("class" => "control-label col-md-3", "for" => "UserTest"),
+			"Mon Label",
+			"/label",
+			array("div" => array("class" => "col-md-9")),
+			array("div" => array("class" => "input-group")),
+			"input" => array(
+				"name" => "data[User][test]",
+				"type" => "text",
+				"id" => "UserTest",
+				"class" => "form-control"
+			),
+			array("span" => array("class" => "input-group-btn")),
+			"button" => array("type" => "button", "class" => "ma-class btn btn-warning"),
+			"Simple",
+			"/button",
+			"/span",
+			"/div",
+			"/div",
+			"/div"
+		);
 
 	  	$this->assertTags($result, $expected);
-	  }
-
-	  /*public function testInputGroupWithTypeImage()
-	  {
-	  	$result = $this->BsForm->inputGroup('User.test', array('content' => 'Simple', 'type' => 'image', 'side' => 'right', "src" => "my-image"), array('label' => 'Mon Label'));
-	$expected = array(
-		array("div" => array("class" => "form-group")),
-		"label" => array("class" => "control-label col-md-3", "for" => "UserTest"),
-		"Mon Label",
-		"/label",
-		array("div" => array("class" => "col-md-9")),
-		array("div" => array("class" => "input-group")),
-		array("input" => array(
-			"name" => "data[User][test]",
-			"type" => "text",
-			"id" => "UserTest",
-			"class" => "form-control"
-		)),
-		"span" => array("class" => "input-group-btn"),
-		array("input" => array("name" => "data[Simple]", "class" => "btn btn-default", "src" => "my-image")),
-		"/span",
-		"/div",
-		"/div",
-		"/div"
-	);
-		debug($result);
-		debug($expected);
-	  	$this->assertTags($result, $expected);
-	  }*/
+	}
 
 	public function testCheckbox() {
 		//////////////////////////
@@ -1692,9 +1660,6 @@ class BsFormHelperTest extends CakeTestCase {
 			'/textarea',
 			'/div',
 			'/div',
-			'<script',
-			'CKEDITOR.replace("TestField");',
-			'/script',
 		);
 		$this->assertTags($result, $expected);
 
@@ -1713,9 +1678,6 @@ class BsFormHelperTest extends CakeTestCase {
 			'/textarea',
 			'/div',
 			'/div',
-			'<script',
-			'CKEDITOR.replace("TestModel.testField");',
-			'/script',
 		);
 		$this->assertTags($result, $expected);
 

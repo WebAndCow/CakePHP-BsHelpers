@@ -12,16 +12,6 @@ App::uses('Set', 'Utility');
 class BsFormHelper extends FormHelper {
 
 /**
- * Check which addon is loaded and which is not
- *
- * @var array
- */
-	protected $_loaded = array(
-		'chosen' => false,
-		'lengthDetector' => false,
-	);
-
-/**
  * BsForm uses the BsHelper so it can use some feature of it
  * BsForm uses the FormHelper
  *
@@ -368,8 +358,8 @@ class BsFormHelper extends FormHelper {
 		$options = Hash::merge($basicOptions, $options);
 		if (isset($options['data-mask'])) {
 			if (!$this->Bs->loaded('jasny')) {
-				echo $this->Bs->loadCSS('BsHelpers.jasny-bootstrap');
-				echo $this->Bs->loadJS('BsHelpers.jasny-bootstrap');
+				$this->Bs->loadCSS('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css');
+				$this->Bs->loadJS('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js');
 				$this->Bs->load('jasny', true);
 			}
 		}
@@ -392,10 +382,10 @@ class BsFormHelper extends FormHelper {
 			}
 
 			// Load JS
-			if (!$this->_loaded['lengthDetector']) {
+			if (!$this->Bs->loaded('lengthDetector')) {
 				$this->Bs->loadJS($this->Bs->lengthDetectorJsPath);
 				$this->Bs->loadJS($this->Bs->lengthDetectorConfigJsPath);
-				$this->_loaded['lengthDetector'] = true;
+				$this->Bs->load('lengthDetector', true);
 			}
 			// JS send to the page
 			$this->Bs->loadJS('$(document).ready(function(){$("[name*=' . $fieldName . '\].length-detector").attr("data-length-detector-class", "' . $ldClass . '").lengthDetector(' . $jsOptions . ');});', true, array('block' => 'scriptBottom'));
@@ -695,15 +685,18 @@ class BsFormHelper extends FormHelper {
 
 		// If there is a point in the fieldName
 		if (strpos($fieldName, '.') !== false) {
-			$nameForReplace = Inflector::camelize($fieldName);
+			$nameForReplace = Inflector::camelize(Inflector::slug($fieldName));
 		} else {
 			$nameForReplace = $this->_modelForm . Inflector::camelize($fieldName);
 		}
 
-		// Create the line of JS
-		$out .= '<script>';
-		$out .= 'CKEDITOR.replace("' . $nameForReplace . '");';
-		$out .= '</script>';
+		// 3rd party libraries and css
+		if (!$this->Bs->loaded('ckeditor')) {
+			$this->Bs->loadJS('//cdn.ckeditor.com/4.4.7/standard/ckeditor.js');
+			$this->Bs->load('ckeditor', true);
+		}
+
+		$this->Bs->loadJS('CKEDITOR.replace("' . $nameForReplace . '");', true, array('block' => 'scriptBottom'));
 		return $out;
 	}
 
@@ -1256,15 +1249,15 @@ class BsFormHelper extends FormHelper {
 		$chosenAttr = json_encode(Hash::merge($defaultChosenAttr, $chosenAttr));
 
 		// 3rd party libraries and css
-		if ($this->Bs->loaded('chosen') === false) {
-			echo $this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css');
-			echo $this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png');
-			echo $this->Bs->loadJS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js');
+		if (!$this->Bs->loaded('chosen')) {
+			$this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css');
+			$this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png');
+			$this->Bs->loadJS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js');
 			$this->Bs->load('chosen', true);
 		}
 
 		// JS send to the page
-		echo $this->Bs->loadJS('$(document).ready(function(){$(".chosen-' . $class . '").chosen(' . $chosenAttr . ');});', true, array('block' => 'scriptBottom'));
+		$this->Bs->loadJS('$(document).ready(function(){$(".chosen-' . $class . '").chosen(' . $chosenAttr . ');});', true, array('block' => 'scriptBottom'));
 		// Chosen select created ->
 		return $this->select($fieldName, $options, Hash::merge($defaultAttr, $attr));
 	}

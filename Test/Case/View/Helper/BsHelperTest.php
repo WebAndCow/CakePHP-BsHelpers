@@ -178,11 +178,9 @@ class BsHelperTest extends CakeTestCase {
 		// MORE JS //
 		/////////////
 
-		$this->Bs->ckEditorLoad = true;
-		$result                 = $this->Bs->js(array('myJs', 'myOther'));
+		$result = $this->Bs->js(array('myJs', 'myOther'));
 
 		$expected = array(
-			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src')), '/script',
 			array('script' => array('type' => 'text/javascript', 'src' => '/js/myJs.js')), '/script',
@@ -227,12 +225,6 @@ class BsHelperTest extends CakeTestCase {
 
 		$expected = array('/header');
 
-		$this->assertTags($result, $expected);
-	}
-
-	public function testSetCkEditorLoad() {
-		$result = $this->Bs->setCkEditorLoad();
-		$expected = true;
 		$this->assertTags($result, $expected);
 	}
 
