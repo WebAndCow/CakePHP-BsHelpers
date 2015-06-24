@@ -357,11 +357,7 @@ class BsFormHelper extends FormHelper {
 
 		$options = Hash::merge($basicOptions, $options);
 		if (isset($options['data-mask'])) {
-			if (!$this->Bs->loaded('jasny')) {
-				$this->Bs->loadCSS('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css');
-				$this->Bs->loadJS('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js');
-				$this->Bs->load('jasny', true);
-			}
+			$this->Bs->load('jasny');
 		}
 		if (!isset($options['type']) || strtolower($options['type']) != 'file') {
 			$options['class'] = (isset($options['class'])) ? 'form-control ' . $options['class'] : 'form-control';
@@ -381,11 +377,8 @@ class BsFormHelper extends FormHelper {
 			}
 
 			// Load JS
-			if (!$this->Bs->loaded('lengthDetector')) {
-				$this->Bs->loadJS($this->Bs->lengthDetectorConfigJsPath);
-				$this->Bs->loadJS($this->Bs->lengthDetectorJsPath);
-				$this->Bs->load('lengthDetector', true);
-			}
+			$this->Bs->load('lengthDetector');
+			
 			// JS send to the page
 			$this->Bs->loadJS('$(document).ready(function(){$("[name*=' . $fieldName . '\].length-detector").attr("data-length-detector-class", "' . $ldClass . '").lengthDetector(' . $jsOptions . ');});', true, array('block' => 'scriptBottom'));
 			unset($options['length-detector-option']);
@@ -690,10 +683,7 @@ class BsFormHelper extends FormHelper {
 		}
 
 		// 3rd party libraries and css
-		if (!$this->Bs->loaded('ckeditor')) {
-			$this->Bs->loadJS('//cdn.ckeditor.com/4.4.7/standard/ckeditor.js');
-			$this->Bs->load('ckeditor', true);
-		}
+		$this->Bs->load('ckeditor');
 
 		$this->Bs->loadJS('CKEDITOR.replace("' . $nameForReplace . '");', true, array('block' => 'scriptBottom'));
 		return $out;
@@ -1248,12 +1238,7 @@ class BsFormHelper extends FormHelper {
 		$chosenAttr = json_encode(Hash::merge($defaultChosenAttr, $chosenAttr));
 
 		// 3rd party libraries and css
-		if (!$this->Bs->loaded('chosen')) {
-			$this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css');
-			$this->Bs->loadCSS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png');
-			$this->Bs->loadJS('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js');
-			$this->Bs->load('chosen', true);
-		}
+		$this->Bs->load('chosen');
 
 		// JS send to the page
 		$this->Bs->loadJS('$(document).ready(function(){$(".chosen-' . $class . '").chosen(' . $chosenAttr . ');});', true, array('block' => 'scriptBottom'));

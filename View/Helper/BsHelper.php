@@ -36,11 +36,33 @@ class BsHelper extends HtmlHelper {
  *
  * @var array
  */
-	private $__loaded = array(
-		'chosen' => false,
-		'jasny' => false,
-		'ckeditor' => false,
-		'lengthDetector' => false
+	private $__extensions = array(
+		'chosen' => array(
+			'css' => array(
+				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css',
+				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png'
+			),
+			'js' => array('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js'),
+			'loaded' => false
+		),
+		'jasny' => array(
+			'css' => array('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css'),
+			'js' => array('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js'),
+			'loaded' => false
+		),
+		'ckeditor' => array(
+			'css' => array(),
+			'js' => array('//cdn.ckeditor.com/4.4.7/standard/ckeditor.js'),
+			'loaded' => false
+		),
+		'lengthDetector' => array(
+			'css' => array(),
+			'js' => array(
+				'BsHelpers./js/bootstrap-length-detector/configs/default.js',
+				'BsHelpers./js/bootstrap-length-detector/bootstrap-length-detector.min.js'
+			),
+			'loaded' => false
+		)
 	);
 
 /**
@@ -70,20 +92,6 @@ class BsHelper extends HtmlHelper {
  * @var string
  */
 	public $bsAddonPath = 'BsHelpers.bs_addon';
-
-/**
- * Path for JS LengthDetector
- *
- * @var string
- */
-	public $lengthDetectorJsPath = 'BsHelpers./js/bootstrap-length-detector/bootstrap-length-detector.min.js';
-
-/**
- * Path for JS LengthDetector config
- *
- * @var string
- */
-	public $lengthDetectorConfigJsPath = 'BsHelpers./js/bootstrap-length-detector/configs/default.js';
 
 /**
  * If Font Awesome is loaded
@@ -140,24 +148,24 @@ class BsHelper extends HtmlHelper {
 	}
 
 /**
- * nesting the read access to private __loaded
- *
- * @param [string] $key The key of the element you're looking for
- * @return [bool]      The value associated to the key
- */
-	public function loaded($key) {
-		return $this->__loaded[$key];
-	}
-
-/**
- * nesting the writing access to private __loaded
+ * nesting the writing access to private __extensions
  *
  * @param [string] $key   The key you want to save
  * @param [bool] $value The value associated to that key
  * @return [bool]        The result of the array saving
  */
-	public function load($key, $value) {
-		return $this->__loaded[$key] = $value;
+	public function load($key) {
+		if (!$this->__extensions[$key]['loaded']) {
+			foreach ($this->__extensions[$key]['css'] as $css) {
+				$this->loadCSS($css);
+			}
+			foreach ($this->__extensions[$key]['js'] as $js) {
+				$this->loadJS($js);
+			}
+			$this->__extensions[$key]['loaded'] = true;
+		}
+
+		return $this->__extensions[$key]['loaded'];
 	}
 
 	/*--------------------------*
@@ -521,17 +529,19 @@ class BsHelper extends HtmlHelper {
  * @return string
  */
 	public function table($titles, $class = array(), $rowlink = false) {
+		// Classe creation for the table element
 		$classes = '';
-		$out = '<div class="table-responsive">';
-
 		if (!empty($class)) {
 			foreach ($class as $opt) {
-				$classes .= ' table-' . $opt;
+				$classes .= ($opt === 'tablesorter') ? ' tablesorter' : ' table-' . $opt;
 			}
 		}
 
+		// Creation of the output HTML
+		$out = '<div class="table-responsive">';
 		$out .= '<table class="table' . $classes . '">';
 
+		// If titles are defined
 		if ($titles != null) {
 
 			$out .= '<thead>';
@@ -568,11 +578,7 @@ class BsHelper extends HtmlHelper {
 			$out .= '</thead>';
 			if ($rowlink === true) {
 				$out .= '<tbody data-link="row" class="rowlink">';
-				if (!$this->loaded('jasny')) {
-					$this->loadCSS('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css');
-					$this->loadJS('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js');
-					$this->load('jasny', true);
-				}
+				$this->load('jasny');
 			} else {
 				$out .= '<tbody>';
 			}
@@ -582,6 +588,7 @@ class BsHelper extends HtmlHelper {
 			$this->_cellPos = 0;
 			$this->_openLine = 0;
 		}
+
 		return $out;
 	}
 
