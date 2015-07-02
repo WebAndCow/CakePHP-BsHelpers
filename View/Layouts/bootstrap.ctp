@@ -10,7 +10,7 @@ echo $this->Bs->html($title_for_layout , $description_for_layout).
 		$this->Bs->body().
 
 			// CONTENT
-			$content_for_layout;
+			$content_for_layout.
 
 	// \BODY
 		$this->Bs->js().
