@@ -42,17 +42,25 @@ class BsHelper extends HtmlHelper {
 				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css',
 				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png'
 			),
-			'js' => array('https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js'),
+			'js' => array(
+				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js'
+			),
 			'loaded' => false
 		),
 		'jasny' => array(
-			'css' => array('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css'),
-			'js' => array('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js'),
+			'css' => array(
+				'//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css'
+			),
+			'js' => array(
+				'//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js'
+			),
 			'loaded' => false
 		),
 		'ckeditor' => array(
 			'css' => array(),
-			'js' => array('//cdn.ckeditor.com/4.4.7/standard/ckeditor.js'),
+			'js' => array(
+				'//cdn.ckeditor.com/4.5.2/standard/ckeditor.js'
+			),
 			'loaded' => false
 		),
 		'lengthDetector' => array(
@@ -60,6 +68,15 @@ class BsHelper extends HtmlHelper {
 			'js' => array(
 				'BsHelpers./js/bootstrap-length-detector/configs/default.js',
 				'BsHelpers./js/bootstrap-length-detector/bootstrap-length-detector.min.js'
+			),
+			'loaded' => false
+		),
+		'tablesorter' => array(
+			'css' => array(),
+			'js' => array(
+				'https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.min.js',
+				'https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.widgets.min.js',
+				'BsHelpers./js/tablesorter/config.js',
 			),
 			'loaded' => false
 		)
@@ -84,7 +101,7 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $faPath = '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css';
+	public $faPath = '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css';
 
 /**
  * Path for Bootstrap addon
@@ -119,13 +136,25 @@ class BsHelper extends HtmlHelper {
 	public $faPrefix = 'fa';
 
 /**
+ * Block name to load CSS elements
+ * @var bool
+ */
+	public $blockCss = 'cssTop';
+
+/**
+ * Block name to load JS elements
+ * @var bool
+ */
+	public $blockJs = 'scriptBottom';
+
+/**
  * Load CSS in view when needed
  *
  * @param [string] $url The CSS url
  * @return [Void]   Closes the view block
  */
 	public function loadCSS($url) {
-		$this->_View->append('cssTop', parent::css($url));
+		$this->_View->append($this->blockCss, parent::css($url));
 		return $this->_View->end();
 	}
 
@@ -140,9 +169,9 @@ class BsHelper extends HtmlHelper {
  */
 	public function loadJS($url, $type = false, array $options = array()) {
 		if ($type === true) {
-			$this->_View->append('scriptBottom', parent::scriptBlock($url, $options));
+			$this->_View->append($this->blockJs, parent::scriptBlock($url, $options));
 		} else {
-			$this->_View->append('scriptBottom', parent::script($url));
+			$this->_View->append($this->blockJs, parent::script($url));
 		}
 		return $this->_View->end();
 	}
@@ -533,7 +562,12 @@ class BsHelper extends HtmlHelper {
 		$classes = '';
 		if (!empty($class)) {
 			foreach ($class as $opt) {
-				$classes .= ($opt === 'tablesorter') ? ' tablesorter' : ' table-' . $opt;
+				if ($opt === 'tablesorter') {
+					$classes .= ' tablesorter';
+					$this->load('tablesorter');
+				} else {
+					$classes .= ' table-' . $opt;
+				}
 			}
 		}
 
@@ -570,7 +604,9 @@ class BsHelper extends HtmlHelper {
 					}
 				}
 				$out .= ($classVisibility != '') ? ' ' : '';
-				$out .= $classVisibility . '">' . $title['title'] . '</th>';
+				$out .= $classVisibility;
+				$out .= (isset($title['sorter'])) ? ' sorter-' . $title['sorter'] : '';
+				$out .= '">' . $title['title'] . '</th>';
 				$tablePos++;
 			}
 

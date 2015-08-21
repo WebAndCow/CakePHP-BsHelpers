@@ -1281,9 +1281,6 @@ class BsFormHelperTest extends CakeTestCase {
 			array('input' => array('class' => 'btn btn-success', 'type' => 'submit', 'value')),
 			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait text-success')),
 			'/i',
-			'<script',
-			'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',
-			'/script',
 			'/div',
 			'/div',
 		);
@@ -1304,9 +1301,6 @@ class BsFormHelperTest extends CakeTestCase {
 			array('div' => array('class' => 'col-md-' . $this->BsForm->getRight() . ' col-md-offset-' . $this->BsForm->getLeft())),
 			array('input' => array('class' => 'btn btn-warning', 'id' => 'myId', 'type' => 'submit', 'value' => 'Send')),
 			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait text-warning')), '/i',
-			'<script',
-			'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',
-			'/script',
 			'/div',
 			'/div',
 			'/div',
@@ -1362,9 +1356,6 @@ class BsFormHelperTest extends CakeTestCase {
 			array('input' => array('class' => 'btn btn-success', 'type' => 'submit', 'value' => 'Update')),
 			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait text-success')),
 			'/i',
-			'<script',
-			'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',
-			'/script',
 			'/div',
 			'/div',
 			'/form',
@@ -1391,9 +1382,6 @@ class BsFormHelperTest extends CakeTestCase {
 			array('div' => array('class' => 'col-md-' . $this->BsForm->getRight() . ' col-md-offset-' . $this->BsForm->getLeft())),
 			array('input' => array('class' => 'btn btn-success', 'type' => 'submit', 'value' => 'Update')),
 			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait text-success')), '/i',
-			'<script',
-			'$("#ModelActionForm").submit(function(){$("#ModelActionForm input[type=\'submit\']").prop("disabled" , true);$("#ModelActionForm .form-submit-wait").show();});',
-			'/script',
 			'/div',
 			'/div',
 			'/div',
@@ -1505,12 +1493,14 @@ class BsFormHelperTest extends CakeTestCase {
 		$field  = 'title';
 		$result = $this->BsForm->chosen($field, $tab);
 
+		debug($result);
+
 		$expected = array(
 			array('div' => array(
 				'class' => 'form-group',
 			)),
 			array('label' => array(
-				'for'   => $field,
+				'for',
 				'class' => 'control-label col-md-3',
 			)),
 			'/label',
@@ -1521,7 +1511,7 @@ class BsFormHelperTest extends CakeTestCase {
 				'name'             => 'data[' . $field . ']',
 				'class'            => 'form-control chosen-' . $field,
 				'data-placeholder' => 'Cliquez pour choisir',
-				'id'               => $field,
+				'id'
 			)),
 			array('option' => array(
 				'value' => 'hello',
@@ -1551,7 +1541,7 @@ class BsFormHelperTest extends CakeTestCase {
 				'class' => 'form-group',
 			)),
 			array('label' => array(
-				'for'   => $field,
+				'for',
 				'class' => 'control-label col-md-3',
 			)),
 			'/label',
@@ -1566,7 +1556,7 @@ class BsFormHelperTest extends CakeTestCase {
 				'name'             => 'data[' . $field . ']',
 				'class'            => 'form-control chosen-' . $field,
 				'data-placeholder' => 'Cliquez pour choisir',
-				'id'               => $field,
+				'id'
 			)),
 			array('option' => array(
 				'value' => 'hello',
@@ -1607,7 +1597,7 @@ class BsFormHelperTest extends CakeTestCase {
 				'class' => 'form-group',
 			)),
 			array('label' => array(
-				'for'   => $field,
+				'for',
 				'class' => 'control-label col-md-3',
 			)),
 			'Ca, ici.',
@@ -1619,7 +1609,7 @@ class BsFormHelperTest extends CakeTestCase {
 				'name'             => 'data[' . $field . ']',
 				'class'            => 'form-control chosen-' . $field,
 				'data-placeholder' => 'Cliquez pour selectionner les valeurs recherchées',
-				'id'               => $field,
+				'id'
 			)),
 			array('option' => array(
 				'value' => 'hello',

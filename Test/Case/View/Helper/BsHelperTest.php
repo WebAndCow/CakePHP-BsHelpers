@@ -718,6 +718,7 @@ class BsHelperTest extends CakeTestCase {
 		$body .= $this->BsForm->end();
 
 		$result = $this->Bs->modal('Modal title', $body, $options);
+		debug($result);
 
 		$expected = array(
 			array('button' => array('class' => 'btn btn-primary btn-lg', 'data-target' => '#myId', 'data-toggle' => 'modal')), 'Voir', '/button',
@@ -744,16 +745,13 @@ class BsHelperTest extends CakeTestCase {
 			array('input' => array('value' => 'Send', 'class' => 'btn btn-success', 'type')),
 			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait text-success')),
 			'/i',
-			'<script',
-			'$("#MyModelMyActionForm").submit(function(){$("#MyModelMyActionForm input[type=\'submit\']").prop("disabled" , true);$("#MyModelMyActionForm .form-submit-wait").show();});',
-			'/script',
 			'/div',
 			'/div',
 			'/div',
 			'/form',
 			'/div',
 			'/div',
-			'/div',
+			'/div'
 		);
 
 		$this->assertTags($result, $expected);

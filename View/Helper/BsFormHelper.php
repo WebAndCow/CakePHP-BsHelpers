@@ -163,11 +163,30 @@ class BsFormHelper extends FormHelper {
 /**
  * Set the value of $_actionForm
  *
- * @param string $val Action of the form
+ * @param array $options Array of form options
  * @return void
  */
-	protected function _setActionForm($val) {
-		$this->_actionForm = $val;
+	protected function _setActionForm($options) {
+		$this->_actionForm = isset($options['action']) ? $options['action'] : '';
+	}
+
+/**
+ * Return the current value of $_idForm
+ *
+ * @return string
+ */
+	protected function _getIdForm() {
+		return $this->_idForm;
+	}
+
+/**
+ * Set the value of $_idForm
+ *
+ * @param array $options Array of form options
+ * @return void
+ */
+	protected function _setIdForm($options) {
+		$this->_idForm = isset($options['id']) ? $options['id'] : Inflector::camelize($this->_modelForm . ' ' . $this->_actionForm . ' Form');
 	}
 
 /**
@@ -239,11 +258,12 @@ class BsFormHelper extends FormHelper {
 			$this->setFormType('horizontal');
 		}
 
+		// Set the Form Model for the Helper
 		$this->_setModelForm($model);
-
-		if (isset($options['action'])) {
-			$this->_setActionForm($options['action']);
-		}
+		// Set the Form Action for the Helper
+		$this->_setActionForm($options);
+		// Set the Form Id for the Helper
+		$this->_setIdForm($options);
 
 		return parent::create($model, $options);
 	}
@@ -666,11 +686,12 @@ class BsFormHelper extends FormHelper {
  *
  * $ckEditorLoad must be set to true in the BsHelper so this feature can work
  *
- * @param string $fieldName Name of a field, like this "Modelname.fieldname"
- * @param array $options Each type of input takes different options.
+ * @param string $fieldName 	 Name of a field, like this "Modelname.fieldname"
+ * @param array $options 		 Each type of input takes different options.
+ * @param array $ckEditorOptions Javascript options for the CKEditor instance
  * @return string An HTML text with a line of Javascript to launch CKEDITOR Script
  */
-	public function ckEditor($fieldName, $options = array()) {
+	public function ckEditor($fieldName, $options = array(), $ckEditorOptions = array()) {
 		$options['type'] = 'textarea';
 
 		$out = $this->input($fieldName, $options);
@@ -685,7 +706,7 @@ class BsFormHelper extends FormHelper {
 		// 3rd party libraries and css
 		$this->Bs->load('ckeditor');
 
-		$this->Bs->loadJS('CKEDITOR.replace("' . $nameForReplace . '");', true, array('block' => 'scriptBottom'));
+		$this->Bs->loadJS('CKEDITOR.replace("' . $nameForReplace . '", ' . json_encode($ckEditorOptions) . ');', true);
 		return $out;
 	}
 
@@ -1078,14 +1099,11 @@ class BsFormHelper extends FormHelper {
  * @return string A HTML submit button
  */
 	public function submit($caption = null, $options = array()) {
-		$out = '';
-		$ux = (isset($options['ux']) && false === $options['ux']) ? false : true;
-		unset($options['ux']);
-
 		$basicOptions = array(
 			'div' => false,
 			'class' => 'btn btn-success',
 			'before' => $this->__buildSubmitBefore(),
+			'ux' => true
 		);
 
 		$typeOfButton = 'success';
@@ -1105,9 +1123,14 @@ class BsFormHelper extends FormHelper {
 			}
 		}
 
-		$basicOptions['after'] = $this->__buildSubmitAfter($ux, $typeOfButton);
-
 		$options = Hash::merge($basicOptions, $options);
+
+		if (!isset($options['after'])) {
+			$options['after'] = $this->__buildSubmitAfter($options['ux'], $typeOfButton);
+		}
+
+		// Remove the 'ux' option
+		unset($options['ux']);
 
 		return parent::submit($caption, $options);
 	}
@@ -1136,16 +1159,18 @@ class BsFormHelper extends FormHelper {
 		$out = '';
 
 		if ($ux) {
+			// Generate the spin icon
 			$out .= '<i class="fa fa-spinner fa-spin form-submit-wait text-' . $type . '"></i>';
 
-			$idForm = '#' . Inflector::camelize($this->_modelForm . ' ' . $this->_actionForm . ' Form');
-
-			$out .= '<script>';
-			$out .= '$("' . $idForm . '").submit(function(){';
-			$out .= '$("' . $idForm . ' input[type=\'submit\']").prop("disabled" , true);';
-			$out .= '$("' . $idForm . ' .form-submit-wait").show();';
-			$out .= '});';
-			$out .= '</script>';
+			$this->Bs->loadJS(
+				'+function ($) {
+					$("#' . $this->_idForm . '").submit(function(){
+						$("#' . $this->_idForm . ' input[type=\'submit\']").prop("disabled" , true);
+						$("#' . $this->_idForm . ' .form-submit-wait").css("display", "inline-block");
+					});
+				}(jQuery);',
+				true
+			);
 		}
 
 		if ($this->_getFormType() == 'horizontal') {
@@ -1219,11 +1244,13 @@ class BsFormHelper extends FormHelper {
  */
 	public function chosen($fieldName = 'fieldname', $options = array(), $attr = array(), $chosenAttr = array()) {
 		$class = Inflector::slug($fieldName);
+
 		// Default option for the select
 		$defaultAttr = array(
 			'label' => '',
 			'class' => 'chosen-' . $class,
 			'data-placeholder' => 'Cliquez pour choisir',
+			'id' => 'chosen_' . uniqid()
 		);
 
 		// Default option for chosen
@@ -1236,14 +1263,21 @@ class BsFormHelper extends FormHelper {
 
 		// Chosen attribute encoded to pass it to JS
 		$chosenAttr = json_encode(Hash::merge($defaultChosenAttr, $chosenAttr));
-
+		// Merge defaults attributes with new attributes
+		$attributes = Hash::merge($defaultAttr, $attr);
+		// Chosen select created ->
+		$select = $this->select($fieldName, $options, $attributes);
 		// 3rd party libraries and css
 		$this->Bs->load('chosen');
-
 		// JS send to the page
-		$this->Bs->loadJS('$(document).ready(function(){$(".chosen-' . $class . '").chosen(' . $chosenAttr . ');});', true, array('block' => 'scriptBottom'));
-		// Chosen select created ->
-		return $this->select($fieldName, $options, Hash::merge($defaultAttr, $attr));
+		$this->Bs->loadJS(
+			'+function ($) {
+				$("#' . $attributes['id'] . '").chosen(' . $chosenAttr . ');
+			}(jQuery);',
+			true
+		);
+
+		return $select;
 	}
 
 }
