@@ -93,6 +93,26 @@ class BsFormHelperTest extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 
+		/////////////////////////////////
+		// BASIC WITH DIFFERENT DEVICE //
+		/////////////////////////////////
+
+		$this->BsForm->setDevice('sm');
+
+		$result = $this->BsForm->input('Name');
+
+		$this->BsForm->setDevice('md');
+
+		$expected = array(
+			array('div' => array('class' => 'form-group')),
+			array('label' => array('for', 'class' => 'control-label col-sm-' . $this->BsForm->getLeft())), 'Name', '/label',
+			array('div' => array('class' => 'col-sm-' . $this->BsForm->getRight())),
+			array('input' => array('name', 'class' => 'form-control', 'type', 'id')),
+			'/div',
+			'/div',
+		);
+		$this->assertTags($result, $expected);
+
 		////////////////
 		// WITH LABEL //
 		////////////////

@@ -1164,9 +1164,9 @@ class BsFormHelper extends FormHelper {
 
 			$this->Bs->loadJS(
 				'+function ($) {
-					$("#' . $this->_idForm . '").submit(function(){
-						$("#' . $this->_idForm . ' input[type=\'submit\']").prop("disabled" , true);
-						$("#' . $this->_idForm . ' .form-submit-wait").css("display", "inline-block");
+					$("#' . $this->_getIdForm() . '").submit(function(){
+						$("#' . $this->_getIdForm() . ' input[type=\'submit\']").prop("disabled" , true);
+						$("#' . $this->_getIdForm() . ' .form-submit-wait").css("display", "inline-block");
 					});
 				}(jQuery);',
 				true
@@ -1190,8 +1190,8 @@ class BsFormHelper extends FormHelper {
  * Returns an HTML element
  *
  * @param string $text Title
- * @param int $h The level of the title 1-6
- * @return string the formatted HTML with a row, columns and the title
+ * @param int $h 	   The level of the title 1-6
+ * @return string 	   the formatted HTML with a row, columns and the title
  */
 	public function title($text, $h = 4) {
 		return $this->__tagForm('h' . $h, $text);
@@ -1200,9 +1200,9 @@ class BsFormHelper extends FormHelper {
 /**
  * Returns an HTML element
  *
- * @param string $text Indications
+ * @param string $text 	Indications
  * @param string $class a class for the p element
- * @return string the formatted HTML with a row, columns and the indications in a p
+ * @return string 		the formatted HTML with a row, columns and the indications in a p
  */
 	public function indications($text, $class = '') {
 		if ('' != $class) {
@@ -1215,10 +1215,10 @@ class BsFormHelper extends FormHelper {
 /**
  * Call the Tag function of the BsHelper in a row and a column like the Form
  *
- * @param string $tag Tag name.
- * @param string $text String content that will appear inside the element.
+ * @param string $tag 	 Tag name.
+ * @param string $text 	 String content that will appear inside the element.
  * @param array $options Additional HTML attributes of the element
- * @return string The formatted tag element
+ * @return string 		 The formatted tag element
  */
 	private function __tagForm($tag, $text, $options = array()) {
 		$out = $this->Bs->row();
@@ -1237,8 +1237,8 @@ class BsFormHelper extends FormHelper {
  * Return an html element with chosen attached
  *
  * @param String $fieldName name of the field
- * @param Array $options options of the select
- * @param Array $attr attributes of the select element (multiple etc...)
+ * @param Array $options 	options of the select
+ * @param Array $attr 		attributes of the select element (multiple etc...)
  * @param Array $chosenAttr attributes of the chosen js call
  * @return string
  */
