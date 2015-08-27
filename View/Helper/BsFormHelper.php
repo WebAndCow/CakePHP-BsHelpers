@@ -380,7 +380,7 @@ class BsFormHelper extends FormHelper {
 
 			// Load JS
 			$this->Bs->load('lengthDetector');
-			
+
 			// JS send to the page
 			$this->Bs->loadJS('$(document).ready(function(){$("[name*=' . $fieldName . '\].length-detector").attr("data-length-detector-class", "' . $ldClass . '").lengthDetector(' . $jsOptions . ');});', true, array('block' => 'scriptBottom'));
 			unset($options['length-detector-option']);
