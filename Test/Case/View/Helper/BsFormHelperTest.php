@@ -3,11 +3,6 @@
 App::uses('View', 'View');
 App::uses('BsFormHelper', 'BsHelpers.View/Helper');
 App::uses('BsHelper', 'BsHelpers.View/Helper');
-App::uses('AppModel', 'Model');
-
-class Example extends AppModel {
-
-}
 
 class BsFormHelperTest extends CakeTestCase {
 

@@ -555,7 +555,9 @@ class BsHelperTest extends CakeTestCase {
 		);
 		$this->assertTags($result, $expected);
 
-
+		////////////////////////
+		// WITHOUT AUTOFORMAT //
+		////////////////////////
 		$this->Bs->table($titles);
 		$result = $this->Bs->cell('Test1', 'classTest', false, false) .
 		'</td>' .
