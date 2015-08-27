@@ -556,7 +556,36 @@ class BsHelperTest extends CakeTestCase {
 		$this->assertTags($result, $expected);
 
 
+		$this->Bs->table($titles);
+		$result = $this->Bs->cell('Test1', 'classTest', false, false) .
+		'</td>' .
+		$this->Bs->cell('Test2', '', false, false) .
+		'</td>' .
+		'</tr>' .
+		$this->Bs->cell('Test3', '', false, false) .
+		'</td>' .
+		$this->Bs->cell('Test4', '', false);
+		$this->Bs->endTable();
 
+		$expected = array(
+			'<tr',
+			array('td' => array('class' => 'classTest hidden-xs')),
+			'Test1',
+			'/td',
+			'<td',
+			'Test2',
+			'/td',
+			'/tr',
+			'<tr',
+			array('td' => array('class' => 'hidden-xs')),
+			'Test3',
+			'/td',
+			'<td',
+			'Test4',
+			'/td',
+			'/tr'
+		);
+		$this->assertTags($result, $expected);
 	}
 
 

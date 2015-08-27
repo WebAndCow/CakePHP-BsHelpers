@@ -133,15 +133,6 @@ class BsFormHelper extends FormHelper {
 	}
 
 /**
- * Return the current value of $_modelForm
- *
- * @return string
- */
-	protected function _getModelForm() {
-		return $this->_modelForm;
-	}
-
-/**
  * Set the value of $_typeForm
  *
  * @param string $val Model of the form
@@ -149,15 +140,6 @@ class BsFormHelper extends FormHelper {
  */
 	protected function _setModelForm($val) {
 		$this->_modelForm = $val;
-	}
-
-/**
- * Return the current value of $_actionForm
- *
- * @return string
- */
-	protected function _getActionForm() {
-		return $this->_actionForm;
 	}
 
 /**
