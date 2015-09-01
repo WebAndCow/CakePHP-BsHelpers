@@ -22,7 +22,10 @@
 
 /* Style for the spinner */
 .form-submit-wait {
-	font-size: 20px; margin-top: 15px; margin-left: 15px; display: none;
+	font-size: 20px;
+  margin-left: 15px;
+  display: none;
+  vertical-align: middle;
 }
 
 /* Style for the input type date */
@@ -158,9 +161,9 @@
   font-size: 14px !important;
 }
 
-
-
-
+.tablesorter th:not(.sorter-false){
+  cursor: pointer;
+}
 
 
 

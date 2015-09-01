@@ -363,9 +363,94 @@ class BsHelperTest extends CakeTestCase {
 		);
 
 		$this->assertTags($result, $expected);
+
+		/////////////////
+		// TABLESORTER //
+		/////////////////
+
+		$titles = array(
+			array('title' => 'Cell1', 'width' => '50', 'hidden' => array('xs')),
+			array('title' => 'Cell2', 'width' => '50'),
+		);
+
+		$result = $this->Bs->table($titles, array('hover', 'striped', 'tablesorter'));
+
+		$expected = array(
+			array('div' => array('class' => 'table-responsive')),
+			array('table' => array('class' => 'table table-hover table-striped tablesorter')),
+			'<thead',
+			'<tr',
+			array('th' => array('class' => 'l_50 hidden-xs')),
+			'Cell1',
+			'/th',
+			array('th' => array('class' => 'l_50')),
+			'Cell2',
+			'/th',
+			'/tr',
+			'/thead',
+			'<tbody',
+		);
+
+		//////////////////
+		// SIMPLE TABLE //
+		//////////////////
+
+		$titles = array(
+			array('title' => 'Cell1'),
+			array('title' => 'Cell2'),
+		);
+
+		$result = $this->Bs->table($titles);
+
+		$expected = array(
+			array('div' => array('class' => 'table-responsive')),
+			array('table' => array('class' => 'table')),
+			'<thead',
+			'<tr',
+			array('th' => array('class')),
+			'Cell1',
+			'/th',
+			array('th' => array('class')),
+			'Cell2',
+			'/th',
+			'/tr',
+			'/thead',
+			'<tbody',
+		);
 	}
 
 	public function testCell() {
+
+		////////////////////////////////////////////////
+		// CELL WITH SIMPLE TABLE AND WITHOUT ROWLINK //
+		////////////////////////////////////////////////
+
+		$titles = array(
+			array('title' => 'Cell1'),
+			array('title' => 'Cell2')
+		);
+		$this->Bs->table($titles);
+
+		$result = $this->Bs->cell('Test1', '', false) .
+		$this->Bs->cell('Test2', '', false);
+
+		$this->Bs->endTable();
+		$expected = array(
+			'<tr',
+			'<td',
+			'Test1',
+			'/td',
+			'<td',
+			'Test2',
+			'/td',
+			'/tr',
+		);
+		$this->assertTags($result, $expected);
+
+		////////////////
+		// WITH WIDTH //
+		////////////////
+
 		$titles = array(
 			array('title' => 'Cell1', 'width' => '50', 'hidden' => array('xs')),
 			array('title' => 'Cell2', 'width' => '50'),
@@ -378,10 +463,10 @@ class BsHelperTest extends CakeTestCase {
 		$this->Bs->endTable();
 		$expected = array(
 			'<tr',
-			array('td' => array('class' => ' rowlink-skip hidden-xs')),
+			array('td' => array('class' => 'hidden-xs')),
 			'Test1',
 			'/td',
-			array('td' => array('class' => ' rowlink-skip ')),
+			'<td',
 			'Test2',
 			'/td',
 			'/tr',
@@ -399,10 +484,10 @@ class BsHelperTest extends CakeTestCase {
 
 		$expected = array(
 			'<tr',
-			array('td' => array('class' => 'classTest rowlink-skip hidden-xs')),
+			array('td' => array('class' => 'classTest hidden-xs')),
 			'Test1',
 			'/td',
-			array('td' => array('class' => ' rowlink-skip ')),
+			'<td',
 			'Test2',
 		);
 
@@ -413,10 +498,10 @@ class BsHelperTest extends CakeTestCase {
 
 		$expected = array(
 			'<tr',
-			array('td' => array('class' => 'classTest rowlink-skip hidden-xs')),
+			array('td' => array('class' => 'classTest hidden-xs')),
 			'Test1',
 			'/td',
-			array('td' => array('class' => ' rowlink-skip ')),
+			'<td',
 			'Test2',
 		);
 		
@@ -430,15 +515,15 @@ class BsHelperTest extends CakeTestCase {
 
 		$expected = array(
 			'<tr',
-			array('td' => array('class' => 'classTest rowlink-skip hidden-xs')),
+			array('td' => array('class' => 'classTest hidden-xs')),
 			'Test1',
 			'/td',
-			array('td' => array('class' => ' rowlink-skip ')),
+			'<td',
 			'Test2',
 			'/td',
 			'/tr',
 			'<tr',
-			array('td' => array('class' => ' rowlink-skip hidden-xs')),
+			array('td' => array('class' => 'hidden-xs')),
 			'Test3',
 			'/td'
 		);
@@ -464,14 +549,45 @@ class BsHelperTest extends CakeTestCase {
 			'/td',
 			'/tr',
 			'<tr',
-			array('td' => array('class' => ' rowlink-skip hidden-xs')),
+			array('td' => array('class' => 'hidden-xs')),
 			'Test3',
 			'/td'
 		);
 		$this->assertTags($result, $expected);
 
+		////////////////////////
+		// WITHOUT AUTOFORMAT //
+		////////////////////////
+		$this->Bs->table($titles);
+		$result = $this->Bs->cell('Test1', 'classTest', false, false) .
+		'</td>' .
+		$this->Bs->cell('Test2', '', false, false) .
+		'</td>' .
+		'</tr>' .
+		$this->Bs->cell('Test3', '', false, false) .
+		'</td>' .
+		$this->Bs->cell('Test4', '', false);
+		$this->Bs->endTable();
 
-
+		$expected = array(
+			'<tr',
+			array('td' => array('class' => 'classTest hidden-xs')),
+			'Test1',
+			'/td',
+			'<td',
+			'Test2',
+			'/td',
+			'/tr',
+			'<tr',
+			array('td' => array('class' => 'hidden-xs')),
+			'Test3',
+			'/td',
+			'<td',
+			'Test4',
+			'/td',
+			'/tr'
+		);
+		$this->assertTags($result, $expected);
 	}
 
 
@@ -490,18 +606,18 @@ class BsHelperTest extends CakeTestCase {
 
 		$expected = array(
 			array('tr' => array('class' => 'success')),
-			array('td' => array('class' => ' rowlink-skip ')),
+			'<td',
 			'Test1',
 			'/td',
-			array('td' => array('class' => ' rowlink-skip ')),
+			'<td',
 			'Test2',
 			'/td',
 			'/tr',
 			'<tr',
-			array('td' => array('class' => ' rowlink-skip ')),
+			'<td',
 			'Test3',
 			'/td',
-			array('td' => array('class' => ' rowlink-skip ')),
+			'<td',
 			'Test4',
 			'/td',
 			'/tr',
@@ -744,16 +860,13 @@ class BsHelperTest extends CakeTestCase {
 			array('input' => array('value' => 'Send', 'class' => 'btn btn-success', 'type')),
 			array('i' => array('class' => 'fa fa-spinner fa-spin form-submit-wait text-success')),
 			'/i',
-			'<script',
-			'$("#MyModelMyActionForm").submit(function(){$("#MyModelMyActionForm input[type=\'submit\']").prop("disabled" , true);$("#MyModelMyActionForm .form-submit-wait").show();});',
-			'/script',
 			'/div',
 			'/div',
 			'/div',
 			'/form',
 			'/div',
 			'/div',
-			'/div',
+			'/div'
 		);
 
 		$this->assertTags($result, $expected);

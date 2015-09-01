@@ -36,11 +36,50 @@ class BsHelper extends HtmlHelper {
  *
  * @var array
  */
-	private $__loaded = array(
-		'chosen' => false,
-		'jasny' => false,
-		'ckeditor' => false,
-		'lengthDetector' => false
+	private $__extensions = array(
+		'chosen' => array(
+			'css' => array(
+				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.css',
+				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png'
+			),
+			'js' => array(
+				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js'
+			),
+			'loaded' => false
+		),
+		'jasny' => array(
+			'css' => array(
+				'//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css'
+			),
+			'js' => array(
+				'//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js'
+			),
+			'loaded' => false
+		),
+		'ckeditor' => array(
+			'css' => array(),
+			'js' => array(
+				'//cdn.ckeditor.com/4.5.2/standard/ckeditor.js'
+			),
+			'loaded' => false
+		),
+		'lengthDetector' => array(
+			'css' => array(),
+			'js' => array(
+				'BsHelpers./js/bootstrap-length-detector/configs/default.js',
+				'BsHelpers./js/bootstrap-length-detector/bootstrap-length-detector.min.js'
+			),
+			'loaded' => false
+		),
+		'tablesorter' => array(
+			'css' => array(),
+			'js' => array(
+				'https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.min.js',
+				'https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.widgets.min.js',
+				'BsHelpers./js/tablesorter/config.js',
+			),
+			'loaded' => false
+		)
 	);
 
 /**
@@ -62,7 +101,7 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $faPath = '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css';
+	public $faPath = '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css';
 
 /**
  * Path for Bootstrap addon
@@ -72,27 +111,15 @@ class BsHelper extends HtmlHelper {
 	public $bsAddonPath = 'BsHelpers.bs_addon';
 
 /**
- * Path for JS LengthDetector
- *
- * @var string
- */
-	public $lengthDetectorJsPath = 'BsHelpers./js/bootstrap-length-detector/bootstrap-length-detector.min.js';
-
-/**
- * Path for JS LengthDetector config
- *
- * @var string
- */
-	public $lengthDetectorConfigJsPath = 'BsHelpers./js/bootstrap-length-detector/configs/default.js';
-
-/**
  * If Font Awesome is loaded
+ * 
  * @var bool
  */
 	public $faLoad = true;
 
 /**
- * jquerypath
+ * Jquerypath
+ * 
  * @var string
  *
  */
@@ -100,64 +127,78 @@ class BsHelper extends HtmlHelper {
 
 /**
  * If Bootstrap addon is loaded
+ * 
  * @var bool
  */
 	public $bsAddonLoad = true;
 
 /**
  * Prefix version for Font Awesome
+ * 
  * @var bool
  */
 	public $faPrefix = 'fa';
 
 /**
+ * Block name to load CSS elements
+ * 
+ * @var bool
+ */
+	public $blockCss = 'cssTop';
+
+/**
+ * Block name to load JS elements
+ * 
+ * @var bool
+ */
+	public $blockJs = 'scriptBottom';
+
+/**
  * Load CSS in view when needed
  *
- * @param [string] $url The CSS url
- * @return [Void]   Closes the view block
+ * @param string $url The CSS url
+ * @return void 	  Closes the view block
  */
 	public function loadCSS($url) {
-		$this->_View->append('cssTop', parent::css($url));
+		$this->_View->append($this->blockCss, parent::css($url));
 		return $this->_View->end();
 	}
 
 /**
  * Load JS in view when needed
  *
- * @param string  $url The JS url
- * @param bool $type True for inline block, false to load form external link
+ * @param string $url 	 The JS url
+ * @param bool $type 	 True for inline block, false to load form external link
  * @param array $options Option for scriptBlock
- * @return Void Close the view
- *  block
+ * @return void 		 Close the view block
  */
 	public function loadJS($url, $type = false, array $options = array()) {
 		if ($type === true) {
-			$this->_View->append('scriptBottom', parent::scriptBlock($url, $options));
+			$this->_View->append($this->blockJs, parent::scriptBlock($url, $options));
 		} else {
-			$this->_View->append('scriptBottom', parent::script($url));
+			$this->_View->append($this->blockJs, parent::script($url));
 		}
 		return $this->_View->end();
 	}
 
 /**
- * nesting the read access to private __loaded
+ * Load an external plugin (ex: Chosen, Tablesorter... )
  *
- * @param [string] $key The key of the element you're looking for
- * @return [bool]      The value associated to the key
+ * @param string $key The key you want to save
+ * @return bool       The result of the array saving
  */
-	public function loaded($key) {
-		return $this->__loaded[$key];
-	}
+	public function load($key) {
+		if (!$this->__extensions[$key]['loaded']) {
+			foreach ($this->__extensions[$key]['css'] as $css) {
+				$this->loadCSS($css);
+			}
+			foreach ($this->__extensions[$key]['js'] as $js) {
+				$this->loadJS($js);
+			}
+			$this->__extensions[$key]['loaded'] = true;
+		}
 
-/**
- * nesting the writing access to private __loaded
- *
- * @param [string] $key   The key you want to save
- * @param [bool] $value The value associated to that key
- * @return [bool]        The result of the array saving
- */
-	public function load($key, $value) {
-		return $this->__loaded[$key] = $value;
+		return $this->__extensions[$key]['loaded'];
 	}
 
 	/*--------------------------*
@@ -169,9 +210,9 @@ class BsHelper extends HtmlHelper {
 /**
  * Initialize an HTML document and the head
  *
- * @param string $titre The name of the current page
+ * @param string $titre 	  The name of the current page
  * @param string $description The description of the current page
- * @param string $lang The language of the current page. By default 'fr' because we are french
+ * @param string $lang 		  The language of the current page. By default 'fr' because we are french
  * @return string
  */
 	public function html($titre = '', $description = '', $lang = 'fr') {
@@ -189,9 +230,9 @@ class BsHelper extends HtmlHelper {
 /**
  * Initialize an HTML 5 document and the head
  *
- * @param string $titre The name of the current page
+ * @param string $titre 	  The name of the current page
  * @param string $description The description of the current page
- * @param string $lang The language of the current page. By default 'fr' because we are french
+ * @param string $lang 		  The language of the current page. By default 'fr' because we are french
  * @return string
  */
 	public function html5($titre = '', $description = '', $lang = 'fr') {
@@ -232,9 +273,9 @@ class BsHelper extends HtmlHelper {
 /**
  * Load CSS for the current page
  *
- * @param array $path Names of CSS for the current page
+ * @param array $path 	 Names of CSS for the current page
  * @param array $options Options for the css element
- * @return string A link tag for the head element
+ * @return string 		 A link tag for the head element
  */
 	public function css($path = array(), $options = array()) {
 		$out = parent::css($this->pathCSS);
@@ -257,7 +298,7 @@ class BsHelper extends HtmlHelper {
  * Load JS for the current page
  *
  * @param array $arrayJs Names of JS for the current page
- * @return string A script tag for the head element
+ * @return string 		 A script tag for the head element
  */
 	public function js($arrayJs = array()) {
 		$out = parent::script($this->pathJquery);
@@ -289,7 +330,7 @@ class BsHelper extends HtmlHelper {
  * Open a header element
  *
  * @param array $options Options of the header element
- * @return string Tag header
+ * @return string 		 Tag header
  */
 	public function header($options = array()) {
 		$out = parent::tag('header', null, $options);
@@ -315,7 +356,7 @@ class BsHelper extends HtmlHelper {
  * Open a Bootstrap container
  *
  * @param array $options Options of the div element
- * @return string Div element with the class 'container'
+ * @return string 		 Div element with the class 'container'
  */
 	public function container($options = array()) {
 		$out = '';
@@ -331,7 +372,7 @@ class BsHelper extends HtmlHelper {
  * Open a Bootstrap row
  *
  * @param array $options Options of the div element
- * @return string Div element with the class 'row'
+ * @return string 		 Div element with the class 'row'
  */
 	public function row($options = array()) {
 		$out = '';
@@ -433,9 +474,9 @@ class BsHelper extends HtmlHelper {
  *
  * Add the correct class for the option in parameter
  *
- * @param array $elem // class apply on the col element {PARAMETRE OBLIGATOIRE}
- * @param string $screen // layout {PARAMETRE OBLIGATOIRE}
- * @return string The class corresponding to the option
+ * @param array $elem 	 class apply on the col element {PARAMETRE OBLIGATOIRE}
+ * @param string $screen layout {PARAMETRE OBLIGATOIRE}
+ * @return string 		 The class corresponding to the option
  */
 	private function __optCol($elem, $screen) {
 		$attr = substr($elem, 0, 2);
@@ -514,24 +555,31 @@ class BsHelper extends HtmlHelper {
  * Initialize the table with the head and the body element.
  *
  * @param array $titles 'title' => title of the cell
- * 'width' => width in percent of the cell
- * 'hidden' => layout
- * @param array $class classes of the table (hover, striped, etc)
+ *                      'width' => width in percent of the cell
+ *                      'hidden' => layout
+ * @param array $class  classes of the table (hover, striped, etc)
  * @param bool $rowlink set rowlink on a table when true
  * @return string
  */
 	public function table($titles, $class = array(), $rowlink = false) {
+		// Classe creation for the table element
 		$classes = '';
-		$out = '<div class="table-responsive">';
-
 		if (!empty($class)) {
 			foreach ($class as $opt) {
-				$classes .= ' table-' . $opt;
+				if ($opt === 'tablesorter') {
+					$classes .= ' tablesorter';
+					$this->load('tablesorter');
+				} else {
+					$classes .= ' table-' . $opt;
+				}
 			}
 		}
 
+		// Creation of the output HTML
+		$out = '<div class="table-responsive">';
 		$out .= '<table class="table' . $classes . '">';
 
+		// If titles are defined
 		if ($titles != null) {
 
 			$out .= '<thead>';
@@ -560,7 +608,9 @@ class BsHelper extends HtmlHelper {
 					}
 				}
 				$out .= ($classVisibility != '') ? ' ' : '';
-				$out .= $classVisibility . '">' . $title['title'] . '</th>';
+				$out .= $classVisibility;
+				$out .= (isset($title['sorter'])) ? ' sorter-' . $title['sorter'] : '';
+				$out .= '">' . $title['title'] . '</th>';
 				$tablePos++;
 			}
 
@@ -568,11 +618,7 @@ class BsHelper extends HtmlHelper {
 			$out .= '</thead>';
 			if ($rowlink === true) {
 				$out .= '<tbody data-link="row" class="rowlink">';
-				if (!$this->loaded('jasny')) {
-					$this->loadCSS('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css');
-					$this->loadJS('//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js');
-					$this->load('jasny', true);
-				}
+				$this->load('jasny');
 			} else {
 				$out .= '<tbody>';
 			}
@@ -582,26 +628,26 @@ class BsHelper extends HtmlHelper {
 			$this->_cellPos = 0;
 			$this->_openLine = 0;
 		}
+
 		return $out;
 	}
 
 /**
  * Create a cell (<td>)
  *
- * @param string $content Informations in the cell
- * @param string $class Classe(s) of the cell
- * @param bool $rowLink set to true by default, create the link on the row with setCellLine
+ * @param string $content  Informations in the cell
+ * @param string $class    Classe(s) of the cell
+ * @param bool $rowLink    set to true by default, create the link on the row with setCellLine
  * @param bool $autoformat Close or not the cell when it is the last of the line
  * @return string
  */
 	public function cell($content, $class = '', $rowLink = true, $autoformat = true) {
-		if (!$rowLink) {
+		// If a link is define for the row, but disable for the cell,
+		// just add a rowlink-skip
+		if ($this->_cellLinkActive === true && !$rowLink) {
 			$class .= ' rowlink-skip';
-		} else {
-			if ($this->_cellLinkActive !== true) {
-				$class .= ' rowlink-skip';
-			}
 		}
+
 		$out = '';
 		$classVisibility = '';
 		$cellPos = $this->_cellPos;
@@ -668,8 +714,8 @@ class BsHelper extends HtmlHelper {
 /**
  * set link for the tr
  *
- * @param [string] $link The link where the td brings
- * @return void it changes local variables
+ * @param string $link The link where the td brings
+ * @return void 	   it changes local variables
  */
 	public function setCellLink($link) {
 		$this->_cellLinkActive = true;
@@ -731,9 +777,9 @@ class BsHelper extends HtmlHelper {
  *
  * Extends from HtmlHelper:image()
  *
- * @param string $path Path to the image file, relative to the app/webroot/img/ directory.
+ * @param string $path 	 Path to the image file, relative to the app/webroot/img/ directory.
  * @param array $options Array of HTML attributes. See above for special options.
- * @return string End tag header
+ * @return string 		 End tag header
  */
 	public function image($path, $options = array()) {
 		if (isset($options['class'])) {
@@ -748,7 +794,7 @@ class BsHelper extends HtmlHelper {
  * Create a Font Awesome Icon
  *
  * @param string $iconLabel label of the icon
- * @param array $classes like 'fixed-width', 'large', '2x', etc.
+ * @param array $classes 	like 'fixed-width', 'large', '2x', etc.
  * @param array $attributes more attributes for the tag
  * @return string
  */
@@ -773,12 +819,12 @@ class BsHelper extends HtmlHelper {
 /**
  * Create a Bootstrap Button or Link
  *
- * @param string $text text in the button
- * @param string $url url of the link
- * @param array $options 'size' => lg, sm or xs, to change the size of the button
- *						 'type' => primary, success, etc, to change the color
- *						 'tag' => to change the tag
- *						 and more... (like 'class')
+ * @param string $text 	  		text in the button
+ * @param string $url 	  		url of the link
+ * @param array $options 		'size' => lg, sm or xs, to change the size of the button
+ *						        'type' => primary, success, etc, to change the color
+ *						        'tag' => to change the tag
+ *						        and more... (like 'class')
  * @param array $confirmMessage to add a confirm pop-up
  * @return string
  */
@@ -811,10 +857,10 @@ class BsHelper extends HtmlHelper {
  * Create a Bootstrap Modal.
  *
  * @param string $header The text in the header
- * @param string $body The content of the body
+ * @param string $body 	 The content of the body
  * @param array $options Used to add custom ID, class or a form into the modal
  * @param array $buttons Informations about open, close and confirm buttons
- * @return string Bootstrap modal
+ * @return string 		 Bootstrap modal
  */
 	public function modal($header, $body, $options = array(), $buttons = array()) {
 		$classes = (isset($options['class'])) ? $options['class'] : '';
@@ -943,7 +989,7 @@ class BsHelper extends HtmlHelper {
  * Create a button with a confirm like a Bootstrap Modal
  *
  * @param string $button the name of the button, the header and the confirm button in the modal
- * @param string $link the link to redirect after the confirm
+ * @param string $link 	 the link to redirect after the confirm
  * @param array $options Options for the confirm (button, texte, header, color)
  * @return string
  */
