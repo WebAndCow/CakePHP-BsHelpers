@@ -770,7 +770,6 @@ class BsFormHelper extends FormHelper {
  * @return string
  */
 	private function __buildCheckboxBefore($validationState) {
-		//debug($validationState);
 		$out = '';
 
 		if ($this->_getFormType() == 'horizontal') {

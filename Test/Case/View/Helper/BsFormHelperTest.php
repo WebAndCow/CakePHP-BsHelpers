@@ -1508,8 +1508,6 @@ class BsFormHelperTest extends CakeTestCase {
 		$field  = 'title';
 		$result = $this->BsForm->chosen($field, $tab);
 
-		debug($result);
-
 		$expected = array(
 			array('div' => array(
 				'class' => 'form-group',
