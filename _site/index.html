@@ -5,15 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1" />
     <meta name="description" content="Cakephp-BsHelpers : Extension of the CakePHP's FormHelper and HtmlHelper to use the framework Twitter Bootstrap v3 more easily" />
 
-    <link rel="stylesheet" href="stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheets/bs_addons.css">
     <link rel="stylesheet" href="stylesheets/theme.css">
     <!-- rainbow, solarized_dark, tomorrow-night-eighties -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/rainbow.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="javascripts/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-
     <title>Cakephp-BsHelpers</title>
   </head>
   <body>
@@ -34,6 +36,7 @@
             <li><a href="installation.html">Getting started</a></li>
             <li><a href="bshelper.html">Bs</a></li>
             <li><a href="bsformhelper.html">BsForm</a></li>
+            <li><a href="examples.html">Examples</a></li>
             <!-- <li><a href="code.html">Le code en détail</a></li> -->
           </ul>
         </div>
@@ -147,6 +150,45 @@
   ga('create', 'UA-55250909-1', 'auto');
   ga('send', 'pageview');
 
-</script>
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.22.1/js/jquery.tablesorter.widgets.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        ///////////////////////////
+        // Parsers configuration //
+        ///////////////////////////
+
+        $.tablesorter.addParser({
+            // set a unique id
+            id: 'data',
+            is: function(s) {
+                    // return false so this parser is not auto detected 
+                    return false;
+            },
+            format: function(s, table, cell) {
+                return ($(cell).find('*[data-sorter]').length > 0) ? $(cell).find('*[data-sorter]').attr('data-sorter') : s;
+            },
+            // set type, either numeric or text 
+            type: 'text'
+        });
+
+        /////////////////
+        // Init config //
+        /////////////////
+
+        $.tablesorter.themes.bootstrap = {
+            iconSortAsc  : 'fa fa-angle-up', // class name added to icon when column has ascending sort
+            iconSortDesc : 'fa fa-angle-down', // class name added to icon when column has descending sort
+        };
+
+        $('.tablesorter').tablesorter({
+            theme : "bootstrap",
+            headerTemplate : '{content} {icon}',
+            widgets : [ "uitheme"]
+        });
+    });
+    </script>
   </body>
 </html>
