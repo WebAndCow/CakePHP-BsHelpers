@@ -1,0 +1,250 @@
+---
+layout: default
+title: Cakephp-BsHelpers Examples
+description: "Differents uses of various plugins included in the Bshelpers"
+---
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+        <h1>Examples</h1>
+
+<!-- Length Detector -->
+        <h2 class="page-header" id="length-detector">Length Detector</h2>
+        <p>You can see an example of using length detector by following this link : <a target="_blank" href="http://www.webandcow.com/Page/Tutoriels/89/Aide-au-remplissage-d-un-input-grace-a-un-plugin-Jquery">Length Detector</a> (in french)</p>
+<a href=""></a>
+
+<!-- Input mask -->
+        <h2 class="page-header" id="input-mask">Input mask</h2>
+        <p>You can see an example of using input-mask by following this link : <a target="_blank" href="http://www.webandcow.com/Page/Tutoriels/91/Mise-en-place-d-un-input-mask-pour-la-saisie-d-un-champ-complexe">Input mask</a> (in french)</p>
+<a href=""></a>
+
+<!-- Rowlink -->
+        <h2 class="page-header" id="rowlink">Rowlink</h2>
+<pre>
+<code class="php">&lt;?php
+// Titles for the table element
+$titles = array(
+  array('title' => 'First name', 'witdh' => 25),
+  array('title' => 'Last name', 'witdh' => 25),
+  array('title' => 'Born', 'witdh' => 25),
+  array('title' => 'Country', 'witdh' => 25),
+  array('title' => 'Disabled column', 'witdh' => 25),
+);
+
+echo
+$this->Bs->table($titles, array('bordered', 'hover'), true) .
+  // Set the link for cells
+  $this->Bs->setCellLink('http://webandcow.github.io/CakePHP-BsHelpers/examples.html') .
+  // OR for example : $this->Bs->setCellLink(array('controller' => 'pages', 'action' => 'home')) .
+
+  $this->Bs->cell('Zachary') .
+  $this->Bs->cell('WILLIAMS') .
+  $this->Bs->cell('05/05/1991') .
+  $this->Bs->cell('USA') .
+  // For the last, the rowlink is disabled
+  $this->Bs->cell($this->Bs->icon('check'), 'myClass', false) .
+$this->Bs->endTable();
+?&gt;
+</code>
+</pre>
+        <br />
+        <div class="result">
+          <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+              <thead>
+                <tr>
+                  <th class="">First name</th>
+
+                  <th class="">Last name</th>
+
+                  <th class="">Born</th>
+
+                  <th class="">Country</th>
+
+                  <th class="">Disabled column</th>
+                </tr>
+              </thead>
+
+              <tbody class="rowlink" data-link="row">
+                <tr>
+                  <td>
+                    <a href=
+                    "http://webandcow.github.io/CakePHP-BsHelpers/examples.html">
+                    Zachary</a>
+                  </td>
+
+                  <td>
+                    <a href=
+                    "http://webandcow.github.io/CakePHP-BsHelpers/examples.html">
+                    WILLIAMS</a>
+                  </td>
+
+                  <td>
+                    <a href=
+                    "http://webandcow.github.io/CakePHP-BsHelpers/examples.html">
+                    05/05/1991</a>
+                  </td>
+
+                  <td>
+                    <a href=
+                    "http://webandcow.github.io/CakePHP-BsHelpers/examples.html">
+                    USA</a>
+                  </td>
+
+                  <td class="myClass rowlink-skip">
+                    <i class="fa fa-check"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+<!-- Tablesorter -->
+        <h2 class="page-header" id="tablesorter">Tablesorter</h2>
+<pre>
+<code class="php">&lt;?php
+$datas = array(
+  array(
+    'Zachary', 
+    '&lt;span data-sorter="1"&gt;Zacchary (1)&lt;/span&gt;', 
+    '05/05/1991', 
+    $this->Bs->icon('check', array(), array('data-sorter' => 1)), 
+    'Actions'
+  ),
+  array(
+    'Jacob', 
+    '&lt;span data-sorter="4"&gt;Jacob (4)&lt;/span&gt;', 
+    '30/01/2006', 
+    $this-&gt;Bs-&gt;icon('users', array(), array('data-sorter' =&gt; 2)), 
+    'Actions'
+  ),
+  array(
+    'Hannah', 
+    '&lt;span data-sorter="3"&gt;Hannah (3)&lt;/span&gt;', 
+    '17/03/2000', 
+    $this-&gt;Bs-&gt;icon('times', array(), array('data-sorter' =&gt; 0)), 
+    'Actions'
+  ),
+  array(
+    'Emily', 
+    '&lt;span data-sorter="2"&gt;Emily (2)&lt;/span&gt;', 
+    '02/08/1885', 
+    $this-&gt;Bs-&gt;icon('times', array(), array('data-sorter' =&gt; 0)), 
+    'Actions'
+  )
+);
+
+// Titles for the table element
+$titles = array(
+  array('title' => 'Firstname', 'witdh' => 25),
+  array('title' => 'Custom order', 'witdh' => 25, 'sorter' => 'data'),
+  array('title' => 'Date', 'witdh' => 25, 'sorter' => 'shortDate dateFormat-ddmmyyyy'),
+  array('title' => 'Icons', 'witdh' => 25, 'sorter' => 'data'),
+  array('title' => 'Unsorted column', 'witdh' => 25, 'sorter' => 'false'),
+);
+
+echo
+$this->Bs->table($titles, array('tablesorter'));
+  foreach ($datas as $data) {
+    echo
+    $this->Bs->cell($data[0]) .
+    $this->Bs->cell($data[1]) .
+    $this->Bs->cell($data[2]) .
+    $this->Bs->cell($data[3]) .
+    $this->Bs->cell($data[4]);
+  }
+echo
+$this->Bs->endTable();
+?&gt;
+</code>
+</pre>
+        <br />
+        <div class="result">
+          <div class="table-responsive">
+            <table class="table tablesorter">
+              <thead>
+                <tr>
+                  <th class="">Firstname</th>
+
+                  <th class="sorter-data">Custom order</th>
+
+                  <th class="sorter-shortDate dateFormat-ddmmyyyy">Date</th>
+
+                  <th class=" sorter-data">Icons</th>
+
+                  <th class=" sorter-false">Unsorted column</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>Zachary</td>
+
+                  <td><span data-sorter="1">Zacchary (1)</span></td>
+
+                  <td>05/05/1991</td>
+
+                  <td>
+                    <i class="fa fa-check" data-sorter="1">
+                  </td>
+
+                  <td>Actions</td>
+                </tr>
+
+                <tr>
+                  <td>Jacob</td>
+
+                  <td><span data-sorter="4">Jacob (4)</span></td>
+
+                  <td>30/01/2006</td>
+
+                  <td>
+                    <i class="fa fa-users" data-sorter="2">
+                  </td>
+
+                  <td>Actions</td>
+                </tr>
+
+                <tr>
+                  <td>Hannah</td>
+
+                  <td><span data-sorter="3">Hannah (3)</span></td>
+
+                  <td>17/03/2000</td>
+
+                  <td>
+                    <i class="fa fa-times" data-sorter="0">
+                  </td>
+
+                  <td>Actions</td>
+                </tr>
+
+                <tr>
+                  <td>Emily</td>
+
+                  <td><span data-sorter="2">Emily (2)</span></td>
+
+                  <td>02/08/1885</td>
+
+                  <td>
+                    <i class="fa fa-times" data-sorter="0">
+                  </td>
+
+                  <td>Actions</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <h4 class="parameters">Further explanations</h4>
+        <ul>
+          <li><code>[data-sorter]</code> - It's a special attributes, to sort in the way that you want. It's very useful to sort icons for example.</li>
+          <li><code>[sorter]</code> - In titles, you can define if you want a specific format for your sort (like date). You can define sorter to "data", to choose to use the "data-sorter" attributes as sort order. You can also define it to false to disable the column.</li>
+          <li><code>[tablesorter]</code> - Don't forget to add the "tablesorter" class in your table to load javascripts and css.</li>
+        </ul>
+
+    </div>
+    {% include sidebar_examples.html %}
+  </div>
+</div>
