@@ -1,17 +1,17 @@
 language: php
 
 php:
-  - 5.3.2
+  - 5.4
   - 5.6
 
 env:
   global:
     - PLUGIN_NAME=BsHelpers
     - REQUIRE=""
-    - DB=mysql CAKE_VERSION=2.0
+    - DB=mysql CAKE_VERSION=2.1
   matrix:
-    - DB=mysql CAKE_VERSION=2.0
-    - DB=mysql CAKE_VERSION=2.8
+    - DB=mysql CAKE_VERSION=2.1
+    - DB=mysql CAKE_VERSION=2.7
 
 matrix:
   include:
