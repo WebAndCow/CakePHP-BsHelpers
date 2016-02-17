@@ -79,6 +79,12 @@ class BsHelperTest extends CakeTestCase {
 		$this->assertTags($result, $expected);
 	}
 
+	public function testNoIndex() {
+		$result = $this->Bs->noIndex();
+
+		$this->assertTags($result, array('meta' => array('name' => 'robots', 'content' => 'noindex, nofollow')));
+	}
+
 	public function testBody() {
 		///////////////////
 		// WITHOUT CLASS //

@@ -247,6 +247,15 @@ class BsHelper extends HtmlHelper {
 	}
 
 /**
+ * Add a meta tag with the no index and no follow instructions
+ * 
+ * @return string
+ */
+	public function noIndex() {
+		return parent::meta(array('name' => 'robots', 'content' => 'noindex, nofollow'));
+	}
+
+/**
  * Close the head element and initialize the body element
  *
  * @param string $classBody Class for the body element
