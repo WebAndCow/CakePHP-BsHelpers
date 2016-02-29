@@ -87,21 +87,21 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $pathCSS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css';
+	public $pathCSS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css';
 
 /**
  * Path for JS bootstrap
  *
  * @var string
  */
-	public $pathJS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js';
+	public $pathJS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js';
 
 /**
  * Path for Font Awesome
  *
  * @var string
  */
-	public $faPath = '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css';
+	public $faPath = 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css';
 
 /**
  * Path for Bootstrap addon
@@ -123,7 +123,7 @@ class BsHelper extends HtmlHelper {
  * @var string
  *
  */
-	public $pathJquery = 'http://code.jquery.com/jquery-1.11.3.js';
+	public $pathJquery = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js';
 
 /**
  * If Bootstrap addon is loaded
