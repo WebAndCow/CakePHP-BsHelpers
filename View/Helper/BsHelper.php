@@ -43,23 +43,23 @@ class BsHelper extends HtmlHelper {
 				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png'
 			),
 			'js' => array(
-				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js'
+				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js'
 			),
 			'loaded' => false
 		),
 		'jasny' => array(
 			'css' => array(
-				'//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css'
+				'https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css'
 			),
 			'js' => array(
-				'//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js'
+				'https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js'
 			),
 			'loaded' => false
 		),
 		'ckeditor' => array(
 			'css' => array(),
 			'js' => array(
-				'//cdn.ckeditor.com/4.5.2/standard/ckeditor.js'
+				'https://cdn.ckeditor.com/4.5.7/standard/ckeditor.js'
 			),
 			'loaded' => false
 		),
