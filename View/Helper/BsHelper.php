@@ -43,23 +43,23 @@ class BsHelper extends HtmlHelper {
 				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen-sprite.png'
 			),
 			'js' => array(
-				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.js'
+				'https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js'
 			),
 			'loaded' => false
 		),
 		'jasny' => array(
 			'css' => array(
-				'//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css'
+				'https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css'
 			),
 			'js' => array(
-				'//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js'
+				'https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min.js'
 			),
 			'loaded' => false
 		),
 		'ckeditor' => array(
 			'css' => array(),
 			'js' => array(
-				'//cdn.ckeditor.com/4.5.2/standard/ckeditor.js'
+				'https://cdn.ckeditor.com/4.5.7/standard/ckeditor.js'
 			),
 			'loaded' => false
 		),
@@ -87,21 +87,21 @@ class BsHelper extends HtmlHelper {
  *
  * @var string
  */
-	public $pathCSS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css';
+	public $pathCSS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css';
 
 /**
  * Path for JS bootstrap
  *
  * @var string
  */
-	public $pathJS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js';
+	public $pathJS = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js';
 
 /**
  * Path for Font Awesome
  *
  * @var string
  */
-	public $faPath = '//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css';
+	public $faPath = 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css';
 
 /**
  * Path for Bootstrap addon
@@ -123,7 +123,7 @@ class BsHelper extends HtmlHelper {
  * @var string
  *
  */
-	public $pathJquery = 'http://code.jquery.com/jquery-1.11.3.js';
+	public $pathJquery = 'https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js';
 
 /**
  * If Bootstrap addon is loaded
@@ -244,6 +244,15 @@ class BsHelper extends HtmlHelper {
 		$out .= '<![endif]-->';
 
 		return $out;
+	}
+
+/**
+ * Add a meta tag with the no index and no follow instructions
+ * 
+ * @return string
+ */
+	public function noIndex() {
+		return parent::meta(array('name' => 'robots', 'content' => 'noindex, nofollow'));
 	}
 
 /**

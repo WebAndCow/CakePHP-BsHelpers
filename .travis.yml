@@ -1,28 +1,27 @@
 language: php
 
 php:
-  - 5.3
   - 5.4
-  - 5.5
+  - 5.6
 
 env:
   global:
     - PLUGIN_NAME=BsHelpers
     - REQUIRE=""
-    - DB=mysql CAKE_VERSION=2.4
+    - DB=mysql CAKE_VERSION=2.7
   matrix:
     - DB=mysql CAKE_VERSION=2.4
-    - DB=mysql CAKE_VERSION=2.5
+    - DB=mysql CAKE_VERSION=2.7
 
 matrix:
   include:
-    - php: 5.4
+    - php: 5.6
       env:
         - COVERALLS=1
-    - php: 5.4
+    - php: 5.6
       env:
         - PHPCS=1 PHPCS_IGNORE="*/Test/*"
-    - php: 5.4
+    - php: 5.6
       env:
         - FOC_VALIDATE=1
 

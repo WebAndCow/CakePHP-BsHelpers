@@ -1,5 +1,4 @@
 /* Width for tables */
-
 .l_5 {width: 5%}
 .l_10 {width: 10%}
 .l_15 {width: 15%}
@@ -165,19 +164,31 @@
   cursor: pointer;
 }
 
+/* Colors for social buttons */
+.btn-facebook{
+  background: #3b5998;
+  border: 1px solid #334E85;
+  color: #fff;
+}
 
+.btn-facebook:hover,
+.btn-facebook:active,
+.btn-facebook:visited,
+.btn-facebook:focus{
+  background: #334E85;
+  color: #fff;
+}
 
+.btn-twitter{
+  background: #55acee;
+  color: #fff;
+  border: 1px solid #458CC2;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+.btn-twitter:hover,
+.btn-twitter:active,
+.btn-twitter:visited,
+.btn-twitter:focus{
+  background: #458CC2;
+  color: #fff;
+}
